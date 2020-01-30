@@ -1,0 +1,32 @@
+{
+  "name": "webapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js",
+    "start": "node app.js",
+    "dev": "node-dev app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodejsdevproject/appgo.git"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "config": "^2.0.1",
+    "express": "^4.16.4",
+    "formidable": "^1.2.1",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.3.7",
+    "mongoose-to-swagger": "0.0.4",
+    "qiniu": "^7.2.2",
+    "swagger-jsdoc": "^3.2.3"
+  },
+  "author": "Frank",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nodejsdevproject/appgo/issues"
+  },
+  "homepage": "https://github.com/nodejsdevproject/appgo#readme"
+}

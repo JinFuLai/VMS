@@ -1,0 +1,160 @@
+var account = require('../model/account/account')
+var group = require('../model/gpstrack/group')
+var state = require('../model/address/state')
+var country = require('../model/address/country')
+var reponseHelper = require('../helper/responsehelper')
+
+// ----------------------------------Contorller-------------------------------------------
+/**
+ * @swagger
+ * tags:
+ *  - name: "Account"
+ *    description: "公司"
+ */
+module.exports = function (app) {
+  /**
+   * @swagger
+   * /api/account/list:
+   *   post:
+   *     tags:
+   *       - Account
+   *     summary: "公司查询"
+   *     produces:
+   *     - application/json
+   *     responses:
+   *       200:
+   *         description: An array of accounts
+   */
+  app.post('/account/list', function (req, res) {
+
+    account.find().populate({ path: 'address.city' })
+      .populate({
+        path: 'address.city', populate: {
+          path: 'state',
+          model: state,
+          populate: {
+            path: 'country',
+            model: country,
+          }
+        }
+      }).exec(function (err, accounts) {
+        if (err) throw err;
+        res.json(reponseHelper.Success(accounts));
+      });
+
+    // account.find({}, function (err, accounts) {
+    //     if (err) throw err;
+    //     // object of all the accounts
+    //     res.json(reponseHelper.createResponse(200, accounts, "OK"));
+    // });
+  });
+
+  /**
+   * @swagger
+   * /api/account/create:
+   *   post: 
+   *      tags:
+   *          - Account
+   *      produces:
+   *      - application/json
+   *      summary: "创建公司"
+   *      parameters:
+   *      - name: account
+   *        in: body
+   *        description: "公司信息"
+   *        required: true
+   *        schema:
+   *          $ref: '#/definitions/account'
+   *      responses:
+   *          200:
+   *              description: Successfully     
+   */
+  app.post('/account/create', function (req, res) {
+    var myData = new account(req.body);
+    myData.save()
+      .then(item => {
+        res.json(reponseHelper.Success('添加成功'))
+      })
+      .catch(err => {
+        res.json(reponseHelper.Error('添加失败' + err))
+      });
+  });
+
+  /**
+* @swagger
+* /api/account/groups:
+*   get:
+*     tags:
+*       - Account
+*     description: Returns all groups for account
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*         description: An array of accounts
+*/
+  app.get('/account/groups', function (req, res) {
+    group.find({ account_id: req.query.id }, function (err, groups) {
+      if (err) throw err;
+      // object of all the accounts
+      res.json(reponseHelper.Success(groups));
+    });
+  });
+
+  /**
+* @swagger
+* /api/account/upsert:
+*   post:
+*     tags:
+*       - Account
+*     description: Creates a new account
+*     produces:
+*       - application/json
+*     parameters:
+*       - name: account
+*         description: Account object
+*         in: body
+*         required: true
+*         schema:
+*            $ref: '#/definitions/account'
+*     responses:
+*       200:
+*         description: Successfully created
+*/
+  app.post("/account/upsert", (req, res) => {
+    var myData = new account(req.body);
+    account.findOneAndUpdate({
+      _id: myData.id
+    }, myData, { upsert: true, new: true }, function (err, _account) {
+      if (err) throw err;
+      res.json(reponseHelper.Success(_account));
+    });
+  });
+
+  /**
+* @swagger
+* /api/account/delete:
+*   post:
+*     tags:
+*       - Account
+*     description: Delete a account
+*     produces:
+*       - application/json
+*     parameters:
+*       - name: id
+*         description: Account object
+*         in: body
+*         required: true
+*         schema:
+*            $ref: '#/definitions/account'
+*     responses:
+*       200:
+*         description: Successfully created
+*/
+  app.delete("/account/delete", (req, res) => {
+    account.remove({ _id: req.query.id }, function (err) {
+      if (err) throw err;
+      res.json(reponseHelper.Success(req.query.id));
+    });
+  });
+}

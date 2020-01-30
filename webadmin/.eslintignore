@@ -1,0 +1,7 @@
+/lambda/
+/scripts
+/config
+
+*.js
+dist
+src
