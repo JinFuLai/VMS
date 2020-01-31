@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  VMS
+
+  Created by 何治军 on 2020/1/31.
+  Copyright © 2020 Facebook. All rights reserved.
+*/
+"map_3D" = "3D";
+"map_satellite" = "satellite";
+"map_standard" = "norm";
+"map_history" = "history";
+"map_warn" = "warn";
+"map_details" = "details";
