@@ -1,3 +1,3 @@
 # VehicleManage
 
-车管家
+Vehicle manage system is a application which could manage all your vehicle. Track the location. 
