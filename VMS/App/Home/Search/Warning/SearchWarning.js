@@ -16,7 +16,7 @@ import {RefreshControl} from 'react-native';
 
 export default class SearchWarning extends BaseComponent {
   static navigationOptions = _ => ({
-    headerTitle: (
+    headerTitle: () => (
       <Text style={CommonStyle.navGreenStyle}>{I18n.t('warnning_list')}</Text>
     ),
   });

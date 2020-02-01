@@ -7,7 +7,7 @@ import {WarningBottom} from '../SearchComponent';
 ///搜索结果-告警详情
 export default class SearchWarningDetails extends BaseComponent {
   static navigationOptions = () => ({
-    headerTitle: (
+    headerTitle: () => (
       <Text style={CommonStyle.navGreenStyle}>
         {I18n.t('warnning_details')}
       </Text>

@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 
 export default class ChangePswCommit extends BaseComponent {
   static navigationOptions = () => ({
-    headerTitle: (
+    headerTitle: () => (
       <Text style={CommonStyle.navGreenStyle}>
         {I18n.t('my_setting_change_password')}
       </Text>

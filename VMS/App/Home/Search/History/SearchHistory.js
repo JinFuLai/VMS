@@ -15,7 +15,7 @@ import {HistoryBottom} from '../SearchComponent';
 
 export default class SearchHistory extends BaseComponent {
   static navigationOptions = _ => ({
-    headerTitle: (
+    headerTitle: () => (
       <Text style={CommonStyle.navGreenStyle}>{I18n.t('history')}</Text>
     ),
   });

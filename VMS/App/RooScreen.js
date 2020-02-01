@@ -221,7 +221,7 @@ const AppNavigator = createStackNavigator(
     Register: {
       screen: Register,
       navigationOptions: ({navigation}) => ({
-        gesturesEnabled: true,
+        gestureEnabled: true,
       }),
     },
   },
@@ -231,8 +231,8 @@ const AppNavigator = createStackNavigator(
       headerTintColor: '#333333',
       showIcon: true,
       headerTransparent: true,
-      header: null,
-      gesturesEnabled: false,
+      headerShown: false,
+      gestureEnabled: false,
     },
   },
 );

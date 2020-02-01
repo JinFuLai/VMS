@@ -6,7 +6,7 @@ import {Container, Text, Item, Input, Button} from 'native-base';
 
 export default class ChangePswGetVerification extends PureComponent {
   static navigationOptions = () => ({
-    headerTitle: (
+    headerTitle: () => (
       <Text style={CommonStyle.navGreenStyle}>
         {I18n.t('my_setting_change_password')}
       </Text>

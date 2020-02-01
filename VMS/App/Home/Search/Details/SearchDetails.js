@@ -15,7 +15,7 @@ import {SectionList} from 'react-native';
 
 export default class SearchDetails extends BaseComponent {
   static navigationOptions = () => ({
-    headerTitle: (
+    headerTitle: () => (
       <Text style={CommonStyle.navGreenStyle}>{I18n.t('details')}</Text>
     ),
   });

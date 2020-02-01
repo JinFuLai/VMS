@@ -17,7 +17,7 @@ import MessageList from './MessageList';
 
 export default class Message extends PureComponent {
   static navigationOptions = () => ({
-    header: null,
+    headerShown: false,
   });
 
   constructor(props) {

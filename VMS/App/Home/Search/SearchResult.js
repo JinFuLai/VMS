@@ -18,7 +18,7 @@ import {ListHomeItem} from '../../List/Home/ListHomeComponent';
 ///搜索结果页
 export default class SearchResult extends BaseComponent {
   static navigationOptions = () => ({
-    headerTitle: (
+    headerTitle: () => (
       <Text style={CommonStyle.navGreenStyle}>{I18n.t('search_result')}</Text>
     ),
   });

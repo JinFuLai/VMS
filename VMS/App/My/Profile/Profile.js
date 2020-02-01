@@ -32,11 +32,11 @@ const options = {
 export default class ProfileScreen extends BaseComponent {
   static navigationOptions = ({navigation}) => ({
     title: I18n.t('my_profile'),
-    headerRight: (
+    headerRight: () => {
       <Button transparent onPress={() => navigation.state.params.saveUser()}>
         <Text style={{color: Color.jfl_FFFFFF}}>{I18n.t('save')}</Text>
       </Button>
-    ),
+    },
   });
   constructor() {
     super();

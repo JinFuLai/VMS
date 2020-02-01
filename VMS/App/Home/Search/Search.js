@@ -26,7 +26,7 @@ import {
 
 export default class Search extends BaseComponent {
   static navigationOptions = () => ({
-    header: null,
+    headerShown: false,
   });
 
   constructor() {

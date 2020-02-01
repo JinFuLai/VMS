@@ -44,11 +44,10 @@ import {
 
 export class My extends PureComponent {
   static navigationOptions = ({navigation}) => ({
-    headerLeft: <View />,
-    headerTitle: (
+    headerLeft: () => <View />,
+    headerTitle: () => (
       <Text
         style={{
-          flex: 1,
           textAlign: 'center',
           color: Color.jfl_FFFFFF,
           fontSize: 17,
@@ -56,7 +55,7 @@ export class My extends PureComponent {
         {I18n.t('my')}
       </Text>
     ),
-    headerRight: (
+    headerRight: () => (
       <Button
         transparent
         onPress={() => navigation.state.params.navigatePress()}>
@@ -295,7 +294,6 @@ const MyScreen = createStackNavigator(
   },
   {
     headerMode: 'screen', //设置导航栏切换时的样式
-    headerLayoutPreset: 'center', //居中
     //设置一些默认属性
     defaultNavigationOptions: {
       headerStyle: {
@@ -307,7 +305,9 @@ const MyScreen = createStackNavigator(
       headerTitleStyle: {
         fontSize: 17, //导航栏字体
       },
-      headerBackTitle: null,
+      // headerBackTitle: null,
+      headerBackTitleVisible: false,
+      headerTitleAlign: 'center', //居中
     },
   },
 );

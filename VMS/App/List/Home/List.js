@@ -28,7 +28,7 @@ import {
 
 export class ListView extends Component {
   static navigationOptions = () => ({
-    header: null,
+    headerShown: false,
   });
 
   constructor(props) {
@@ -167,7 +167,6 @@ const ListScreen = createStackNavigator(
   },
   {
     headerMode: 'screen', //设置导航栏切换时的样式
-    headerLayoutPreset: 'center', //居中
     //设置一些默认属性
     defaultNavigationOptions: {
       headerStyle: {
@@ -178,8 +177,10 @@ const ListScreen = createStackNavigator(
       headerTitleStyle: {
         fontSize: 17, //导航栏字体
       },
-      headerBackTitle: null,
+      // headerBackTitle: null,
+      headerBackTitleVisible: false,
       headerTransparent: false,
+      headerTitleAlign: 'center', //居中
     },
   },
 );

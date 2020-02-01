@@ -24,7 +24,7 @@ import {
 
 class Home extends BaseComponent {
   static navigationOptions = () => ({
-    header: null,
+    headerShown: false,
   });
 
   constructor(props) {
@@ -184,7 +184,6 @@ const HomeScreen = createStackNavigator(
   },
   {
     headerMode: 'screen', //设置导航栏切换时的样式
-    headerLayoutPreset: 'center', //居中
     //设置一些默认属性
     defaultNavigationOptions: {
       headerStyle: {
@@ -195,7 +194,9 @@ const HomeScreen = createStackNavigator(
       headerTitleStyle: {
         fontSize: 17, //导航栏字体
       },
-      headerBackTitle: null,
+      // headerBackTitle: null,
+      headerBackTitleVisible: false,
+      headerTitleAlign: 'center', //居中
     },
   },
 );
