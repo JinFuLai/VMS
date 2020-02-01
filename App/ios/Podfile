@@ -56,6 +56,9 @@ target 'VMS' do
   
   pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
 
+  #高德地图
+  pod 'GoogleMaps'
+  
   target 'VMSTests' do
     inherit! :search_paths
     # Pods for testing

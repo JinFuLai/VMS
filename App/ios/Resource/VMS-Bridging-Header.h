@@ -16,3 +16,7 @@
 #import <BaiduMapAPI_Utils/BMKUtilsComponent.h>//引入计算工具所有的头文件
 #import <BaiduMapAPI_Map/BMKMapView.h>//只引入所需的单个头文件
 #import <BMKLocationkit/BMKLocationComponent.h>//定位
+
+///谷歌地图
+#import <GoogleMaps/GoogleMaps.h>
+#import <GoogleMapsBase/GoogleMapsBase.h>

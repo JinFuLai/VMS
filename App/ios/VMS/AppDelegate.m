@@ -16,6 +16,8 @@
 #import <React/RCTDevLoadingView.h>
 #endif
 
+#import <GoogleMaps/GoogleMaps.h>
+
 @interface AppDelegate()<BMKLocationAuthDelegate>
 
 @end
@@ -67,6 +69,8 @@
 //  [BMKMapManager setCoordinateTypeUsedInBaiduMapSDK: BMK_COORDTYPE_COMMON];
   //定位
   [[BMKLocationAuth sharedInstance] checkPermisionWithKey:@"FKNzI3CxD0GQwYagDOSfnHUGUfZgcNia" authDelegate:self];
+  
+  [GMSServices provideAPIKey:@"YOUR_API_KEY"];
   return YES;
 }
 
