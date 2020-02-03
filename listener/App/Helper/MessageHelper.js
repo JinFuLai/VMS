@@ -135,13 +135,15 @@ class MessageHelper {
         var extraID = parseInt(bodyArray.slice(28,29),16);
         var extraLength = parseInt(bodyArray.slice(29,30),16);
         var extraInfo = bodyArray.slice(30,30+extraLength);
+        var alert = this.getAllWarning(warning);//获取所有报警信息
         var point = {
             longitude: longitude,
             latitude: latitude,
             direction: direction,
             altitude: elevation,
             datetime: datetime,
-            speed: speed
+            speed: speed,
+            alert: alert,
         };
         return {
             /**消息体数据组*/ 
