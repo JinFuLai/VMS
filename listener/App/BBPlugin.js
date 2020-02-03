@@ -150,9 +150,9 @@ class BBPlugin {
         }else if (msg.header.ID == "0200") {//位置信息汇报
             let body = msg._getBody_0200();
             //更新数据信息
-            NetWorkHelper.updatDeviceInfo(msg.header.IMEI,body.device,(result)=>{
+            NetWorkHelper.updatDeviceInfo(msg.header.IMEI,body.device,function (result) {
                 //返回通用应答
-                this.replyGeneralMsg(_listener,_socket,msg,result);
+                BBPlugin.replyGeneralMsg(_listener,_socket,msg,result);
             });
         }else if (msg.header.ID == "0107") {//查询终端属性应答 
             let body = msg._getBody_0107();
@@ -161,13 +161,13 @@ class BBPlugin {
             console.log("终端ID:" + body.terminalID);
             console.log("ICCID:" + body.ICCID);
             //返回通用应答
-            this.replyGeneralMsg(_listener,_socket,msg,'0');//直接成功'0'
+            BBPlugin.replyGeneralMsg(_listener,_socket,msg,'0');//直接成功'0'
         }else if (msg.header.ID == "0704") {//定位数据批量上传
             let body = msg._getBody_0704();
             //批量更新历史数据
-            NetWorkHelper.updatDeviceHistory(msg.header.IMEI,body.devices,(result)=>{
+            NetWorkHelper.updatDeviceHistory(msg.header.IMEI,body.devices,function (result) {
                 //返回通用应答
-                this.replyGeneralMsg(_listener,_socket,msg,result);
+                BBPlugin.replyGeneralMsg(_listener,_socket,msg,result);
             });
         }else if (msg.header.ID == "0102") {//终端鉴权
             console.log("收到数据IMEI:" + msg.header.IMEI);
@@ -175,7 +175,7 @@ class BBPlugin {
             console.log("鉴权码:" + body.authentication);
             if (body.authentication === 'X') {//待处理
                 //返回通用应答
-                this.replyGeneralMsg(_listener,_socket,msg,'0');//直接成功'0'
+                BBPlugin.replyGeneralMsg(_listener,_socket,msg,'0');//直接成功'0'
             }
 
         }
@@ -188,7 +188,7 @@ class BBPlugin {
      * @param {MsgHelper} msg 消息
      * @param {*} result 结果(字符) - 0：成功/确认；1：失败；2：消息有误；3：不支持；4：报警处理确认
      */
-    replyGeneralMsg(listener,socket,msg,result = '0') {
+    static replyGeneralMsg(listener,socket,msg,result = '0') {
         let header = msg.header;
         // 生成 平台通用应答 消息头
         let returnHeader = MsgResHelper.creatMsgHeader('8001',header.bodyAttribute,header.IMEI,header.messageNum+1);

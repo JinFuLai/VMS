@@ -60,14 +60,14 @@ class NetWorkHelper {
                         && info.last_gps_point 
                         && info.last_gps_point.datetime 
                         && element.last_gps_point.datetime < Date(Date.parse(info.last_gps_point.datetime))){//将最新的数据更新上去
-                            element.save(info,(err,doc) => {
+                            element.updateOne(info,(err,doc) => {
                                 if (err) {//更新失败
                                     console.log('更新失败' + err);
                                     callback(MsgGeneral.res_1);
                                 }else if (doc) {//更新成功
                                     console.log('更新成功'+doc);
                                     callback(MsgGeneral.res_0);
-                                    NetWorkHelper.updatDeviceHistory(imei,[info],(err)={});//更新历史轨迹
+                                    NetWorkHelper.updatDeviceHistory(imei,[info],function(err){});//更新历史轨迹
                                 }
                             });
                     // }
