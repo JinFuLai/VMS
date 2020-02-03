@@ -9,7 +9,7 @@
 import UIKit
 import ObjectMapper
 
-class JFLTools: BMKPolyline {
+class JFLBDTools: BMKPolyline {
   
   /// 筛选出正确的点
   /// - Parameter items: <#items description#>
@@ -39,7 +39,7 @@ class JFLTools: BMKPolyline {
   /// - Parameter dic: dic description
   class func getPolyline(locations:[JFLLocation]) -> BMKPolyline?{
     let GPSPoints = locations.map {$0.gps_point!}
-    return JFLTools.getPolyline(GPSPoints:GPSPoints);
+    return JFLBDTools.getPolyline(GPSPoints:GPSPoints);
   }
   
   /// 根据GPSPoint数组创建BMKPolyline对象
@@ -87,7 +87,7 @@ class JFLTools: BMKPolyline {
   
 }
 
-extension JFLTools{
+extension JFLBDTools{
   
   class func getModelArray<T:Mappable>(_ data:[[String : Any]] ,classType:T.Type) -> [T] {
       let models  = Mapper<T>().mapArray(JSONArray: data)

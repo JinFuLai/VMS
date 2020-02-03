@@ -89,7 +89,7 @@ class JFLMap extends React.PureComponent {
     if (Platform.OS == 'ios') {
       UIManager.dispatchViewManagerCommand(
         findNodeHandle(this),
-        UIManager.getViewManagerConfig('JFLMapView').Commands[command],
+        UIManager.getViewManagerConfig('JFLGooleMapView').Commands[command],
         params ? [params] : null,
       );
     }
@@ -97,6 +97,6 @@ class JFLMap extends React.PureComponent {
 }
 
 const JFLMapView =
-  Platform.OS == 'ios' ? requireNativeComponent('JFLMapView', JFLMap) : View;
+  Platform.OS == 'ios' ? requireNativeComponent('JFLGooleMapView', JFLMap) : View;
 
 export default JFLMap;

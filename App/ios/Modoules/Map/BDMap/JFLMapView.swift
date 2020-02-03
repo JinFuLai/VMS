@@ -281,12 +281,12 @@ extension JFLMapView{
   /// 添加历史轨迹点
   /// - Parameter list: <#list description#>
   @objc func addPolylines(_ list:[JFLLocation]?) {
-    self.historyPoints = JFLTools.getPoints(locations: list)
+    self.historyPoints = JFLBDTools.getPoints(locations: list)
 //    self.canShowPaopao = false
     if let point = self.historyPoints.first, let first = point.gps_point,let latitude = first.latitude, let longitude = first.longitude {
       self.mapView.setCenter(CLLocationCoordinate2DMake(CLLocationDegrees(latitude), CLLocationDegrees(longitude)), animated: false)
     }
-    if let polyline = JFLTools.getPolyline(locations: self.historyPoints){
+    if let polyline = JFLBDTools.getPolyline(locations: self.historyPoints){
       self.mapView.add(polyline)
     }
   }

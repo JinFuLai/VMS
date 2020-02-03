@@ -90,12 +90,12 @@ class JFLVehicle: NSObject,Mappable {
   /// 为了oc😓
   /// - Parameter json: <#json description#>
   @objc class func getModel(_ json:[String:Any]) ->JFLVehicle?{
-    return JFLTools.getModel(json, classType: JFLVehicle.self)
+    return JFLBDTools.getModel(json, classType: JFLVehicle.self)
   }
   
   /// 为了oc😓
   /// - Parameter json: <#json description#>
   @objc class func getModelArray(_ json:[[String:Any]]) ->[JFLVehicle]{
-    return JFLTools.getModelArray(json, classType: JFLVehicle.self)
+    return JFLBDTools.getModelArray(json, classType: JFLVehicle.self)
   }
 }

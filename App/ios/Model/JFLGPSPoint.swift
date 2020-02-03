@@ -41,12 +41,12 @@ class JFLGPSPoint: NSObject,Mappable {
   /// 为了oc😓
   /// - Parameter json: <#json description#>
   @objc class func getModel(_ json:[String:Any]) ->JFLGPSPoint?{
-    return JFLTools.getModel(json, classType: JFLGPSPoint.self)
+    return JFLBDTools.getModel(json, classType: JFLGPSPoint.self)
   }
   
   /// 为了oc😓
   /// - Parameter json: <#json description#>
   @objc class func getModelArray(_ json:[[String:Any]]) ->[JFLGPSPoint]{
-    return JFLTools.getModelArray(json, classType: JFLGPSPoint.self)
+    return JFLBDTools.getModelArray(json, classType: JFLGPSPoint.self)
   }
 }

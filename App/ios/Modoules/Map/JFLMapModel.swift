@@ -50,24 +50,12 @@ class JFLMapModel: NSObject,Mappable {
   /// 为了oc😓
   /// - Parameter json: <#json description#>
   @objc class func getModel(_ json:[String:Any]) ->JFLMapModel?{
-    return JFLTools.getModel(json, classType: JFLMapModel.self)
+    return JFLBDTools.getModel(json, classType: JFLMapModel.self)
   }
   
   /// 为了oc😓
   /// - Parameter json: <#json description#>
   @objc class func getModelArray(_ json:[[String:Any]]) ->[JFLMapModel]{
-    return JFLTools.getModelArray(json, classType: JFLMapModel.self)
+    return JFLBDTools.getModelArray(json, classType: JFLMapModel.self)
   }
 }
-
-//"userId": 792,
-//"latitude": 30.5628,
-//"longitude": 103.9844,
-//"address": "四川 成都市 双流县 川齿路(川西干燥技术有限公司 附近)",
-//"speed": 22.0,
-//"directionString": "正北",
-//"vehicleStatus": "ACC开",
-//"imagePath": null,
-//"datetime": "2017-12-29T04:48:30",
-//"mileage": 0.7001953,
-//"stop": 0.0

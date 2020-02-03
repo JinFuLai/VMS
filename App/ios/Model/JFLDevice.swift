@@ -59,12 +59,12 @@ class JFLDevice: NSObject,Mappable {
   /// 为了oc😓
   /// - Parameter json: <#json description#>
   @objc class func getModel(_ json:[String:Any]) ->JFLDevice?{
-    return JFLTools.getModel(json, classType: JFLDevice.self)
+    return JFLBDTools.getModel(json, classType: JFLDevice.self)
   }
   
   /// 为了oc😓
   /// - Parameter json: <#json description#>
   @objc class func getModelArray(_ json:[[String:Any]]) ->[JFLDevice]{
-    return JFLTools.getModelArray(json, classType: JFLDevice.self)
+    return JFLBDTools.getModelArray(json, classType: JFLDevice.self)
   }
 }

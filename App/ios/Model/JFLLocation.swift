@@ -35,12 +35,12 @@ class JFLLocation: NSObject,Mappable {
   /// 为了oc😓
   /// - Parameter json: <#json description#>
   @objc class func getModel(_ json:[String:Any]) ->JFLLocation?{
-    return JFLTools.getModel(json, classType: JFLLocation.self)
+    return JFLBDTools.getModel(json, classType: JFLLocation.self)
   }
   
   /// 为了oc😓
   /// - Parameter json: <#json description#>
   @objc class func getModelArray(_ json:[[String:Any]]) ->[JFLLocation]{
-    return JFLTools.getModelArray(json, classType: JFLLocation.self)
+    return JFLBDTools.getModelArray(json, classType: JFLLocation.self)
   }
 }

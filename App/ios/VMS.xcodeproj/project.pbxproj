@@ -35,7 +35,7 @@
 		9F47610223E432F200F9A006 /* JFLPinAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4760FA23E432F200F9A006 /* JFLPinAnnotationView.swift */; };
 		9F47610323E432F200F9A006 /* JFLMapViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F4760FB23E432F200F9A006 /* JFLMapViewManager.m */; };
 		9F47610423E432F200F9A006 /* JFLMapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4760FC23E432F200F9A006 /* JFLMapModel.swift */; };
-		9F47610523E432F200F9A006 /* JFLTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4760FD23E432F200F9A006 /* JFLTools.swift */; };
+		9F47610523E432F200F9A006 /* JFLBDTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4760FD23E432F200F9A006 /* JFLBDTools.swift */; };
 		9F47610623E432F200F9A006 /* JFLActionPaopaoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4760FE23E432F200F9A006 /* JFLActionPaopaoView.swift */; };
 		9F47610723E432F200F9A006 /* JFLPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4760FF23E432F200F9A006 /* JFLPointAnnotation.swift */; };
 		9F47610C23E4330B00F9A006 /* JFLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F47610823E4330B00F9A006 /* JFLLocation.swift */; };
@@ -45,6 +45,8 @@
 		9F47611123E4331C00F9A006 /* AlertButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F47611023E4331C00F9A006 /* AlertButton.swift */; };
 		9F47611423E4332F00F9A006 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F47611223E4332F00F9A006 /* UIColor+Extension.swift */; };
 		9F47611523E4332F00F9A006 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F47611323E4332F00F9A006 /* UIFont+Extension.swift */; };
+		9F88A10123E7AE50002065DC /* JFLGooleMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F88A10023E7AE50002065DC /* JFLGooleMapView.swift */; };
+		9F88A10423E7B906002065DC /* JFLGooleMapViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F88A10323E7B906002065DC /* JFLGooleMapViewManager.m */; };
 		9FDB701023E407A200C91A0E /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDB700F23E407A200C91A0E /* Common.swift */; };
 		9FDB702E23E41F3C00C91A0E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9FDB703023E41F3C00C91A0E /* Localizable.strings */; };
 		A61112AEAD90449193BF477E /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8FDE93786EE34070B1825032 /* Ionicons.ttf */; };
@@ -111,7 +113,7 @@
 		9F4760FA23E432F200F9A006 /* JFLPinAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JFLPinAnnotationView.swift; sourceTree = "<group>"; };
 		9F4760FB23E432F200F9A006 /* JFLMapViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JFLMapViewManager.m; sourceTree = "<group>"; };
 		9F4760FC23E432F200F9A006 /* JFLMapModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JFLMapModel.swift; sourceTree = "<group>"; };
-		9F4760FD23E432F200F9A006 /* JFLTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JFLTools.swift; sourceTree = "<group>"; };
+		9F4760FD23E432F200F9A006 /* JFLBDTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JFLBDTools.swift; sourceTree = "<group>"; };
 		9F4760FE23E432F200F9A006 /* JFLActionPaopaoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JFLActionPaopaoView.swift; sourceTree = "<group>"; };
 		9F4760FF23E432F200F9A006 /* JFLPointAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JFLPointAnnotation.swift; sourceTree = "<group>"; };
 		9F47610823E4330B00F9A006 /* JFLLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JFLLocation.swift; sourceTree = "<group>"; };
@@ -121,6 +123,8 @@
 		9F47611023E4331C00F9A006 /* AlertButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertButton.swift; sourceTree = "<group>"; };
 		9F47611223E4332F00F9A006 /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		9F47611323E4332F00F9A006 /* UIFont+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
+		9F88A10023E7AE50002065DC /* JFLGooleMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFLGooleMapView.swift; sourceTree = "<group>"; };
+		9F88A10323E7B906002065DC /* JFLGooleMapViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JFLGooleMapViewManager.m; sourceTree = "<group>"; };
 		9FDB700E23E407A200C91A0E /* VMS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VMS-Bridging-Header.h"; sourceTree = "<group>"; };
 		9FDB700F23E407A200C91A0E /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		9FDB702A23E41EE900C91A0E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -289,6 +293,29 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		9F88A0FE23E7ACD8002065DC /* GooleMap */ = {
+			isa = PBXGroup;
+			children = (
+				9F88A10023E7AE50002065DC /* JFLGooleMapView.swift */,
+				9F88A10323E7B906002065DC /* JFLGooleMapViewManager.m */,
+			);
+			path = GooleMap;
+			sourceTree = "<group>";
+		};
+		9F88A0FF23E7AD10002065DC /* BDMap */ = {
+			isa = PBXGroup;
+			children = (
+				9F4760FE23E432F200F9A006 /* JFLActionPaopaoView.swift */,
+				9F4760F823E432F200F9A006 /* JFLMapView.swift */,
+				9F4760F923E432F200F9A006 /* JFLPaopaoView.swift */,
+				9F4760FA23E432F200F9A006 /* JFLPinAnnotationView.swift */,
+				9F4760FB23E432F200F9A006 /* JFLMapViewManager.m */,
+				9F4760FF23E432F200F9A006 /* JFLPointAnnotation.swift */,
+				9F4760FD23E432F200F9A006 /* JFLBDTools.swift */,
+			);
+			path = BDMap;
+			sourceTree = "<group>";
+		};
 		9FDB700D23E4078800C91A0E /* Resource */ = {
 			isa = PBXGroup;
 			children = (
@@ -327,14 +354,9 @@
 		9FDB701C23E41E5600C91A0E /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				9F4760FE23E432F200F9A006 /* JFLActionPaopaoView.swift */,
+				9F88A0FF23E7AD10002065DC /* BDMap */,
+				9F88A0FE23E7ACD8002065DC /* GooleMap */,
 				9F4760FC23E432F200F9A006 /* JFLMapModel.swift */,
-				9F4760F823E432F200F9A006 /* JFLMapView.swift */,
-				9F4760FB23E432F200F9A006 /* JFLMapViewManager.m */,
-				9F4760F923E432F200F9A006 /* JFLPaopaoView.swift */,
-				9F4760FA23E432F200F9A006 /* JFLPinAnnotationView.swift */,
-				9F4760FF23E432F200F9A006 /* JFLPointAnnotation.swift */,
-				9F4760FD23E432F200F9A006 /* JFLTools.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -774,6 +796,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				9F88A10423E7B906002065DC /* JFLGooleMapViewManager.m in Sources */,
 				9F47610223E432F200F9A006 /* JFLPinAnnotationView.swift in Sources */,
 				9F47610C23E4330B00F9A006 /* JFLLocation.swift in Sources */,
 				9F47610E23E4330B00F9A006 /* JFLDevice.swift in Sources */,
@@ -782,12 +805,13 @@
 				9F47611523E4332F00F9A006 /* UIFont+Extension.swift in Sources */,
 				9F47610423E432F200F9A006 /* JFLMapModel.swift in Sources */,
 				9F47610323E432F200F9A006 /* JFLMapViewManager.m in Sources */,
-				9F47610523E432F200F9A006 /* JFLTools.swift in Sources */,
+				9F47610523E432F200F9A006 /* JFLBDTools.swift in Sources */,
 				9F47611123E4331C00F9A006 /* AlertButton.swift in Sources */,
 				9F47610723E432F200F9A006 /* JFLPointAnnotation.swift in Sources */,
 				9F47610F23E4330B00F9A006 /* JFLVehicle.swift in Sources */,
 				9F47610623E432F200F9A006 /* JFLActionPaopaoView.swift in Sources */,
 				9F47610023E432F200F9A006 /* JFLMapView.swift in Sources */,
+				9F88A10123E7AE50002065DC /* JFLGooleMapView.swift in Sources */,
 				9F47610D23E4330B00F9A006 /* JFLGPSPoint.swift in Sources */,
 				9F47610123E432F200F9A006 /* JFLPaopaoView.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
