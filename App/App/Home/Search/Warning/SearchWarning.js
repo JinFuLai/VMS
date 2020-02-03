@@ -65,11 +65,13 @@ export default class SearchWarning extends BaseComponent {
 
   _renderItem = info => {
     let data = info.item;
+    let vehicle = data.vehicle ? data.vehicle : {};
+    let device = data.device ? data.device : {};
     return (
       <SearchWarningItem
         data={data}
-        carNum={data.carNum}
-        IMEI={data.IMEI}
+        carNum={vehicle.plate}
+        IMEI={device.imei}
         onPressItem={data => this._goToView('SearchWarningDetails', data)}
         onPressDeleteItem={() => this.AlertView.showAlert()}
       />

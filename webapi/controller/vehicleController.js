@@ -46,7 +46,19 @@ module.exports = function (app) {
     app.post('/vehicle/history', function (req, res) {
         var { deviceID, start ,end } = req.query;
         // location.find({'device.imei': imei})
-        location.find({'device': deviceID})
+        var startDate = null,endDate = null;
+        if (start == null) {
+            // var now = new Date();
+            // startDate = new Date(`${now.getFullYear()}-${now.getMonth()}-${now.getDate()+1}`); //设置默认时间
+            startDate = new Date('2000-1-1'); //设置默认时间
+        }else{
+            startDate = new Date(start);
+        }
+        if (end) {
+            endDate = new Date(end);
+        }
+        var options = endDate != null ? {$gte: startDate, $lt: endDate} : {$gte: startDate};
+        location.find({device: deviceID, 'gps_point.datetime':options})
             .populate('device')
             .populate('vehicle')
             // .populate('driver')//有问题😓
@@ -82,9 +94,67 @@ module.exports = function (app) {
      *          description: Successfully   
      */
     app.post('/vehicle/alarmMessage', function (req, res) {
-        console.log('adsfs');
-        //TO DO暂未处理
-        res.json(reponseHelper.Success([]));
+        var { id, start ,end } = req.query;
+        if (!id) {
+            res.json(reponseHelper.ParameterError());
+            return;
+        }
+        var startDate = null,endDate = null;
+        if (start == null) {
+            // var now = new Date();
+            // startDate = new Date(`${now.getFullYear()}-${now.getMonth()}-${now.getDate()+1}`); //设置默认时间
+            startDate = new Date('2000-1-1'); //设置默认时间
+        }else{
+            startDate = new Date(start);
+        }
+        if (end) {
+            endDate = new Date(end);
+        }
+        var options = endDate != null ? {$gte: startDate, $lt: endDate} : {$gte: startDate};
+        location.find({vehicle: id, 'gps_point.datetime':options})
+            .populate('device')
+            .populate('vehicle') 
+            // .populate('driver')//有问题😓
+            .populate('group')
+            .exec((err, docs) => {
+                console.log(err);
+                console.log(docs);
+                if (err) {
+                    res.json(reponseHelper.Error('failed.Please try again later!'));
+                    return;
+                }
+                if (docs) {
+                    var result = docs.filter((item) => {
+                        return item.gps_point;// && item.gps_point.alert && item.gps_point.alert.length > 0;
+                      })
+                    res.json(reponseHelper.Success(result));
+                    return;
+                }
+                res.json(reponseHelper.Success([]));
+            });
+
+        // vehicle.findById(id)
+        //     .populate("account", "name")
+        //     .populate("vehicle_type", "name")
+        //     .populate("vehicle_brand", "name")
+        //     .populate("vehicle_color", "name")
+        //     .populate("group", "name")
+        //     .populate('device')
+        //     .exec((err, vehicleAll) => {
+        //         if (err) {
+        //             res.json(reponseHelper.Error('failed.Please try again later!'));
+        //             return;
+        //         }
+        //         if (vehicleAll) {
+        //             var result = vehicleAll[0];
+        //             if (result && result.device && result.device.last_gps_point && result.device.last_gps_point.alert) {
+        //                 var alert = result.device.last_gps_point.alert;
+        //                 res.json(reponseHelper.Success(alert));
+        //                 return;
+        //             }
+        //         }
+        //         res.json(reponseHelper.Success([]));
+        //     });
     });
 
     /**

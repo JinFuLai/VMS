@@ -107,6 +107,8 @@ export class SearchWarningItem extends PureComponent {
 
   render() {
     var data = this.props.data ?? {};
+    let vehicle = data.vehicle ? data.vehicle : {};
+    let device = data.device ? data.device : {};
     return (
       <SwipeRow rightOpenValue={-75} stopLeftSwipe={0.5} stopRightSwipe={-100}>
         <View style={SearchComponentStyle.waringHiddenStyle}>
@@ -139,15 +141,19 @@ export class SearchWarningItem extends PureComponent {
             <Col>
               <Row style={{justifyContent: 'space-between'}}>
                 <Text style={SearchComponentStyle.warningTextStyle}>
-                  {data.address}
+                  {vehicle.plate}
                 </Text>
                 <Text style={SearchComponentStyle.warningTextStyle}>
-                  {data.userId}
+                  {`IMEI:${device.imei}`}
                 </Text>
               </Row>
               <Row style={{justifyContent: 'space-between'}}>
                 <Text style={SearchComponentStyle.warningTextStyle}>
-                  {data.datetime}
+                  {data.gps_point
+                    ? data.gps_point.datetime
+                      ? data.gps_point.datetime
+                      : null
+                    : null}
                 </Text>
                 <Text
                   style={{
@@ -156,7 +162,11 @@ export class SearchWarningItem extends PureComponent {
                     paddingVertical: 4,
                     alignSelf: 'flex-end',
                   }}>
-                  超速报警
+                  {data.gps_point
+                    ? data.gps_point.alert
+                      ? data.gps_point.alert.join(',')
+                      : null
+                    : null}
                 </Text>
               </Row>
             </Col>
