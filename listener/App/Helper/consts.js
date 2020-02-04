@@ -45,3 +45,13 @@ exports.REPAIR_STATUS = {
     PROCESSING: "PROCESSING",
     END: "END"
 }
+
+//判断是否保存数据的距离
+exports.LIMIT_CONDITIONS = {
+    /**小于该距离的点不保存 */
+    DISTANCE_SMALLEST: 10000,
+    /**小于该距离，大于DISTANCE_SMALLEST的点，不插入到location中，但device.last_gps_point要跟新. */
+    DISTANCE_MIDDLE: 100000,
+    /**(分钟)只有时间间隔小于该值的点才保存 */
+    MAX_TIME: 15
+}

@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const device = require('../Model/device');
 const location = require('../Model/location');
 const vehicle = require('../Model/vehicle');
+const consts = require('../Helper/consts');
+const Helper = require('../Helper/Helper');
 
 /**通用回复 */
 class MsgGeneral {
@@ -45,7 +47,7 @@ class NetWorkHelper {
      * @param {device} info 更新的信息 device
      * @param {MsgGeneral} callback 回调 
      */
-    static updatDeviceInfo(imei,info,callback){
+    static async updatDeviceInfo(imei,info,callback){
         device.find({imei: imei},(err,docs) => {
             if (err) {
                 console.log(err);
@@ -53,36 +55,63 @@ class NetWorkHelper {
                 return;
             };
             if (docs && docs.length === 1) {//存在设备才更新
-                // for (let index = 0; index < docs.length; index++) {
-                    const element = docs[0];
-                    if (element.last_gps_point 
-                        && element.last_gps_point.datetime 
-                        && info.last_gps_point 
-                        && info.last_gps_point.datetime 
-                        && element.last_gps_point.datetime < Date(Date.parse(info.last_gps_point.datetime))){//将最新的数据更新上去
-                            element.updateOne(info,(err,doc) => {
-                                if (err) {//更新失败
-                                    console.log('更新失败' + err);
-                                    callback(MsgGeneral.res_1);
-                                }else if (doc) {//更新成功
-                                    console.log('更新成功'+doc);
-                                    callback(MsgGeneral.res_0);
-                                    NetWorkHelper.updatDeviceHistory(imei,[info],function(err){});//更新历史轨迹
-                                }
-                            });
-                    // }
-                };
-            }else{//不存在则创建设备
-                var newDevice = new device(info);
-                newDevice.save()
-                    .then(item => {//添加成功
-                        console.log('添加成功');
-                        callback(MsgGeneral.res_0);
-                    })
-                    .catch(err => {//添加成功
-                        console.log('添加失败' + err);
-                        callback(MsgGeneral.res_1);
+                /**
+                 * 更新数据的方法
+                 * @param {*} ele 更新的对象
+                 * @param {*} deviceInfo 更新的信息
+                 * @param {*} update_Location 是否更新Location表中
+                 */
+                function update(ele,deviceInfo,update_Location=true) {
+                    ele.updateOne(deviceInfo,(err,doc) => {
+                        if (err) {//更新失败
+                            console.log('更新失败' + err);
+                            callback(MsgGeneral.res_1);
+                        }else if (doc) {//更新成功
+                            console.log('更新成功'+doc);
+                            callback(MsgGeneral.res_0);
+                            if (update_Location) {
+                                NetWorkHelper.updatDeviceHistory(imei,[info],function(err){});//更新历史轨迹
+                            }
+                        }
                     });
+                }
+                const element = docs[0];
+                const ele_lastP = element.last_gps_point;
+                const info_lastP = element.last_gps_point;
+                if (ele_lastP) {
+                    const ele_lastP_time = info_lastP.datetime;
+                    const info_lastP_time = info_lastP ? info_lastP.datetime : null;
+                    if (ele_lastP_time && info_lastP_time && Helper.withinTheSpecifiedTime(ele_lastP_time,info_lastP_time)) {//时间筛选
+
+                        const distance = Helper.getDistance(ele_lastP.longitude,ele_lastP.latitude,info_lastP.longitude,info_lastP.latitude);
+                        if (distance < consts.LIMIT_CONDITIONS.DISTANCE_SMALLEST) {
+                            //距离了过小不存储
+                        } else if (distance >= consts.LIMIT_CONDITIONS.DISTANCE_SMALLEST && distance < consts.LIMIT_CONDITIONS.DISTANCE_MIDDLE) {
+                            //只更新device表
+                            update(element,info,false);
+                            return;
+                        } else {
+                            update(element,info);
+                            return;
+                        }
+                    } 
+                }else{
+                    update(element,info);
+                    return;
+                }
+            }else{//不存在则创建设备
+                callback(MsgGeneral.res_0);//不操作，直接返回正确
+                return;
+                // var newDevice = new device(info);
+                // newDevice.save()
+                //     .then(item => {//添加成功
+                //         console.log('添加成功');
+                //         callback(MsgGeneral.res_0);
+                //     })
+                //     .catch(err => {//添加成功
+                //         console.log('添加失败' + err);
+                //         callback(MsgGeneral.res_1);
+                //     });
             }
         });
     }
@@ -104,26 +133,25 @@ class NetWorkHelper {
         var deviceRes = await device.find({imei: imei});//查找出设备
         var resultDev = null;
         if (deviceRes.length <= 0) {//不存在设备时
-            // callback(MsgGeneral.res_1);//直接返回错误
-            // return;
-            //创建设备
-            var newDevice = new device({imei: imei});
-            let result = await newDevice.save();
-            if (result.length <= 0) {
-                //创建失败
-                callback(MsgGeneral.res_1);
-                return;
-            }else{
-                resultDev = result;
-            }
+            callback(MsgGeneral.res_0);///不操作，直接返回正确
+            return;
+            // //创建设备
+            // var newDevice = new device({imei: imei});
+            // let result = await newDevice.save();
+            // if (result.length <= 0) {
+            //     //创建失败
+            //     callback(MsgGeneral.res_1);
+            //     return;
+            // }else{
+            //     resultDev = result;
+            // }
         }else{
             resultDev = deviceRes[0];
         }
-
         var vehicles = await vehicle.find({device:resultDev.id});//查找出车辆
         var resultV = null;
         if (vehicles.length <= 0) {//不存在车辆时
-            callback(MsgGeneral.res_1);//直接返回错误
+            callback(MsgGeneral.res_1);//不操作，直接返回正确
             return;
         }else{
             resultV = vehicles[0];
@@ -137,7 +165,7 @@ class NetWorkHelper {
             info.push({
                 gps_point: element.last_gps_point,
                 device: resultDev,
-                vehicle: resultV,
+                vehicle: resultV
             });
         }
         //批量导入

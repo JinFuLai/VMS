@@ -1,3 +1,5 @@
+const consts = require('./consts');
+
 class Helper {
 
     /**
@@ -69,6 +71,54 @@ class Helper {
             return (str.charAt(index) === targe) 
         }else {
             return ('str'.substring(index,index + targe.length) === targe)
+        }
+    }
+
+    /**
+     * 判断两个时间点的间隙，是否小于规定时间
+     * @param {*} fistTime 第一个时间点
+     * @param {*} secondTime 第二个时间点
+     */
+    static withinTheSpecifiedTime(fistTime,secondTime) {
+        if (fistTime && secondTime) {
+            const result = Date(fistTime) - Date(secondTime);
+            const limit = consts.LIMIT_CONDITIONS.MAX_TIME * 60 * 1000
+            if ( result <= limit || result >= -limit) {
+                return true;
+            } else {
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * 计算经纬度见的距离
+     * @param {*} lng1 
+     * @param {*} lat1 
+     * @param {*} lng2 
+     * @param {*} lat2 
+     */
+    static getDistance(lng1, lat1, lng2, lat2) {
+        if (lng1 && lat1 && lng2 && lat2) {
+            var EARTH_RADIUS = 6378.137; //地球半径  
+            //将用角度表示的角转换为近似相等的用弧度表示的角 java Math.toRadians  
+            function rad(d) {
+                return d * Math.PI / 180.0;
+            }
+            var radLat1 = rad(lat1);
+            var radLat2 = rad(lat2);
+            var a = radLat1 - radLat2;
+            var b = rad(lng1) - rad(lng2);
+            var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+                + Math.cos(radLat1) * Math.cos(radLat2)
+                * Math.pow(Math.sin(b / 2), 2)));
+            s = s * EARTH_RADIUS;
+            s = Math.round(s * 10000) / 10000;
+            return s;   
+        } else {
+            return 0;
         }
     }
 }
