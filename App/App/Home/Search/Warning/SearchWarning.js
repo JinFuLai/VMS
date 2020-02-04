@@ -42,6 +42,7 @@ export default class SearchWarning extends BaseComponent {
         <SwipeListView
           refreshing
           refreshControl={<RefreshControl />}
+          showsVerticalScrollIndicator={false}
           data={data}
           renderItem={this._renderItem}
           keyExtractor={() => Math.random().toString()} //还需要处理
@@ -72,7 +73,7 @@ export default class SearchWarning extends BaseComponent {
         data={data}
         carNum={vehicle.plate}
         IMEI={device.imei}
-        onPressItem={data => this._goToView('SearchWarningDetails', data)}
+        onPressItem={info => this._goToView('SearchWarningDetails', data)}
         onPressDeleteItem={() => this.AlertView.showAlert()}
       />
     );

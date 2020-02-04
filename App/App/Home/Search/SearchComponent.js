@@ -110,7 +110,12 @@ export class SearchWarningItem extends PureComponent {
     let vehicle = data.vehicle ? data.vehicle : {};
     let device = data.device ? data.device : {};
     return (
-      <SwipeRow rightOpenValue={-75} stopLeftSwipe={0.5} stopRightSwipe={-100}>
+      <SwipeRow
+        rightOpenValue={-75}
+        stopRightSwipe={-100}
+        stopLeftSwipe={0.1}
+        disableLeftSwipe={true} //{!(this.props.editing ?? false)}
+        closeOnRowPress>
         <View style={SearchComponentStyle.waringHiddenStyle}>
           <Button
             style={{paddingVertical: 14.5, height: '100%', backgroundColor: ''}}
@@ -123,7 +128,7 @@ export class SearchWarningItem extends PureComponent {
           onPress={() => this.props.onPressItem(data)}
           activeOpacity={1}>
           <Grid style={{height: '100%'}}>
-            <Col style={{width: 45}}>
+            {/* <Col style={{width: 45}}>
               <Button transparent onPress={this._selectCell}>
                 <Row style={{justifyContent: 'center'}}>
                   <Thumbnail
@@ -137,7 +142,7 @@ export class SearchWarningItem extends PureComponent {
                   />
                 </Row>
               </Button>
-            </Col>
+            </Col> */}
             <Col>
               <Row style={{justifyContent: 'space-between'}}>
                 <Text style={SearchComponentStyle.warningTextStyle}>
@@ -194,7 +199,7 @@ export class WarningBottom extends PureComponent {
     super(props);
   }
   static propTypes = {
-    data: PropTypes.any, //数据
+    data: PropTypes.any, //数据(location)
     carNum: PropTypes.any, //车牌号
     IMEI: PropTypes.any, //国际移动设备识别码
     driving: PropTypes.bool, //是否正在驾驶
@@ -203,6 +208,8 @@ export class WarningBottom extends PureComponent {
 
   render() {
     var data = this.props.data ?? {};
+    let vehicle = data.vehicle ? data.vehicle : {};
+    let device = data.device ? data.device : {};
     return (
       <View
         style={[
@@ -212,10 +219,10 @@ export class WarningBottom extends PureComponent {
         <Grid>
           <Row style={{height: 17, justifyContent: 'space-between'}}>
             <Text style={SearchComponentStyle.warningBottomTextStyle}>
-              {data.address}
+              {vehicle.plate}
             </Text>
             <Text style={[SearchComponentStyle.warningBottomTextStyle, {}]}>
-              {data.userId}
+              {`IMEI:${device.imei}`}
             </Text>
           </Row>
           <Row style={{height: 17, marginBottom: 10, marginTop: 5}}>
@@ -224,22 +231,35 @@ export class WarningBottom extends PureComponent {
                 SearchComponentStyle.warningBottomTextStyle,
                 {color: Color.jfl_DB4141},
               ]}>
-              超速报警
+              {device.last_gps_point
+                ? device.last_gps_point.alert
+                  ? device.last_gps_point.alert.join('  ')
+                  : null
+                : null}
             </Text>
           </Row>
           <Col>
             <Text style={SearchComponentStyle.warningBottomTextStyle}>
-              {data.datetime} 卫星定位
+              {device.last_gps_point ? device.last_gps_point.datetime : null}
+              卫星定位
             </Text>
             <Text style={SearchComponentStyle.warningBottomTextStyle}>
-              {I18n.t('location_longitude') + ' ' + data.longitude}
+              {I18n.t('location_longitude') +
+                ' ' +
+                (device.last_gps_point
+                  ? device.last_gps_point.longitude
+                  : null)}
             </Text>
             <Text style={SearchComponentStyle.warningBottomTextStyle}>
-              {I18n.t('location_latitude') + ' ' + data.latitude}
+              {I18n.t('location_latitude') +
+                ' ' +
+                (device.last_gps_point ? device.last_gps_point.latitude : null)}
             </Text>
             <Row style={{height: 17}}>
               <Text style={SearchComponentStyle.warningBottomTextStyle}>
-                {I18n.t('location_speed')}
+                {I18n.t('location_speed') +
+                  ' ' +
+                  (device.last_gps_point ? device.last_gps_point.speed : null)}
               </Text>
               <Text
                 style={[
