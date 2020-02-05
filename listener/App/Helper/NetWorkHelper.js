@@ -8,15 +8,15 @@ const Helper = require('../Helper/Helper');
 /**通用回复 */
 class MsgGeneral {
     /**成功/确认 */
-    static res_0 = '0'
+    static res_0() {return '0'}
     /**失败 */
-    static res_1 = '1'
+    static res_1() {return '1'}
     /**消息有误 */
-    static res_2 = '2'
+    static res_2() {return '2'}
     /**不支持 */
-    static res_3 = '3'
+    static res_3() {return '3'}
     /**报警处理确认 */
-    static res_4 = '4'
+    static res_4() {return '4'}
 }
 
 class NetWorkHelper {
@@ -51,7 +51,7 @@ class NetWorkHelper {
         device.find({imei: imei},(err,docs) => {
             if (err) {
                 console.log(err);
-                callback(MsgGeneral.res_1);
+                callback(MsgGeneral.res_1());
                 return;
             };
             if (docs && docs.length === 1) {//存在设备才更新
@@ -65,10 +65,10 @@ class NetWorkHelper {
                     ele.updateOne(deviceInfo,(err,doc) => {
                         if (err) {//更新失败
                             console.log('更新失败' + err);
-                            callback(MsgGeneral.res_1);
+                            callback(MsgGeneral.res_1());
                         }else if (doc) {//更新成功
                             console.log('更新成功'+doc);
-                            callback(MsgGeneral.res_0);
+                            callback(MsgGeneral.res_0());
                             if (update_Location) {
                                 NetWorkHelper.updatDeviceHistory(imei,[info],function(err){});//更新历史轨迹
                             }
@@ -100,7 +100,7 @@ class NetWorkHelper {
                     return;
                 }
             }else{//不存在则创建设备
-                callback(MsgGeneral.res_0);//不操作，直接返回正确
+                callback(MsgGeneral.res_0());//不操作，直接返回正确
                 return;
                 // var newDevice = new device(info);
                 // newDevice.save()
@@ -110,7 +110,7 @@ class NetWorkHelper {
                 //     })
                 //     .catch(err => {//添加成功
                 //         console.log('添加失败' + err);
-                //         callback(MsgGeneral.res_1);
+                //         callback(MsgGeneral.res_1());
                 //     });
             }
         });
@@ -133,7 +133,7 @@ class NetWorkHelper {
         var deviceRes = await device.find({imei: imei});//查找出设备
         var resultDev = null;
         if (deviceRes.length <= 0) {//不存在设备时
-            callback(MsgGeneral.res_0);///不操作，直接返回正确
+            callback(MsgGeneral.res_0());///不操作，直接返回正确
             return;
             // //创建设备
             // var newDevice = new device({imei: imei});
@@ -151,7 +151,7 @@ class NetWorkHelper {
         var vehicles = await vehicle.find({device:resultDev.id});//查找出车辆
         var resultV = null;
         if (vehicles.length <= 0) {//不存在车辆时
-            callback(MsgGeneral.res_1);//不操作，直接返回正确
+            callback(MsgGeneral.res_1());//不操作，直接返回正确
             return;
         }else{
             resultV = vehicles[0];
@@ -172,10 +172,10 @@ class NetWorkHelper {
         location.insertMany(info,(err,doc) => {
             if (err) {
                 console.log('添加失败' + err);
-                callback(MsgGeneral.res_1);
+                callback(MsgGeneral.res_1());
             }else{
                 console.log(doc);
-                callback(MsgGeneral.res_1);
+                callback(MsgGeneral.res_1());
             }
         });
     }

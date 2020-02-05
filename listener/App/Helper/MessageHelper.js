@@ -4,7 +4,7 @@ const iconvLite = require('iconv-lite');
 /**消息解析相关 */
 class MessageHelper {
 
-    #siyou = '私有属性';
+    // #siyou = '私有属性';
     
     constructor(message) {
         if (new.target !== undefined) {
