@@ -97,7 +97,7 @@ class BBPlugin {
 
     createNewListener() {
         var that=this;
-        var listener = new BBSocket(8090);
+        var listener = new BBSocket(5818);
         let reciveDataFunc = function (socket,message) {
             that.OnRecievedData(listener,socket,message);
         }

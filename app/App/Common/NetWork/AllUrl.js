@@ -4,7 +4,7 @@ import {Component} from 'react';
 /*基本接口*/
 // export const baseUrl = 'http://jinfulaikeji.com:2000/api';
 // export const baseUrl = 'http://192.168.0.194:2000/api';
-export const baseUrl = 'http://192.168.0.100:2000/api';
+export const baseUrl = 'http://192.168.0.103:2000/api';
 
 export default class AllUrl extends Component {
   /**用户相关接口地址 */

@@ -8,9 +8,9 @@ class BBSocket {
      * 新建Socket
      * @param {*} port 监听的端口
      */
-    constructor(port = 8090){
+    constructor(port = 5818){
         this.server = new Net.Server();
-        this.port = port != null ? port : 8090;
+        this.port = port != null ? port : 5818;
         this.recieveData = null;
         this.clientArr = new HashTable();//所有连接的客服端[socket]
     }

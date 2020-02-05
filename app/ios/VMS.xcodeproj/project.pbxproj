@@ -45,8 +45,10 @@
 		9F47611123E4331C00F9A006 /* AlertButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F47611023E4331C00F9A006 /* AlertButton.swift */; };
 		9F47611423E4332F00F9A006 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F47611223E4332F00F9A006 /* UIColor+Extension.swift */; };
 		9F47611523E4332F00F9A006 /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F47611323E4332F00F9A006 /* UIFont+Extension.swift */; };
-		9F88A10123E7AE50002065DC /* JFLGooleMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F88A10023E7AE50002065DC /* JFLGooleMapView.swift */; };
-		9F88A10423E7B906002065DC /* JFLGooleMapViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F88A10323E7B906002065DC /* JFLGooleMapViewManager.m */; };
+		9F86403A23EA62AA00E27373 /* JFLGoogleTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F86403923EA62AA00E27373 /* JFLGoogleTools.swift */; };
+		9F86403C23EA6B3D00E27373 /* JFLGoogleMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F86403B23EA6B3D00E27373 /* JFLGoogleMarker.swift */; };
+		9F88A10123E7AE50002065DC /* JFLGoogleMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F88A10023E7AE50002065DC /* JFLGoogleMapView.swift */; };
+		9F88A10423E7B906002065DC /* JFLGoogleMapViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F88A10323E7B906002065DC /* JFLGoogleMapViewManager.m */; };
 		9FDB701023E407A200C91A0E /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDB700F23E407A200C91A0E /* Common.swift */; };
 		9FDB702E23E41F3C00C91A0E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9FDB703023E41F3C00C91A0E /* Localizable.strings */; };
 		A61112AEAD90449193BF477E /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8FDE93786EE34070B1825032 /* Ionicons.ttf */; };
@@ -123,8 +125,10 @@
 		9F47611023E4331C00F9A006 /* AlertButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertButton.swift; sourceTree = "<group>"; };
 		9F47611223E4332F00F9A006 /* UIColor+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		9F47611323E4332F00F9A006 /* UIFont+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
-		9F88A10023E7AE50002065DC /* JFLGooleMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFLGooleMapView.swift; sourceTree = "<group>"; };
-		9F88A10323E7B906002065DC /* JFLGooleMapViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JFLGooleMapViewManager.m; sourceTree = "<group>"; };
+		9F86403923EA62AA00E27373 /* JFLGoogleTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFLGoogleTools.swift; sourceTree = "<group>"; };
+		9F86403B23EA6B3D00E27373 /* JFLGoogleMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFLGoogleMarker.swift; sourceTree = "<group>"; };
+		9F88A10023E7AE50002065DC /* JFLGoogleMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JFLGoogleMapView.swift; sourceTree = "<group>"; };
+		9F88A10323E7B906002065DC /* JFLGoogleMapViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JFLGoogleMapViewManager.m; sourceTree = "<group>"; };
 		9FDB700E23E407A200C91A0E /* VMS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VMS-Bridging-Header.h"; sourceTree = "<group>"; };
 		9FDB700F23E407A200C91A0E /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		9FDB702A23E41EE900C91A0E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -296,8 +300,10 @@
 		9F88A0FE23E7ACD8002065DC /* GooleMap */ = {
 			isa = PBXGroup;
 			children = (
-				9F88A10023E7AE50002065DC /* JFLGooleMapView.swift */,
-				9F88A10323E7B906002065DC /* JFLGooleMapViewManager.m */,
+				9F88A10023E7AE50002065DC /* JFLGoogleMapView.swift */,
+				9F86403B23EA6B3D00E27373 /* JFLGoogleMarker.swift */,
+				9F86403923EA62AA00E27373 /* JFLGoogleTools.swift */,
+				9F88A10323E7B906002065DC /* JFLGoogleMapViewManager.m */,
 			);
 			path = GooleMap;
 			sourceTree = "<group>";
@@ -796,7 +802,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				9F88A10423E7B906002065DC /* JFLGooleMapViewManager.m in Sources */,
+				9F88A10423E7B906002065DC /* JFLGoogleMapViewManager.m in Sources */,
 				9F47610223E432F200F9A006 /* JFLPinAnnotationView.swift in Sources */,
 				9F47610C23E4330B00F9A006 /* JFLLocation.swift in Sources */,
 				9F47610E23E4330B00F9A006 /* JFLDevice.swift in Sources */,
@@ -806,12 +812,14 @@
 				9F47610423E432F200F9A006 /* JFLMapModel.swift in Sources */,
 				9F47610323E432F200F9A006 /* JFLMapViewManager.m in Sources */,
 				9F47610523E432F200F9A006 /* JFLBDTools.swift in Sources */,
+				9F86403C23EA6B3D00E27373 /* JFLGoogleMarker.swift in Sources */,
 				9F47611123E4331C00F9A006 /* AlertButton.swift in Sources */,
 				9F47610723E432F200F9A006 /* JFLPointAnnotation.swift in Sources */,
 				9F47610F23E4330B00F9A006 /* JFLVehicle.swift in Sources */,
 				9F47610623E432F200F9A006 /* JFLActionPaopaoView.swift in Sources */,
+				9F86403A23EA62AA00E27373 /* JFLGoogleTools.swift in Sources */,
 				9F47610023E432F200F9A006 /* JFLMapView.swift in Sources */,
-				9F88A10123E7AE50002065DC /* JFLGooleMapView.swift in Sources */,
+				9F88A10123E7AE50002065DC /* JFLGoogleMapView.swift in Sources */,
 				9F47610D23E4330B00F9A006 /* JFLGPSPoint.swift in Sources */,
 				9F47610123E432F200F9A006 /* JFLPaopaoView.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,

@@ -43,6 +43,7 @@ class Home extends BaseComponent {
           alertVTopMargin={100}
           showsUserLocation={true}
           showLocationBtn={true}
+          showCompassBtn={true}
           style={{flex: 1}}
           onClickBottomBtnBlock={event => {
             let dic = event.nativeEvent;

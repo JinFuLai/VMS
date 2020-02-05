@@ -11,9 +11,14 @@ import {
 } from 'react-native';
 import {I18n} from './Language/I18n';
 
+/**是否是谷歌地图 */
+const isGoogleMap = true;
+
 class JFLMap extends React.PureComponent {
   static propTypes = {
     ...ViewPropTypes,
+    /**是否是谷歌地图 */
+    isGoogleMap: PropTypes.bool,
     /**地图类型 */
     mapType: PropTypes.number,
     /**语言(0-英语，1-中文) */
@@ -39,7 +44,13 @@ class JFLMap extends React.PureComponent {
   }
 
   render() {
-    return <JFLMapView ref={this.JFLMapView} {...this.props} />;
+    if (isGoogleMap) {
+      this.NativeName = 'JFLGoogleMapView';
+      return <JFLGoogleMapView ref={this.MapView} {...this.props} />;
+    } else {
+      this.NativeName = 'JFLMapView';
+      return <JFLMapView ref={this.MapView} {...this.props} />;
+    }
   }
 
   /**刷新语言显示 */
@@ -89,16 +100,19 @@ class JFLMap extends React.PureComponent {
     if (Platform.OS == 'ios') {
       UIManager.dispatchViewManagerCommand(
         findNodeHandle(this),
-        UIManager.getViewManagerConfig(NativeName).Commands[command],
+        UIManager.getViewManagerConfig(this.NativeName).Commands[command],
         params ? [params] : null,
       );
     }
   };
 }
 
-const NativeName = true ? 'JFLMapView' : 'JFLGooleMapView';
-
 const JFLMapView =
-  Platform.OS == 'ios' ? requireNativeComponent(NativeName, JFLMap) : View;
+  Platform.OS == 'ios' ? requireNativeComponent('JFLMapView', JFLMap) : View;
+
+const JFLGoogleMapView =
+  Platform.OS == 'ios'
+    ? requireNativeComponent('JFLGoogleMapView', JFLMap)
+    : View;
 
 export default JFLMap;

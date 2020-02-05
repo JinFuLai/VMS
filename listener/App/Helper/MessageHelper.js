@@ -202,7 +202,7 @@ class MessageHelper {
                 case 0:
                     return '紧急报警，触动报警开关后触发';
                 case 1:
-                    return '超速报警';
+                    return '设备超速报警';
                 case 2:
                     return '疲劳驾驶';
                 case 3:

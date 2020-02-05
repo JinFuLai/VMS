@@ -69,8 +69,8 @@
 //  [BMKMapManager setCoordinateTypeUsedInBaiduMapSDK: BMK_COORDTYPE_COMMON];
   //定位
   [[BMKLocationAuth sharedInstance] checkPermisionWithKey:@"FKNzI3CxD0GQwYagDOSfnHUGUfZgcNia" authDelegate:self];
-  
-  [GMSServices provideAPIKey:@"YOUR_API_KEY"];
+  //谷歌地图
+  [GMSServices provideAPIKey:@"AIzaSyBT6v9p64rmCpRmZou0Hd6s5x9bD2y1-t0"];
   return YES;
 }
 
