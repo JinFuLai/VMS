@@ -98,11 +98,11 @@ class BBSocket {
 
 
     /**clientArr添加元素 */
-    _clientArrAdd = socket => {
+    _clientArrAdd (socket){
         this.clientArr.Add(socket._getpeername().address+socket._getpeername().port.toString()+socket._getpeername().family,socket);
     }
     /**clientArr移除元素 */
-    _clientArrRemove = socket => {
+    _clientArrRemove (socket) {
         this.clientArr.remove(socket._getpeername().address+socket._getpeername().port.toString()+socket._getpeername().family);
     }
 }
