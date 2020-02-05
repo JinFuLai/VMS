@@ -3,7 +3,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {PureComponent} from 'react';
 import {Image, DeviceEventEmitter, View} from 'react-native';
-import {Color, I18n, storage} from './Common/index';
+import {Color, I18n, storage, Loading, HttpUtils} from './Common/index';
 import {
   createAppContainer,
   NavigationActions,
@@ -20,6 +20,13 @@ import GuideScreen from './Guide/Guide';
 import Register from './Login/register';
 
 export default class RootScreen extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      refresh: false,
+    };
+  }
+
   _goToView(name) {
     // call navigate for AppNavigator here:
     // this.navigator &&
@@ -36,8 +43,9 @@ export default class RootScreen extends PureComponent {
       <AppContainer
         ref={nav => {
           this.navigator = nav;
-        }}
-      />
+        }}>
+        {this.state.refresh ? <Loading /> : null}
+      </AppContainer>
     );
   }
 
@@ -127,10 +135,27 @@ export default class RootScreen extends PureComponent {
     });
     this._getLauguage();
     this._setAppShowState();
+    this.getMapType();
   }
 
   componentWillUnmount() {
     this._navListener.remove();
+  }
+
+  /**获取app使用的地图类型 0-百度，1-谷歌 */
+  getMapType() {
+    this.setState({refresh: true});
+    var _this = this;
+    HttpUtils.getRequest(HttpUtils.AllUrl.System.MapType, false).then(
+      response => {
+        _this.setState({refresh: false});
+        if (response.code === 200) {
+          if (response.data) {
+            DeviceEventEmitter.emit('MapType', response.data);
+          }
+        }
+      },
+    );
   }
 }
 

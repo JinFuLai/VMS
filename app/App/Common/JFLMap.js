@@ -8,17 +8,23 @@ import {
   UIManager,
   Platform,
   View,
+  DeviceEventEmitter,
 } from 'react-native';
 import {I18n} from './Language/I18n';
 
 /**是否是谷歌地图 */
-const isGoogleMap = true;
+// const isGoogleMap = false;
 
 class JFLMap extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {...this.state};
+    /**是否是谷歌地图 */
+    this.isGoogleMap = false;
+  }
+
   static propTypes = {
     ...ViewPropTypes,
-    /**是否是谷歌地图 */
-    isGoogleMap: PropTypes.bool,
     /**地图类型 */
     mapType: PropTypes.number,
     /**语言(0-英语，1-中文) */
@@ -41,10 +47,25 @@ class JFLMap extends React.PureComponent {
 
   componentDidMount() {
     this.refreshLanguage();
+    this._navListener = DeviceEventEmitter.addListener('MapType', type => {
+      if (type == 0) {
+        //百度
+        this.isGoogleMap = false;
+        this.forceUpdate();
+      } else if (type == 1) {
+        //谷歌
+        this.isGoogleMap = true;
+        this.forceUpdate();
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this._navListener.remove();
   }
 
   render() {
-    if (isGoogleMap) {
+    if (this.isGoogleMap) {
       this.NativeName = 'JFLGoogleMapView';
       return <JFLGoogleMapView ref={this.MapView} {...this.props} />;
     } else {

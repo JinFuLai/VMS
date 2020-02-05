@@ -7,6 +7,12 @@ import {Component} from 'react';
 export const baseUrl = 'http://192.168.0.103:2000/api';
 
 export default class AllUrl extends Component {
+
+  /**系统相关 */
+  static System = {
+    MapType: baseUrl + '/system/maptype',
+  }
+
   /**用户相关接口地址 */
   static User = {
     /**登录 */

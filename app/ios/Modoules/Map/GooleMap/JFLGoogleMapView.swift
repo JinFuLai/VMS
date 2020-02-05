@@ -44,7 +44,7 @@ class JFLGoogleMapView: UIView{
   /// 是否显示指南针
   @objc var showCompassBtn:Bool = true{
     didSet{
-      self.btnCompass.isHidden = !showCompassBtn
+//      self.btnCompass.isHidden = !showCompassBtn//暂时不用
     }
   }
   
@@ -148,6 +148,7 @@ class JFLGoogleMapView: UIView{
     btn.layer.shadowOffset = CGSize(width: 6, height: 6)
     btn.layer.shadowRadius = 6
     btn.layer.shadowOpacity = 1
+    btn.isHidden = true
     return btn
   }()
   
