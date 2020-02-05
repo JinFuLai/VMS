@@ -38,7 +38,7 @@ export default class SearchDetails extends BaseComponent {
             data: [
               {title: I18n.t('details_plate_number'), info: vehicle.plate},
               {title: I18n.t('details_name'), info: driver.name},
-              {title: I18n.t('details_Identity_ID'), info: 230221198902023423},
+              // {title: I18n.t('details_Identity_ID'), info: 230221198902023423},
               {
                 title: I18n.t('details_contact'),
                 info: driver.contact && driver.contact.mobile,
@@ -60,7 +60,7 @@ export default class SearchDetails extends BaseComponent {
           },
           {
             data: [
-              {title: I18n.t('details_equipment_power'), info: '20%'},
+              // {title: I18n.t('details_equipment_power'), info: '20%'},
               {title: I18n.t('details_equipment_state'), info: device.status},
             ],
           },
@@ -70,14 +70,19 @@ export default class SearchDetails extends BaseComponent {
                 title: I18n.t('details_location_time'),
                 info: device.last_gps_point && device.last_gps_point.datetime,
               },
-              {
-                title: I18n.t('details_communication_time'),
-                info: '2018-10-10 14：50',
-              },
+              // {
+              //   title: I18n.t('details_communication_time'),
+              //   info: '2018-10-10 14：50',
+              // },
               {
                 title: I18n.t('details_speed'),
-                info: `${device.last_gps_point &&
-                  device.last_gps_point.speed} km/h`,
+                info: `${
+                  device.last_gps_point
+                    ? device.last_gps_point.speed
+                      ? device.last_gps_point.speed
+                      : 0
+                    : 0
+                } km/h`,
               },
               {
                 title: I18n.t('details_longitude'),
@@ -87,7 +92,7 @@ export default class SearchDetails extends BaseComponent {
                 title: I18n.t('details_latitude'),
                 info: device.last_gps_point && device.last_gps_point.latitude,
               },
-              {title: I18n.t('details_address'), info: '广东省惠州市'},
+              // {title: I18n.t('details_address'), info: '广东省惠州市'},
             ],
           },
           {
