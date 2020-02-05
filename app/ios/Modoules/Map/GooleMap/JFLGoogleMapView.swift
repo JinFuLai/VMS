@@ -44,7 +44,6 @@ class JFLGoogleMapView: UIView{
   /// 是否显示指南针
   @objc var showCompassBtn:Bool = true{
     didSet{
-//      self.mapView.settings.compassButton = showCompassBtn
       self.btnCompass.isHidden = !showCompassBtn
     }
   }
@@ -85,15 +84,9 @@ class JFLGoogleMapView: UIView{
   fileprivate var historyTimer:Timer?
   /// 历史轨迹动画当前显示的点
   fileprivate var historyIndex:Int = 0
-  /// 历史轨迹显示当前位置的点（用于设置mark）
-  fileprivate var historyAnnotationView:JFLPinAnnotationView?
   /// 地图上的所有的历史轨迹线条
-  fileprivate var allPolyline:[BMKPolyline] = []
+  fileprivate var allPolyline:[GMSPolyline] = []
   //---------------------------
-
-  
-  /// 是否能展示Paopao
-  fileprivate var canShowPaopao:Bool = true
   
   convenience init() { self.init(frame:CGRect()) }
 
@@ -108,9 +101,9 @@ class JFLGoogleMapView: UIView{
   /// 谷歌地图
   lazy var mapView:GMSMapView = {
     let map = GMSMapView(frame: CGRect(), camera: GMSCameraPosition(target: CLLocationCoordinate2D(), zoom: 10))
-//    map.showMapScaleBar = true
     map.delegate = self
     map.settings.tiltGestures = false //不支持俯仰角
+    map.settings.rotateGestures = false
     return map
   }()
   
@@ -247,11 +240,12 @@ extension JFLGoogleMapView{
     let rightList = JFLGoogleTools.getRightPoint(list)
     let markers = JFLGoogleMarker.getMarkers(rightList)
     for item in markers {
-      item.title = item.item.plate
+//      item.title = item.item.plate
       item.icon = UIImage(named: "car")
       item.map = self.mapView
       item.rotation = CLLocationDegrees(item.item.device?.last_gps_point?.direction ?? 0)
     }
+    self.allMarkers.append(contentsOf: markers)
     return markers
   }
   
@@ -274,33 +268,51 @@ extension JFLGoogleMapView{
   /// 移除所有的标记点
   /// - Parameter list: <#list description#>
   @objc func removeAllMarks() {
-    self.mapView.clear()
+//    self.mapView.clear()
+    for item in self.allMarkers {
+      item.map = nil
+    }
+    self.allMarkers = []
   }
   
   /// 添加历史轨迹点
   /// - Parameter list: <#list description#>
   @objc func addPolylines(_ list:[JFLLocation]?) {
-//    self.historyPoints = JFLBDTools.getPoints(locations: list)
-//    if let point = self.historyPoints.first, let first = point.gps_point,let latitude = first.latitude, let longitude = first.longitude {
-//      self.mapView.setCenter(CLLocationCoordinate2DMake(CLLocationDegrees(latitude), CLLocationDegrees(longitude)), animated: false)
-//    }
-//    if let polyline = JFLBDTools.getPolyline(locations: self.historyPoints){
-//      self.mapView.add(polyline)
-//    }
+    let rightList = JFLGoogleTools.getRightLocations(list)
+    guard rightList.count > 0 else {return}
+    for item in rightList {
+      item.vehicle?.showAlertView = false // 不要浮窗
+    }
+    self.removeAllPolylines()
+    self.historyPoints = rightList
+    let path = GMSMutablePath()
+    for item in rightList {
+      path.add(CLLocationCoordinate2D(latitude: CLLocationDegrees(item.gps_point?.latitude ?? 0), longitude: CLLocationDegrees(item.gps_point?.longitude ?? 0)))
+    }
+    let rectangle = GMSPolyline(path: path)
+    rectangle.map = self.mapView
+    rectangle.strokeColor = UIColor.hexColor("#37BCAD")
+    rectangle.strokeWidth = 6
+    self.allPolyline.append(rectangle)
+    
+    if let firstP = rightList.first, let latitude = firstP.gps_point?.latitude, let longitude = firstP.gps_point?.longitude{
+      let zoom = self.mapView.camera.zoom
+      self.mapView.camera = GMSCameraPosition(target: CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)), zoom: zoom < 14 ? 14 : zoom)
+    }
   }
   
-  /// 移除地图上所有的历史轨迹西线条
+  /// 移除地图上所有的历史轨迹线条
   fileprivate func removeAllPolylines() {
-//    self.mapView.removeOverlays(self.allPolyline)
+//    self.mapView.clear()
+    for item in self.allPolyline {
+      item.map = nil
+    }
+    self.allPolyline = []
   }
   
   ///重置方向
   @objc fileprivate func clickCompassBtn() {
-    let oldCamerra = self.mapView.camera
-    if oldCamerra.bearing != 0 {
-      let newCamera = GMSCameraPosition(target: oldCamerra.target, zoom: oldCamerra.zoom < 10 ? 10 : oldCamerra.zoom, bearing: 0, viewingAngle: oldCamerra.viewingAngle)
-      self.mapView.camera = newCamera
-    }
+    self.setTheMapDirection(0)
   }
   
   ///定位
@@ -312,11 +324,36 @@ extension JFLGoogleMapView{
       self.mapView.camera = newCamera
     }
   }
+  
+  
+  /// 设置地图旋转角度
+  /// - Parameter rotationAngle: 旋转的角度
+  fileprivate func setTheMapDirection(_ rotationAngle:CLLocationDirection) {
+    let oldCamerra = self.mapView.camera
+    if oldCamerra.bearing != rotationAngle {
+      let newCamera = GMSCameraPosition(target: oldCamerra.target, zoom: oldCamerra.zoom < 10 ? 10 : oldCamerra.zoom, bearing: rotationAngle, viewingAngle: oldCamerra.viewingAngle)
+      self.mapView.camera = newCamera
+    }
+  }
 }
 
 //MARK: -GMSMapViewDelegate
 extension JFLGoogleMapView:GMSMapViewDelegate{
-  
+  func mapView(_ mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
+    if let jflMarker = marker as? JFLGoogleMarker, jflMarker.item.showAlertView {
+      let paopaoView = jflMarker.item.isCurrentHistoryPoint ? JFLPaopaoView(["map_details"], imgNames:["xiangqing"]) : JFLPaopaoView(["map_history","map_warn","map_details"], imgNames:["guiji","gaojing","xiangqing"])
+      paopaoView.frame = CGRect(x: 0, y: 0, width: paopaoView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).width, height: paopaoView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height)
+      paopaoView.clickBottomBtnBlock = { [weak self]index in
+        guard let strongSelf = self else { return }
+        DispatchQueue.main.async {
+          strongSelf.onClickBottomBtnBlock?(["index":NSNumber(integerLiteral: index),"item":jflMarker.item.toJSON()])
+        }
+      }
+      paopaoView.model = jflMarker.item
+      return paopaoView
+    }
+    return nil
+  }
 }
 
 //MARK: - CLLocationManagerDelegate
@@ -335,5 +372,69 @@ extension JFLGoogleMapView:CLLocationManagerDelegate{
 
 //MARK: - 历史轨迹动画实现相关
 extension JFLGoogleMapView{
+  /// 开始历史轨迹动画
+  /// - Parameter list: list description
+  @objc func startHistoryAnimation() {
+    guard self.historyPoints.count > 0 else { return }
+    self.stopHistoryAnimation()
+    self.removeAllMarks()
+    guard let point = self.historyPoints.first, let vehicle = point.vehicle else{
+      return
+    }
+    if vehicle.device == nil {//待优化
+      vehicle.device = point.device
+      if let dev = vehicle.device,dev.last_gps_point == nil {
+        dev.last_gps_point = point.gps_point
+      }
+    }
+    vehicle.isCurrentHistoryPoint = true
+    self.addMarks([vehicle])
+    if historyTimer == nil {
+      historyTimer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(historyAnimationAction), userInfo: nil, repeats: true)
+      historyTimer?.fire()
+    }
+  }
   
+  /// 停止历史轨迹动画
+  /// - Parameter list: list description
+  @objc func stopHistoryAnimation() {
+    historyTimer?.invalidate()
+    historyTimer = nil
+    historyIndex = 0
+  }
+  
+  @objc fileprivate func historyAnimationAction() {
+    if historyIndex >= self.historyPoints.count {
+      self.stopHistoryAnimation()
+    }else{
+      let showHistory = self.historyPoints[historyIndex]
+      if let gps = showHistory.gps_point, let latitude = gps.latitude, let longitude = gps.longitude {
+        let point = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude))
+        if let mark = self.allMarkers.first {
+          mark.position = point
+          if let vehicle = showHistory.vehicle {
+             mark.item = vehicle
+          }
+          if let direction = gps.direction {
+//            self.setTheMapDirection(CLLocationDirection(direction))
+            mark.rotation = CLLocationDirection(direction)
+          }
+          let zoom = self.mapView.camera.zoom
+          self.mapView.camera = GMSCameraPosition(target: point, zoom: zoom < 14 ? 14 : zoom)
+        }
+      }
+      historyIndex += 1
+    }
+  }
+}
+
+//MARK: - 设置车辆定位
+extension JFLGoogleMapView{
+  @objc func setLocationItem(_ item:JFLVehicle?) {
+    guard let vehicle = item, let device = vehicle.device, let model = device.last_gps_point, let latitude = model.latitude, let longitude = model.longitude else { return }
+    let zoom = self.mapView.camera.zoom
+    self.mapView.camera = GMSCameraPosition(target: CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)), zoom: zoom)
+    vehicle.showAlertView = false
+    self.addMarks([vehicle])
+  }
 }

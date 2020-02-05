@@ -279,7 +279,7 @@ extension JFLMapView{
   }
   
   /// 添加历史轨迹点
-  /// - Parameter list: <#list description#>
+  /// - Parameter list: list description
   @objc func addPolylines(_ list:[JFLLocation]?) {
     self.historyPoints = JFLBDTools.getPoints(locations: list)
 //    self.canShowPaopao = false
@@ -371,13 +371,14 @@ extension JFLMapView{
         if let paopaoView = self.historyAnnotationView?.paopaoView as? JFLActionPaopaoView, let vehicle = showHistory.vehicle{
           paopaoView.customV?.model = vehicle
         }
-        if let gps = showHistory.gps_point,let direction = gps.direction {
+        if let direction = gps.direction {
           self.historyAnnotationView?.changeRotationAngle(direction)
           let status = self.mapView.getMapStatus() ?? BMKMapStatus()
           status.fLevel = status.fLevel > 18 || status.fLevel < 14 ? 17 : status.fLevel
           status.fRotation = Float(direction)
           self.mapView.setMapStatus(status, withAnimation: true)
         }
+        self.mapView.setCenter(point, animated: true)
       }
       historyIndex += 1
     }

@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface JFLMapViewManager : RCTViewManager
 
-//@property (nonatomic, strong) JFLMapView *mapView;
-
 @end
 
 NS_ASSUME_NONNULL_END
@@ -124,12 +122,5 @@ RCT_EXPORT_METHOD(setLocationItem:(nonnull NSNumber *)reactTag array:(NSDictiona
 - (UIView *)view{
   return [[JFLMapView alloc]init];
 }
-
-//-(JFLMapView *)mapView{
-//  if (!_mapView) {
-//    _mapView = [[JFLMapView alloc]init];
-//  }
-//  return _mapView;
-//}
 
 @end

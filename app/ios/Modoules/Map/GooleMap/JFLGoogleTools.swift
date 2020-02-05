@@ -10,12 +10,24 @@ import UIKit
 
 class JFLGoogleTools: NSObject {
   
-  /// 筛选出包含经纬度的数据
-  /// - Parameter dic: <#dic description#>
+  /// 筛选出包含经纬度的JFLVehicle数据
+  /// - Parameter list: <#dic description#>
   class func getRightPoint(_ list:[JFLVehicle]?) -> [JFLVehicle]{
     var result:[JFLVehicle] = [];
     for item in list ?? [] {
       if let device = item.device, let gps = device.last_gps_point, let _ = gps.latitude, let _ = gps.longitude {
+        result.append(item)
+      }
+    }
+    return result;
+  }
+  
+  /// 筛选出包含经纬度的JFLLocation数据
+  /// - Parameter list: <#dic description#>
+  class func getRightLocations(_ list:[JFLLocation]?) -> [JFLLocation]{
+    var result:[JFLLocation] = [];
+    for item in list ?? [] {
+      if let gps = item.gps_point, let _ = gps.latitude, let _ = gps.longitude {
         result.append(item)
       }
     }

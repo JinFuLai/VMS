@@ -100,21 +100,21 @@ RCT_EXPORT_METHOD(addPolylines:(nonnull NSNumber *)reactTag array:(NSArray<NSDic
 RCT_EXPORT_METHOD(startHistoryAnimation:(nonnull NSNumber *)reactTag){
   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
     JFLGoogleMapView *mapView = (JFLGoogleMapView *) viewRegistry[reactTag];
-//    [mapView startHistoryAnimation];
+    [mapView startHistoryAnimation];
   }];
 }
 
 RCT_EXPORT_METHOD(stopHistoryAnimation:(nonnull NSNumber *)reactTag){
   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
     JFLGoogleMapView *mapView = (JFLGoogleMapView *) viewRegistry[reactTag];
-//    [mapView stopHistoryAnimation];
+    [mapView stopHistoryAnimation];
   }];
 }
 
 RCT_EXPORT_METHOD(setLocationItem:(nonnull NSNumber *)reactTag array:(NSDictionary<NSString *,id> *)item){
   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
     JFLGoogleMapView *mapView = (JFLGoogleMapView *) viewRegistry[reactTag];
-//    [mapView setLocationItem:[JFLVehicle getModel:item]];
+    [mapView setLocationItem:[JFLVehicle getModel:item]];
   }];
 }
 

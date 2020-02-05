@@ -34,6 +34,9 @@ class JFLPaopaoView: UIView {
       NotificationCenter.default.removeObserver(self, name: NSNotification.Name(LCLLanguageChangeNotification), object: nil)
     }
       
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    print("touch JFLPaopaoView")
+  }
 
     required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")

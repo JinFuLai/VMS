@@ -51,6 +51,8 @@ class JFLVehicle: NSObject,Mappable {
   
   /// 是否是用于显示历史轨迹的当前位置标记点（本地自定义的属性）
   var isCurrentHistoryPoint:Bool = false
+  /// 点击是否展示浮窗(本地自定义的属性,用于google地图)
+  var showAlertView = true
   
   override init() { super.init() }
 
