@@ -100,18 +100,19 @@ class NetWorkHelper {
                     return;
                 }
             }else{//不存在则创建设备
-                callback(MsgGeneral.res_0());//不操作，直接返回正确
-                return;
-                // var newDevice = new device(info);
-                // newDevice.save()
-                //     .then(item => {//添加成功
-                //         console.log('添加成功');
-                //         callback(MsgGeneral.res_0);
-                //     })
-                //     .catch(err => {//添加成功
-                //         console.log('添加失败' + err);
-                //         callback(MsgGeneral.res_1());
-                //     });
+                // callback(MsgGeneral.res_0());//不操作，直接返回正确
+                // return;
+                var newDevice = new device(info);
+                newDevice.save()
+                    .then(item => {//添加成功
+                        console.log('添加成功');
+                        callback(MsgGeneral.res_0());
+                        NetWorkHelper.updatDeviceHistory(imei,[info],function(err){});//更新历史轨迹
+                    })
+                    .catch(err => {//添加成功
+                        console.log('添加失败' + err);
+                        callback(MsgGeneral.res_1());
+                    });
             }
         });
     }
@@ -133,18 +134,18 @@ class NetWorkHelper {
         var deviceRes = await device.find({imei: imei});//查找出设备
         var resultDev = null;
         if (deviceRes.length <= 0) {//不存在设备时
-            callback(MsgGeneral.res_0());///不操作，直接返回正确
-            return;
-            // //创建设备
-            // var newDevice = new device({imei: imei});
-            // let result = await newDevice.save();
-            // if (result.length <= 0) {
-            //     //创建失败
-            //     callback(MsgGeneral.res_1);
-            //     return;
-            // }else{
-            //     resultDev = result;
-            // }
+            // callback(MsgGeneral.res_0());///不操作，直接返回正确
+            // return;
+            //创建设备
+            var newDevice = new device({imei: imei});
+            let result = await newDevice.save();
+            if (result.length <= 0) {
+                //创建失败
+                callback(MsgGeneral.res_1());
+                return;
+            }else{
+                resultDev = result;
+            }
         }else{
             resultDev = deviceRes[0];
         }
