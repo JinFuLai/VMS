@@ -157,7 +157,8 @@ class JFLGoogleMapView: UIView{
   ///定位按钮
   lazy var btnLocation: UIButton = {
     let btn = UIButton()
-    btn.setImage(UIImage(named: "dingwei"), for: .normal)
+    btn.setImage(UIImage(named: "dingwei")?.withRenderingMode(.alwaysTemplate), for: .normal)
+    btn.tintColor = UIColor.hexColor("#444444")
     btn.addTarget(self, action: #selector(clickLocationBtn), for: .touchUpInside)
     btn.isHidden = !self.showLocationBtn
     btn.layer.cornerRadius = 17

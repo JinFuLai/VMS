@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const appSchema = new Schema({
     name: String,
     domainName: String,
-    logoUrl:String
+    logoUrl:String,
+    mapType: Number,
 }, { collection: 'app' });
 
 // the schema is useless so far

@@ -170,7 +170,8 @@ class JFLMapView: UIView{
   ///定位按钮
   lazy var btnLocation: UIButton = {
     let btn = UIButton()
-    btn.setImage(UIImage(named: "dingwei"), for: .normal)
+    btn.setImage(UIImage(named: "dingwei")?.withRenderingMode(.alwaysTemplate), for: .normal)
+    btn.tintColor = UIColor.hexColor("#444444")
     btn.addTarget(self, action: #selector(clickLocationBtn), for: .touchUpInside)
     btn.isHidden = !self.showLocationBtn
     btn.layer.cornerRadius = 17
@@ -376,7 +377,7 @@ extension JFLMapView{
           self.historyAnnotationView?.changeRotationAngle(direction)
           let status = self.mapView.getMapStatus() ?? BMKMapStatus()
           status.fLevel = status.fLevel > 18 || status.fLevel < 14 ? 17 : status.fLevel
-          status.fRotation = Float(direction)
+//          status.fRotation = Float(direction)
           self.mapView.setMapStatus(status, withAnimation: true)
         }
         self.mapView.setCenter(point, animated: true)
