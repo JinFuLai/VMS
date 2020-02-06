@@ -28,6 +28,7 @@ class JFLGoogleMapView: UIView{
   /// 是否显示定位图层
   @objc var showsUserLocation:Bool = false{
     didSet{
+      self.mapView.isMyLocationEnabled = showsUserLocation
       if self.showsUserLocation {
         self.locationManager.startUpdatingLocation()
       }
@@ -41,23 +42,22 @@ class JFLGoogleMapView: UIView{
     }
   }
   
-  /// 是否显示指南针
-  @objc var showCompassBtn:Bool = true{
+  /// 是否显示数据刷新按钮
+  @objc var showRefreshDataBtn:Bool = false{
     didSet{
-//      self.btnCompass.isHidden = !showCompassBtn//暂时不用
+      self.btnRefreshData.isHidden = !showRefreshDataBtn
     }
   }
   
   /// 是否显示定位
   @objc var showLocationBtn:Bool = false{
     didSet{
-      self.mapView.isMyLocationEnabled = showLocationBtn
-      self.btnLocation.isHidden = !showCompassBtn
+      self.btnLocation.isHidden = !showLocationBtn
     }
   }
   
   ///alertV距离顶部的距离
-  @objc var alertVTopMargin:Float = 40{
+  @objc var alertVTopMargin:Float = 25{
     didSet{
       self.alertV.topMargin = CGFloat(self.alertVTopMargin)
       self.alertV.snp.updateConstraints{$0.top.equalToSuperview().offset(self.alertVTopMargin)}
@@ -73,6 +73,8 @@ class JFLGoogleMapView: UIView{
   
   /// 点击按钮的回调
   @objc var onClickBottomBtnBlock:RCTBubblingEventBlock?
+  /// 点击刷新数据按钮的回调
+  @objc var onClickRefreshDataBtnBlock:RCTBubblingEventBlock?
   //------------标记点---------------
   /// 地图上所有的标记点
   var allMarkers:[JFLGoogleMarker] = []
@@ -137,19 +139,18 @@ class JFLGoogleMapView: UIView{
     return v
   }()
   
-  ///方向重置按钮
-  lazy var btnCompass: UIButton = {
+  ///数据刷新按钮
+  lazy var btnRefreshData: UIButton = {
     let btn = UIButton()
     btn.setImage(UIImage(named: "compass"), for: .normal)
-    btn.addTarget(self, action: #selector(clickCompassBtn), for: .touchUpInside)
-    btn.isHidden = !self.showCompassBtn
+    btn.addTarget(self, action: #selector(clickRefreshDataBtn), for: .touchUpInside)
+    btn.isHidden = !self.showRefreshDataBtn
     btn.layer.cornerRadius = 17
     btn.backgroundColor = .white
     btn.layer.shadowColor = UIColor.gray.cgColor
-    btn.layer.shadowOffset = CGSize(width: 6, height: 6)
+    btn.layer.shadowOffset = CGSize(width: 3, height: 3)
     btn.layer.shadowRadius = 6
     btn.layer.shadowOpacity = 1
-    btn.isHidden = true
     return btn
   }()
   
@@ -162,7 +163,7 @@ class JFLGoogleMapView: UIView{
     btn.layer.cornerRadius = 17
     btn.backgroundColor = .white
     btn.layer.shadowColor = UIColor.gray.cgColor
-    btn.layer.shadowOffset = CGSize(width: 6, height: 6)
+    btn.layer.shadowOffset = CGSize(width: 3, height: 3)
     btn.layer.shadowRadius = 6
     btn.layer.shadowOpacity = 1
     return btn
@@ -173,7 +174,7 @@ extension JFLGoogleMapView{
   fileprivate func setUpUI(){
     self.addSubview(mapView)
     self.addSubview(alertV)
-    self.addSubview(btnCompass)
+    self.addSubview(btnRefreshData)
     self.addSubview(btnLocation)
     mapView.snp.makeConstraints{$0.edges.equalToSuperview()}
     alertV.snp.makeConstraints { (make) in
@@ -181,7 +182,7 @@ extension JFLGoogleMapView{
       make.right.equalToSuperview().offset(-15)
       make.top.equalToSuperview().offset(40)
     }
-    btnCompass.snp.makeConstraints { (make) in
+    btnRefreshData.snp.makeConstraints { (make) in
       make.width.height.equalTo(34)
       make.left.equalToSuperview().offset(15)
       make.bottom.equalToSuperview().offset(-30.5)
@@ -189,7 +190,7 @@ extension JFLGoogleMapView{
     btnLocation.snp.makeConstraints { (make) in
       make.width.height.equalTo(34)
       make.left.equalToSuperview().offset(15)
-      make.bottom.equalTo(btnCompass.snp.top).offset(-14)
+      make.bottom.equalTo(btnRefreshData.snp.top).offset(-14)
     }
   }
   
@@ -313,9 +314,9 @@ extension JFLGoogleMapView{
     self.allPolyline = []
   }
   
-  ///重置方向
-  @objc fileprivate func clickCompassBtn() {
-    self.setTheMapDirection(0)
+  ///点击刷新数据按钮
+  @objc fileprivate func clickRefreshDataBtn() {
+    self.onClickRefreshDataBtnBlock?([:])
   }
   
   ///定位

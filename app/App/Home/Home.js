@@ -43,7 +43,7 @@ class Home extends BaseComponent {
           alertVTopMargin={100}
           showsUserLocation={true}
           showLocationBtn={true}
-          showCompassBtn={true}
+          showRefreshDataBtn={true}
           style={{flex: 1}}
           onClickBottomBtnBlock={event => {
             let dic = event.nativeEvent;
@@ -57,6 +57,9 @@ class Home extends BaseComponent {
               //详情
               this._goToView('SearchDetails', dic.item);
             }
+          }}
+          onClickRefreshDataBtnBlock={event => {
+            this.refreshInfo();
           }}>
           <Header
             noShadow
@@ -153,7 +156,7 @@ class Home extends BaseComponent {
 const style = StyleSheet.create({
   searchStyle: {
     backgroundColor: Color.jfl_FFFFFF,
-    height: 44,
+    height: 40,
     width: '80%',
     borderRadius: 4,
     // overflow: 'hidden',

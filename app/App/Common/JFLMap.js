@@ -35,14 +35,16 @@ class JFLMap extends React.PureComponent {
     showsUserLocation: PropTypes.bool,
     /**是否显示显示3D楼块效果 */
     buildingsEnabled: PropTypes.bool,
-    /**是否显示指南针按钮 */
-    showCompassBtn: PropTypes.bool,
+    /**是否显示刷新数据按钮 */
+    showRefreshDataBtn: PropTypes.bool,
     /**是否显示定位按钮 */
     showLocationBtn: PropTypes.bool,
     /** alertV距离顶部的距离 */
     alertVTopMargin: PropTypes.number,
     /** 点击底部的按钮回调 */
     onClickBottomBtnBlock: PropTypes.func,
+    /** 点击刷新数据按钮的回调 */
+    onClickRefreshDataBtnBlock: PropTypes.func,
   };
 
   componentDidMount() {

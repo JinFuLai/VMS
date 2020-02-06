@@ -29,11 +29,12 @@ RCT_EXPORT_VIEW_PROPERTY(mapType, NSUInteger)
 RCT_EXPORT_VIEW_PROPERTY(trafficEnabled, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(showsUserLocation, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(buildingsEnabled, BOOL)
-RCT_EXPORT_VIEW_PROPERTY(showCompassBtn, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(showRefreshDataBtn, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(showLocationBtn, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(alertVTopMargin, float)
 
 RCT_EXPORT_VIEW_PROPERTY(onClickBottomBtnBlock, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onClickRefreshDataBtnBlock, RCTBubblingEventBlock)
 
 RCT_EXPORT_METHOD(changeTypes:(nonnull NSNumber *)reactTag array:(NSDictionary *)dic){
   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
