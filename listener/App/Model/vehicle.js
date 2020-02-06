@@ -27,7 +27,9 @@ const vehicleSchema = new Schema({
     photos: [String],
     note: String,
     status: { type: String, default: consts.STATUS.ACTIVE },
-    maxspeed: Number
+    maxspeed: Number,
+    /**车牌颜色 */
+    plate_color: String
 }, { collection: 'vehicle' });
 
 const VehicleModel = mongoose.model('vehicle', vehicleSchema);

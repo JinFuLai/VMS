@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-const consts = require("../../consts");
-const contactSchema = require("../schema/contactSchema");
-const addressSchema = require("../schema/addressSchema");
+const consts = require("../Helper/consts");
 const Schema = mongoose.Schema;
 
 //设备生产厂家
@@ -9,9 +7,9 @@ const manufactorSchema = new Schema({
     name: String,
     /**编码 */
     code: String,
-    address: addressSchema,
+    // address: addressSchema,
     owner: String,
-    contact: contactSchema,
+    // contact: contactSchema,
     bank_name: String,
     bank_account: String,
     tax_number: String,

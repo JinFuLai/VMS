@@ -141,7 +141,7 @@ class BBPlugin {
                 BBPlugin.replyRegisterMsg(_listener,_socket,msg,'2');
                 return;//不返回通用应答
             }
-            NetWorkHelper.registerDevice({imei: header.IMEI},body.identification,function (result) {
+            NetWorkHelper.registerDevice(header.IMEI,body,function (result) {
                 //返回注册消息应答
                 BBPlugin.replyRegisterMsg(_listener,_socket,msg,result);
             });

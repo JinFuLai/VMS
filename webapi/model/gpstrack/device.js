@@ -7,13 +7,19 @@ const gpsPointSchema = require("../schema/gpsPointSchema")
 //设备信息
 const deviceSchema = new Schema({
     imei: { type: String, required: true, unique: true }, // device IMEI
+    /**终端ID(设别编号) */
+    device_id: String,
+    /**设备类型 */
     device_type: { type: String, default: consts.DEVICETYPE.VEHICLE_GPS },
     manufactor: { type: Schema.Types.ObjectId, ref: 'manufactor' },
     simcard: { type: Schema.Types.ObjectId, ref: 'simcard' },
     produce_date: Date,
     purchase_date: Date,
     expire_date: Date,
+    /**批次 */
     batch_number: String,
+    /**国际编码 */
+    international_code: String,
     account: { type: Schema.ObjectId, ref: 'account' },
     last_gps_point: gpsPointSchema,
     note: String,
