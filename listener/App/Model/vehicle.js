@@ -26,7 +26,8 @@ const vehicleSchema = new Schema({
     un_safe_zone: { type: Schema.Types.ObjectId, ref: 'enclosure' },
     photos: [String],
     note: String,
-    status: { type: String, default: consts.STATUS.ACTIVE }
+    status: { type: String, default: consts.STATUS.ACTIVE },
+    maxspeed: Number
 }, { collection: 'vehicle' });
 
 const VehicleModel = mongoose.model('vehicle', vehicleSchema);

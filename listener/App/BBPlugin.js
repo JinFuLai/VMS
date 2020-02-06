@@ -135,16 +135,15 @@ class BBPlugin {
         {
             // console.log("消息为终端注册,开始组织通用应答.");
             let header = msg.header,body = msg._getBody_0100();
-            NetWorkHelper.registerDevice(header.IMEI,{},function (result) {
-                // 生成终端注册应答消息头
-                let returnHeader = MsgResHelper.creatMsgHeader('8100',header.bodyAttribute,header.IMEI,header.messageNum+1);
-                // 生成 平台通用应答-8100 消息题
-                let returnBody = MsgResHelper.creatMsgBody_8100(header.messageNum+1, result,'58')//发送的原始消息
-                let returnArray = MsgResHelper.creatReturnMsg(returnHeader.concat(returnBody));
-                console.log("终端注册:" + returnArray.join(' '));
-                let returnByte = Helper.getByteBuffer(returnArray)
-                //返回应答
-                _listener.sendMessage(_socket,returnByte);
+            if (body.plateColor == 0) { //车辆未上牌
+                console.log('车辆未上牌');
+                //返回注册消息应答
+                BBPlugin.replyRegisterMsg(_listener,_socket,msg,'2');
+                return;//不返回通用应答
+            }
+            NetWorkHelper.registerDevice({imei: header.IMEI},body.identification,function (result) {
+                //返回注册消息应答
+                BBPlugin.replyRegisterMsg(_listener,_socket,msg,result);
             });
             return;//不返回通用应答
         }else if (msg.header.ID == "0200") {//位置信息汇报
@@ -179,6 +178,26 @@ class BBPlugin {
             }
 
         }
+    }
+
+    /**
+     * 注册消息回复
+     * @param {*} listener 
+     * @param {*} socket 
+     * @param {MsgHelper} msg 消息
+     * @param {*} result 结果(字符) -'0'：成功；'1'：车辆已被注册；'2'：数据库中无该车辆；'3'：终端已被注册；'4'：数据库中无该终端
+     */
+    static replyRegisterMsg(listener,socket,msg,result = '0') {
+        let header = msg.header;
+        // 生成终端注册应答消息头
+        let returnHeader = MsgResHelper.creatMsgHeader('8100',header.bodyAttribute,header.IMEI,header.messageNum+1);
+        // 生成 平台通用应答-8100 消息题
+        let returnBody = MsgResHelper.creatMsgBody_8100(header.messageNum+1, result,'58')//发送的原始消息
+        let returnArray = MsgResHelper.creatReturnMsg(returnHeader.concat(returnBody));
+        console.log("终端注册:" + returnArray.join(' '));
+        let returnByte = Helper.getByteBuffer(returnArray)
+        //返回应答
+        listener.sendMessage(socket,returnByte);
     }
 
     /**

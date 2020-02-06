@@ -83,7 +83,7 @@ class Helper {
         if (fistTime && secondTime) {
             const result = Date(fistTime) - Date(secondTime);
             const limit = consts.LIMIT_CONDITIONS.MAX_TIME * 60 * 1000
-            if ( result <= limit || result >= -limit) {
+            if ( result <= limit) {
                 return true;
             } else {
                 return false;

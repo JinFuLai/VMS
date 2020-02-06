@@ -19,24 +19,97 @@ class MsgGeneral {
     static res_4() {return '4'}
 }
 
+ // 抽离成公共方法
+ const awaitWrap = (promise) => {
+     return promise
+        .then(data => [null, data])
+        .catch(err => [err, null])
+ }
+
 class NetWorkHelper {
 
     /**
      * 注册车辆设备信息（待处理）
-     * @param {string} imei IMEI
+     * @param {*} info 设备相关信息{imei、以及一些相关注册信息}
      * @param {*} plate 机动车牌号
      * @param {*} callback 回调（'0'：成功；'1'：车辆已被注册；'2'：数据库中无该车辆；'3'：终端已被注册；'4'：数据库中无该终端）
      */
-    static async registerDevice(imei,plate,callback){
-        let currentV = await vehicle.find({plate: plate}).populate('device');
-        if (currentV.length > 0) {//车辆不存在
-            callback('2');
-        }else {
-            if (currentV[0].device.imei == imei) {
+    static async registerDevice(info,plate,callback){
+        /**创建车辆 */
+        async function creatVehicle(info) {
+            var newVehicle = new vehicle(info);
+            newVehicle.save()
+                .then(item => {//添加成功
+                    return [null, item];
+                })
+                .catch(err => {//创建失败
+                    return [err,null];
+                });
+        }
+        /**创建设备 */
+        async function creatDevice(info) {
+            var newDevice = new device(info);
+            newDevice.save()
+                .then(item => {//添加成功
+                    return [null, item];
+                })
+                .catch(err => {//创建失败
+                    return [err,null];
+                });
+        }
+        const [err, vehicles] = await awaitWrap(vehicle.find({plate: plate}).populate('device'));//查找出车辆
+        if (err) {
+            console.log(err);
+            callback(MsgGeneral.res_1());
+            return;
+        }
+        const [err1, devices] = await awaitWrap(device.find({imei: info.imei}));//查找出设备
+        if (err1) {
+            console.log(err1);
+            callback(MsgGeneral.res_1());
+            return;
+        }
+        if (vehicles && vehicles.length > 0) {
+            if (vehicles[0].device && vehicles[0].device.imei == info.imei) {
+                //车辆存在设备,且设备一致
                 callback('0');
             }else{
-                //TO DO:车辆的设备和传入的设备不一致
+                //设备号不一致,更新车辆设备
+                var theDevice = devices ? devices[0] : null;
+                if (theDevice == null) {
+                    const [_, newDevice] = await awaitWrap(creatDevice({imei: info.imei}));
+                    if (newDevices) {
+                        theDevice = newDevice 
+                    }else{
+                        callback('4');
+                        return;
+                    }
+                }
+                const [err2, devices] = await awaitWrap(vehicles[0].updateOne({device: theDevice.id}));
+                if (err2) {//更新失败
+                    callback('1');
+                }else if (doc) {//更新成功
+                    callback('0');
+                }
+            }
+        }else {
+            //车辆不存在时
+            var theDevice = devices ? devices[0] : null;
+            if (theDevice == null) {
+                //设备不存在，就创建设备
+                const [_, newDevice] = await awaitWrap(creatDevice({imei: info.imei}));
+                if (newDevices) {
+                    theDevice = newDevice 
+                }else{
+                    callback('4');
+                    return;
+                }
+            }
+            const [_, newVehicle] = await awaitWrap(creatVehicle({plate: plate,device: theDevice.id}));//创建车辆，并绑定设备
+            if (newVehicle) {
                 callback('0');
+            }else{
+                callback('2');
             }
         }
     }
@@ -48,73 +121,83 @@ class NetWorkHelper {
      * @param {MsgGeneral} callback 回调 
      */
     static async updatDeviceInfo(imei,info,callback){
-        device.find({imei: imei},(err,docs) => {
-            if (err) {
-                console.log(err);
-                callback(MsgGeneral.res_1());
-                return;
-            };
-            if (docs && docs.length === 1) {//存在设备才更新
-                /**
-                 * 更新数据的方法
-                 * @param {*} ele 更新的对象
-                 * @param {*} deviceInfo 更新的信息
-                 * @param {*} update_Location 是否更新Location表中
-                 */
-                function update(ele,deviceInfo,update_Location=true) {
-                    ele.updateOne(deviceInfo,(err,doc) => {
-                        if (err) {//更新失败
-                            console.log('更新失败' + err);
-                            callback(MsgGeneral.res_1());
-                        }else if (doc) {//更新成功
-                            console.log('更新成功'+doc);
-                            callback(MsgGeneral.res_0());
-                            if (update_Location) {
-                                NetWorkHelper.updatDeviceHistory(imei,[info],function(err){});//更新历史轨迹
-                            }
-                        }
-                    });
-                }
-                const element = docs[0];
-                const ele_lastP = element.last_gps_point;
-                const info_lastP = element.last_gps_point;
-                if (ele_lastP) {
-                    const ele_lastP_time = info_lastP.datetime;
-                    const info_lastP_time = info_lastP ? info_lastP.datetime : null;
-                    if (ele_lastP_time && info_lastP_time && Helper.withinTheSpecifiedTime(ele_lastP_time,info_lastP_time)) {//时间筛选
-
-                        const distance = Helper.getDistance(ele_lastP.longitude,ele_lastP.latitude,info_lastP.longitude,info_lastP.latitude);
-                        if (distance < consts.LIMIT_CONDITIONS.DISTANCE_SMALLEST) {
-                            //距离了过小不存储
-                        } else if (distance >= consts.LIMIT_CONDITIONS.DISTANCE_SMALLEST && distance < consts.LIMIT_CONDITIONS.DISTANCE_MIDDLE) {
-                            //只更新device表
-                            update(element,info,false);
-                            return;
-                        } else {
-                            update(element,info);
-                            return;
-                        }
-                    } 
-                }else{
-                    update(element,info);
-                    return;
-                }
-            }else{//不存在则创建设备
-                // callback(MsgGeneral.res_0());//不操作，直接返回正确
-                // return;
-                var newDevice = new device(info);
-                newDevice.save()
-                    .then(item => {//添加成功
-                        console.log('添加成功');
-                        callback(MsgGeneral.res_0());
-                        NetWorkHelper.updatDeviceHistory(imei,[info],function(err){});//更新历史轨迹
-                    })
-                    .catch(err => {//添加成功
-                        console.log('添加失败' + err);
+        const [err, devices] = await awaitWrap(device.find({imei: imei}));
+        if (err) {
+            console.log(err);
+            callback(MsgGeneral.res_1());
+            return;
+        }
+        if (devices && devices.length === 1) {//存在设备才更新
+            /**
+             * 更新数据的方法
+             * @param {*} ele 更新的对象
+             * @param {*} deviceInfo 更新的信息
+             * @param {*} update_Location 是否更新Location表中
+             */
+            async function update(ele,deviceInfo,update_Location=true) {
+                ele.updateOne(deviceInfo,(err,doc) => {
+                    if (err) {//更新失败
+                        console.log('更新失败' + err);
                         callback(MsgGeneral.res_1());
-                    });
+                    }else if (doc) {//更新成功
+                        console.log('更新成功'+doc);
+                        callback(MsgGeneral.res_0());
+                        if (update_Location) {
+                            NetWorkHelper.updatDeviceHistory(imei,[info],function(err){});//更新历史轨迹
+                        }
+                    }
+                });
+            }                
+            const element = devices[0];
+            const ele_lastP = element.last_gps_point;
+            const info_lastP = element.last_gps_point;
+            if (ele_lastP) {
+                const [err1, vehicles] = await awaitWrap(vehicle.find({device:element.id}));//查找出车辆
+                if (vehicles && vehicles[0] && info_lastP) {//系统-超速设置
+                    var maxspeed = vehicles[0].maxspeed;
+                    if (maxspeed && maxspeed > 0 && info_lastP.speed && maxspeed < info_lastP.speed) {
+                        if (info.last_gps_point.alert) {
+                            info.last_gps_point.alert.push('系统超速');
+                        } else {
+                            info.last_gps_point.alert = ['系统超速'];
+                        }
+                    }
+                }
+                const ele_lastP_time = info_lastP.datetime;
+                const info_lastP_time = info_lastP ? info_lastP.datetime : null;
+                if (ele_lastP_time && info_lastP_time && Helper.withinTheSpecifiedTime(Date().toString(),info_lastP_time)) {//时间筛选
+
+                    const distance = Helper.getDistance(ele_lastP.longitude,ele_lastP.latitude,info_lastP.longitude,info_lastP.latitude);
+                    if (distance < consts.LIMIT_CONDITIONS.DISTANCE_SMALLEST) {
+                        //距离了过小不存储
+                    } else if (distance >= consts.LIMIT_CONDITIONS.DISTANCE_SMALLEST && distance < consts.LIMIT_CONDITIONS.DISTANCE_MIDDLE) {
+                        //只更新device表
+                        update(element,info,false);
+                        return;
+                    } else {
+                        update(element,info);
+                        return;
+                    }
+                } 
+            }else{
+                update(element,info);
+                return;
             }
-        });
+        }else{//不存在则创建设备
+            // callback(MsgGeneral.res_0());//不操作，直接返回正确
+            // return;
+            var newDevice = new device(info);
+            newDevice.save()
+                .then(item => {//添加成功
+                    console.log('添加成功');
+                    callback(MsgGeneral.res_0());
+                    NetWorkHelper.updatDeviceHistory(imei,[info],function(err){});//更新历史轨迹
+                })
+                .catch(err => {//添加成功
+                    console.log('添加失败' + err);
+                    callback(MsgGeneral.res_1());
+                });
+        }
     }
 
     /**
@@ -131,7 +214,12 @@ class NetWorkHelper {
         //         return -1;
         //     }
         // });
-        var deviceRes = await device.find({imei: imei});//查找出设备
+        const [err, deviceRes] = await awaitWrap(device.find({imei: imei}));//查找出设备
+        if (err) {
+            console.log(err);
+            callback(MsgGeneral.res_1());
+            return;
+        }
         var resultDev = null;
         if (deviceRes.length <= 0) {//不存在设备时
             // callback(MsgGeneral.res_0());///不操作，直接返回正确
@@ -149,7 +237,7 @@ class NetWorkHelper {
         }else{
             resultDev = deviceRes[0];
         }
-        var vehicles = await vehicle.find({device:resultDev.id});//查找出车辆
+        const [err1, vehicles] = await awaitWrap(vehicle.find({device:resultDev.id}));//查找出车辆
         var resultV = null;
         if (vehicles.length <= 0) {//不存在车辆时
             callback(MsgGeneral.res_1());//不操作，直接返回正确

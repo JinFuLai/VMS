@@ -27,7 +27,8 @@ const vehicleSchema = new Schema({
     driver: { type: Schema.Types.ObjectId, ref: 'driver' },
     photos: [String],
     note: String,
-    status: { type: String, default: consts.STATUS.ACTIVE }
+    status: { type: String, default: consts.STATUS.ACTIVE },
+    maxspeed: Number
 }, { collection: 'vehicle' });
 
 const VehicleModel = mongoose.model('vehicle', vehicleSchema);
