@@ -20,9 +20,9 @@ class JFLDevice: NSObject,Mappable {
   
   var id:String?
   var imei:String?
-  var device_type:Any?
+  var device_type:String?
 //  var manufactor:Any?
-//  var simcard:Any?
+  var simcard:Any?
   
   var produce_date:String?
   var purchase_date:String?
@@ -43,7 +43,7 @@ class JFLDevice: NSObject,Mappable {
     imei <- map["imei"]
     device_type <- map["device_type"]
 //    manufactor <- map["manufactor"]
-//    simcard <- map["simcard"]
+    simcard <- map["simcard"]
     
     produce_date <- map["produce_date"]
     purchase_date <- map["purchase_date"]

@@ -34,6 +34,7 @@ class JFLMapView: UIView{
           if error == nil, location != nil {
             let userLocation = BMKUserLocation()
             userLocation.location = location!.location
+            self.mapView.updateLocationData(userLocation)
             self.mapView.setCenter(userLocation.location.coordinate, animated: true)
           }else{
             self.makeToast("定位失败")
@@ -116,9 +117,10 @@ class JFLMapView: UIView{
   /// 百度地图
   lazy var mapView:BMKMapView = {
     let map = BMKMapView()
-    map.showMapScaleBar = true
+    map.showMapScaleBar = false
     map.delegate = self
     map.isOverlookEnabled = false//不支持俯仰角
+    map.isRotateEnabled = false//不支持旋转
     return map
   }()
   
@@ -154,7 +156,7 @@ class JFLMapView: UIView{
     btn.setImage(UIImage(named: "compass"), for: .normal)
     btn.addTarget(self, action: #selector(clickCompassBtn), for: .touchUpInside)
     btn.isHidden = !self.showCompassBtn
-    btn.layer.cornerRadius = 14
+    btn.layer.cornerRadius = 17
     btn.backgroundColor = .white
     btn.layer.shadowColor = UIColor.gray.cgColor
     btn.layer.shadowOffset = CGSize(width: 6, height: 6)
@@ -169,7 +171,7 @@ class JFLMapView: UIView{
     btn.setImage(UIImage(named: "dingwei"), for: .normal)
     btn.addTarget(self, action: #selector(clickLocationBtn), for: .touchUpInside)
     btn.isHidden = !self.showLocationBtn
-    btn.layer.cornerRadius = 14
+    btn.layer.cornerRadius = 17
     btn.backgroundColor = .white
     btn.layer.shadowColor = UIColor.gray.cgColor
     btn.layer.shadowOffset = CGSize(width: 6, height: 6)
@@ -192,13 +194,14 @@ extension JFLMapView{
       make.top.equalToSuperview().offset(40)
     }
     btnCompass.snp.makeConstraints { (make) in
-      make.width.height.equalTo(28)
-      make.right.bottom.equalToSuperview().offset(-15)
+      make.width.height.equalTo(34)
+      make.left.equalToSuperview().offset(15)
+      make.bottom.equalToSuperview().offset(-30.5)
     }
     btnLocation.snp.makeConstraints { (make) in
-      make.width.height.equalTo(28)
-      make.right.equalToSuperview().offset(-15)
-      make.bottom.equalTo(btnCompass.snp.top).offset(-15)
+      make.width.height.equalTo(34)
+      make.left.equalToSuperview().offset(15)
+      make.bottom.equalTo(btnCompass.snp.top).offset(-14)
     }
   }
   
@@ -316,6 +319,7 @@ extension JFLMapView{
       if error == nil, location != nil {
         let userLocation = BMKUserLocation()
         userLocation.location = location!.location
+        self.mapView.updateLocationData(userLocation)
         self.mapView.setCenter(userLocation.location.coordinate, animated: true)
       }else{
         self.makeToast("定位失败")
@@ -418,7 +422,8 @@ extension JFLMapView:BMKMapViewDelegate{
       annotationView.animatesDrop = false
       annotationView.enabled3D = true
 //      annotationView.centerOffset = CGPoint(x: 0, y: 7)
-      let paopaoView = annota.item.isCurrentHistoryPoint ? JFLPaopaoView(["map_details"], imgNames:["xiangqing"]) : JFLPaopaoView(["map_history","map_warn","map_details"], imgNames:["guiji","gaojing","xiangqing"])
+//      let paopaoView = annota.item.isCurrentHistoryPoint ? JFLPaopaoView(["map_details"], imgNames:["xiangqing"]) : JFLPaopaoView(["map_history","map_warn","map_details"], imgNames:["guiji","gaojing","xiangqing"])
+      let paopaoView = JFLPaopaoView()
       paopaoView.frame = CGRect(x: 0, y: 0, width: paopaoView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).width, height: paopaoView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height)
       paopaoView.clickBottomBtnBlock = { [weak self]index in
         guard let strongSelf = self else { return }

@@ -1,4 +1,3 @@
-var user = require('../model/account/user')
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('config');   // https://www.npmjs.com/package/config
 var reponseHelper = require('../helper/responsehelper');
@@ -25,6 +24,6 @@ module.exports = function (app) {
    *          description: Successfully   
    */
   app.get('/system/maptype', function (req, res) {
-    res.json(reponseHelper.Success(0));
+    res.json(reponseHelper.Success(1));
   });
 }

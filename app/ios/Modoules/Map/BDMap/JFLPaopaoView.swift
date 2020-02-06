@@ -13,7 +13,7 @@ class JFLPaopaoView: UIView {
   
   var model:JFLVehicle = JFLVehicle(){
     didSet{
-      self.titleLab.text = "车牌号码：   \(model.plate ?? "暂无地址") \n设备类型：   S12\n身份ID：      230221198902023423\n联系方式：   13548981112\nIMEI号：      1033040993923232\nSIM卡号：    828944514551131\n车辆识别号：12121231"
+      self.titleLab.text = "车牌号码：   \(model.plate ?? "暂无数据") \n设备类型：   \(model.device?.device_type ?? "暂无数据")\n身份ID：      暂无数据\n联系方式：   暂无数据\nIMEI号：      \(model.device?.imei ?? "暂无数据")\nSIM卡号：    \(model.device?.simcard ?? "暂无数据")\n车辆识别号：\(model.number ?? "暂无数据")"
     }
   }
   
@@ -79,8 +79,8 @@ extension JFLPaopaoView{
       make.centerX.equalToSuperview()
       make.top.equalToSuperview().offset(8)
       make.width.equalTo(SCREEN_WIDTH * 0.6)
-      make.height.greaterThanOrEqualTo(100)
-      make.bottom.lessThanOrEqualToSuperview()
+      make.height.greaterThanOrEqualTo(120)
+      make.bottom.lessThanOrEqualToSuperview().offset(-8)
     }
   }
   
