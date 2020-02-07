@@ -27,8 +27,42 @@ class MsgGeneral {
         .catch(err => [err, null])
  }
 
-class NetWorkHelper {
+/**创建车辆 */
+async function creatVehicle(info) {
+    var newVehicle = new vehicle(info);
+    newVehicle.save()
+        .then(item => {//添加成功
+            return [null, item];
+        })
+        .catch(err => {//创建失败
+            return [err,null];
+        });
+}
+/**创建设备 */
+async function creatDevice(info) {
+    var newDevice = new device(info);
+    newDevice.save()
+        .then(item => {//添加成功
+            return [null, item];
+        })
+        .catch(err => {//创建失败
+            return [err,null];
+        });
+}
 
+/**创建生产厂家 */
+async function creatManufactor(info) {
+    var newManufactor = new manufactor(info);
+    newManufactor.save()
+        .then(item => {//添加成功
+            return [null, item];
+        })
+        .catch(err => {//创建失败
+            return [err,null];
+        });
+}
+
+class NetWorkHelper {
     /**
      * 注册车辆设备信息（待处理）
      * @param {*} imei imei
@@ -36,41 +70,6 @@ class NetWorkHelper {
      * @param {*} callback 回调（'0'：成功；'1'：车辆已被注册；'2'：数据库中无该车辆；'3'：终端已被注册；'4'：数据库中无该终端）
      */
     static async registerDevice(imei,info,callback){
-        /**创建车辆 */
-        async function creatVehicle(info) {
-            var newVehicle = new vehicle(info);
-            newVehicle.save()
-                .then(item => {//添加成功
-                    return [null, item];
-                })
-                .catch(err => {//创建失败
-                    return [err,null];
-                });
-        }
-        /**创建设备 */
-        async function creatDevice(info) {
-            var newDevice = new device(info);
-            newDevice.save()
-                .then(item => {//添加成功
-                    return [null, item];
-                })
-                .catch(err => {//创建失败
-                    return [err,null];
-                });
-        }
-
-        /**创建生产厂家 */
-        async function creatManufactor(info) {
-            var newManufactor = new manufactor(info);
-            newManufactor.save()
-                .then(item => {//添加成功
-                    return [null, item];
-                })
-                .catch(err => {//创建失败
-                    return [err,null];
-                });
-        }
-        
         const [err, vehicles] = await awaitWrap(vehicle.find({plate: info.identification}).populate('device'));//查找出车辆
         if (err) {
             console.log(err);
@@ -83,84 +82,73 @@ class NetWorkHelper {
             callback('4');
             return;
         }
-        if (vehicles && vehicles.length > 0) {
-            if (vehicles[0].device && vehicles[0].device.imei == imei) {
-                //车辆存在设备,且设备一致
-                callback('0');
-            }else{
-                //设备号不一致,更新车辆设备
-                var theDevice = devices ? devices[0] : null;
-                if (theDevice == null) {
-                    //设备不存在，就创建设备
-                    //先查看生产厂商
-                    const [manufactor_err, manufactors] = await awaitWrap(manufactor.find({code: info.manufacturerID}));//查找出生产厂商
-                    if (manufactor_err) {
-                        console.log(manufactor_err);
-                        callback('4');
-                        return;
-                    }
-                    var theManufactors = manufactors ? manufactors[0] : null;
-                    if (theManufactors == null) {
-                        //创建厂商
-                        const [_, newManufactor] = await awaitWrap(creatManufactor({code: info.manufacturerID}));
-                        if (newManufactor) {
-                            theManufactors = newManufactor 
-                        }else{
-                            callback('4');
-                            return;
-                        }
-                    }
-                    const [_, newDevice] = await awaitWrap(creatDevice({imei: imei, device_id: info.terminalID, manufactor: theManufactors.id}));
-                    if (newDevices) {
-                        theDevice = newDevice 
-                    }else{
-                        callback('4');
-                        return;
-                    }
-                }
-                const [err2, devices] = await awaitWrap(vehicles[0].updateOne({device: theDevice.id}));
-                if (err2) {//更新失败
-                    callback('1');
-                }else if (doc) {//更新成功
-                    callback('0');
-                }
+        if (vehicles && vehicles[0] && vehicles[0].device && vehicles[0].device.imei == imei) {
+            /**车辆存在设备,且设备一致时 */
+            callback('0');
+        } else {
+            /**其他情况*/
+            //先查看生产厂商
+            const [manufactor_err, manufactors] = await awaitWrap(manufactor.find({code: info.manufacturerID}));//查找出生产厂商
+            if (manufactor_err) {
+                console.log(manufactor_err);
+                callback('4');
+                return;
             }
-        }else {
-            //车辆不存在时
-            var theDevice = devices ? devices[0] : null;
-            if (theDevice == null) {
-                //设备不存在，就创建设备
-                //先查看生产厂商
-                const [manufactor_err, manufactors] = await awaitWrap(manufactor.find({code: info.manufacturerID}));//查找出生产厂商
-                if (manufactor_err) {
-                    console.log(manufactor_err);
+            /**生产厂商 */
+            var theManufactors = manufactors ? manufactors[0] : null;
+            if (theManufactors) {
+                //更新厂商信息
+                const [updateManufactorError, _] = await awaitWrap(theManufactors.updateOne({code: info.manufacturerID}));
+                if (updateManufactorError) {//更新失败
                     callback('4');
                     return;
                 }
-                var theManufactors = manufactors ? manufactors[0] : null;
-                if (theManufactors == null) {
-                    //创建厂商
-                    const [_, newManufactor] = await awaitWrap(creatManufactor({code: info.manufacturerID}));
-                    if (newManufactor) {
-                        theManufactors = newManufactor 
-                    }else{
-                        callback('4');
-                        return;
-                    }
-                }
-                const [_, newDevice] = await awaitWrap(creatDevice({imei: imei, device_id: info.terminalID, manufactor: theManufactors.id}));
-                if (newDevices) {
-                    theDevice = newDevice 
+            }else{
+                //创建厂商
+                const [_, newManufactor] = await awaitWrap(creatManufactor({code: info.manufacturerID}));
+                if (newManufactor) {
+                    theManufactors = newManufactor; 
                 }else{
                     callback('4');
                     return;
                 }
             }
-            const [_, newVehicle] = await awaitWrap(creatVehicle({plate: info.identification,device: theDevice.id, plate_color: info.plateColor}));//创建车辆，并绑定设备
-            if (newVehicle) {
-                callback('0');
+            /**当前设备 */
+            var theDevice = devices ? devices[0] : null;
+            if (theDevice) {
+                //更新设备信息
+                const [updateDeviceError, _] = await awaitWrap(theDevice.updateOne({device_id: info.terminalID, international_code: info.terminalType, manufactor: theManufactors.id}));
+                if (updateDeviceError) {//更新失败
+                    callback('4');
+                }
             }else{
-                callback('2');
+                //设备不存在，就创建设备
+                const [_, newDevice] = await awaitWrap(creatDevice({imei: imei, device_id: info.terminalID, international_code: info.terminalType, manufactor: theManufactors.id}));
+                if (newDevices) {
+                    theDevice = newDevice; 
+                }else{
+                    callback('4');
+                    return;
+                }
+            }
+            /**当前车辆 */
+            var theVehicle = vehicles ? vehicles[0] : null;
+            if (theVehicle) {
+                //更新车辆信息
+                const [updateVehicleError, _] = await awaitWrap(theVehicle.updateOne({device: theDevice.id}));
+                if (updateVehicleError) {//更新失败
+                    callback('1');
+                }else{//更新成功
+                    callback('0');
+                }
+            }else{
+                //设备不存在，就创建车辆
+                const [_, newVehicle] = await awaitWrap(creatVehicle({plate: info.identification,device: theDevice.id, plate_color: info.plateColor}));//创建车辆，并绑定设备
+                if (newVehicle) {
+                    callback('0');
+                }else{
+                    callback('2');
+                }
             }
         }
     }
@@ -237,17 +225,18 @@ class NetWorkHelper {
         }else{//不存在则创建设备
             // callback(MsgGeneral.res_0());//不操作，直接返回正确
             // return;
-            var newDevice = new device(info);
-            newDevice.save()
-                .then(item => {//添加成功
-                    console.log('添加成功');
-                    callback(MsgGeneral.res_0());
-                    NetWorkHelper.updatDeviceHistory(imei,[info],function(err){});//更新历史轨迹
-                })
-                .catch(err => {//添加成功
-                    console.log('添加失败' + err);
-                    callback(MsgGeneral.res_1());
-                });
+            const [creactDeviceError, newDevice] = await awaitWrap(creatDevice(info));
+            if (creactDeviceError) {
+                console.log('添加失败' + creactDeviceError);
+                callback(MsgGeneral.res_1());
+            }
+            if (newDevice) {
+                console.log('添加成功');
+                callback(MsgGeneral.res_0());
+                NetWorkHelper.updatDeviceHistory(imei,[info],function(err){});//更新历史轨迹
+            }else{
+                callback(MsgGeneral.res_1());
+            }
         }
     }
 
@@ -320,6 +309,58 @@ class NetWorkHelper {
         });
     }
 
+    /**
+     * 更新0107消息的相关车辆设备信息
+     * @param {string} imei IMEI
+     * @param {device} info 0107消息得到的信息
+     * @param {MsgGeneral} callback 回调 
+     */
+    static async update_0107_msg(imei,info,callback){
+        const [err1, devices] = await awaitWrap(device.find({imei: imei}));//查找出设备
+        if (err1) {
+            console.log(err1);
+            callback(MsgGeneral.res_1());
+            return;
+        }
+        const [err2, manufactors] = await awaitWrap(manufactor.find({code: info.manufacturerID}));//查找出生产厂商
+        if (err2) {
+            console.log(err2);
+            callback(MsgGeneral.res_1());
+            return;
+        }
+        /**当前设备 */
+        var theDevice = devices ? devices[0] : null;
+        if (theDevice) {
+            /**生产厂商 */
+            var theManufactors = manufactors ? manufactors[0] : null;
+            if (theManufactors) {
+                //更新厂商信息
+                const [updateManufactorError, _] = await awaitWrap(theManufactors.updateOne({code: info.manufacturerID}));
+                if (updateManufactorError) {//更新失败
+                    callback(MsgGeneral.res_1());
+                    return;
+                }
+            }else{
+                //创建厂商
+                const [_, newManufactor] = await awaitWrap(creatManufactor({code: info.manufacturerID}));
+                if (newManufactor) {
+                    theManufactors = newManufactor; 
+                }else{
+                    callback(MsgGeneral.res_1());
+                    return;
+                }
+            }
+            //更新设备信息
+            const [updateDeviceError, _] = await awaitWrap(theDevice.updateOne({device_id: info.terminalID, international_code: info.terminalType, manufactor: theManufactors.id}));
+            if (updateDeviceError) {//更新失败
+                callback(MsgGeneral.res_1());
+            }else{
+                callback(MsgGeneral.res_0());
+            }
+        }else{
+            callback(MsgGeneral.res_1());
+        }
+    }
 }
 
 module.exports = NetWorkHelper;

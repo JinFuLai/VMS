@@ -159,8 +159,13 @@ class BBPlugin {
             console.log("终端型号:" + body.terminalType);
             console.log("终端ID:" + body.terminalID);
             console.log("ICCID:" + body.ICCID);
-            //返回通用应答
-            BBPlugin.replyGeneralMsg(_listener,_socket,msg,'0');//直接成功'0'
+            // //返回通用应答
+            // BBPlugin.replyGeneralMsg(_listener,_socket,msg,'0');//直接成功'0'
+            //更新数据信息
+            NetWorkHelper.update_0107_msg(msg.header.IMEI,body,function (result) {
+                //返回通用应答
+                BBPlugin.replyGeneralMsg(_listener,_socket,msg,result);
+            });
         }else if (msg.header.ID == "0704") {//定位数据批量上传
             let body = msg._getBody_0704();
             //批量更新历史数据
@@ -172,10 +177,10 @@ class BBPlugin {
             console.log("收到数据IMEI:" + msg.header.IMEI);
             let body = msg._getBody_0102();
             console.log("鉴权码:" + body.authentication);
-            if (body.authentication === 'X') {//待处理
+            // if (body.authentication === 'X') {//待处理
                 //返回通用应答
                 BBPlugin.replyGeneralMsg(_listener,_socket,msg,'0');//直接成功'0'
-            }
+            // }
 
         }
     }
