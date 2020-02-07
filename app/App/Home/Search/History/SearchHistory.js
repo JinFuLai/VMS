@@ -35,34 +35,28 @@ export default class SearchHistory extends BaseComponent {
     const data = this.props.navigation.state.params.data;
     return (
       <Container>
-        <Grid>
-          <Row>
-            <JFLMap
-              ref={ref => {
-                this.JFLMap = ref;
-              }}
-              onClickBottomBtnBlock={event => {
-                let dic = event.nativeEvent;
-                if (dic.index === 0) {
-                  //详情
-                  this._goToView('SearchDetails', dic.item);
-                }
-              }}
-              style={{flex: 1}}
-            />
-          </Row>
-          <Row style={{height: 165}}>
-            <HistoryBottom
-              ref={ref => {
-                this.picker = ref;
-              }}
-              carNum={data.carNum}
-              IMEI={data.IMEI}
-              driving={data.driving}
-              clickDetailsBtn={index => this._clickDetailsBottomBtn(index)}
-            />
-          </Row>
-        </Grid>
+        <JFLMap
+          ref={ref => {
+            this.JFLMap = ref;
+          }}
+          onClickBottomBtnBlock={event => {
+            let dic = event.nativeEvent;
+            if (dic.index === 0) {
+              //详情
+              this._goToView('SearchDetails', dic.item);
+            }
+          }}
+          style={{flex: 1}}
+        />
+        <HistoryBottom
+          ref={ref => {
+            this.picker = ref;
+          }}
+          carNum={data.carNum}
+          IMEI={data.IMEI}
+          driving={data.driving}
+          clickDetailsBtn={index => this._clickDetailsBottomBtn(index)}
+        />
         {this.state.refresh ? <Loading /> : null}
       </Container>
     );
@@ -75,7 +69,7 @@ export default class SearchHistory extends BaseComponent {
 
   _goToView = (viewName, data = {}) => {
     // const {navigate} = this.props.navigation;
-    this.props.navigation.push(viewName, {data: data});//push可以才能推出相同界面，而navigate不行
+    this.props.navigation.push(viewName, {data: data}); //push可以才能推出相同界面，而navigate不行
   };
 
   /**
@@ -120,5 +114,5 @@ export default class SearchHistory extends BaseComponent {
       });
     } else {
     }
-  };
+  }
 }

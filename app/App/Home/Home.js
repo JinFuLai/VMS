@@ -58,7 +58,7 @@ class Home extends BaseComponent {
               this._goToView('SearchDetails', dic.item);
             }
           }}
-          onClickRefreshDataBtnBlock={event => {
+          onClickRefreshDataBtn={event => {
             this.refreshInfo();
           }}>
           <Header

@@ -34,29 +34,21 @@ export default class SearchLocation extends BaseComponent {
     var data = this.state.data;
     return (
       <Container>
-        <Grid>
-          <Row>
-            <JFLMap
-              ref={ref => {
-                this.JFLMap = ref;
-              }}
-              style={{flex: 1}}
-            />
-          </Row>
-          {data ? (
-            <Row style={{height: 151}}>
-              <LocationBottom
-                ref={ref => {
-                  this.LocationBottom = ref;
-                }}
-                data={data}
-                clickDetailsBtn={index =>
-                  this._clickDetailsBottomBtn(index, data)
-                }
-              />
-            </Row>
-          ) : null}
-        </Grid>
+        <JFLMap
+          ref={ref => {
+            this.JFLMap = ref;
+          }}
+          style={{flex: 1}}
+        />
+        {data ? (
+          <LocationBottom
+            ref={ref => {
+              this.LocationBottom = ref;
+            }}
+            data={data}
+            clickDetailsBtn={index => this._clickDetailsBottomBtn(index, data)}
+          />
+        ) : null}
         {this.state.refresh ? <Loading /> : null}
       </Container>
     );
