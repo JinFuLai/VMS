@@ -5,14 +5,17 @@ import React from 'react';
 import {ViewPropTypes, DeviceEventEmitter} from 'react-native';
 import {I18n} from '../Language/I18n';
 import MapView from 'react-native-maps';
-import {Button, Container, Thumbnail} from 'native-base';
+import {Button, Container, Thumbnail, Text} from 'native-base';
 import {Style} from './MapStyle';
+import {Color} from '../Tools';
 
 class JFLMap extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       myLocation: null,
+      mapType: null,
+      showMapTypeBtn: false, //是否展示地图类型选择按钮
     };
   }
 
@@ -56,10 +59,14 @@ class JFLMap extends React.PureComponent {
   }
 
   render() {
+    if (this.state.mapType == undefined) {
+      this.state.mapType = this.props.mapType;
+    }
     return (
       <Container>
         <MapView
           {...this.props}
+          mapType={this.state.mapType}
           provider={'google'}
           ref={ref => (this.MapView = ref)}
           onUserLocationChange={event => {
@@ -82,11 +89,40 @@ class JFLMap extends React.PureComponent {
               ? {marginTop: this.props.alertVTopMargin}
               : {},
           ]}
-          // onPress={()=>{}}
+          onPress={() => {
+            this._showMapTypeBtn(!this.state.showMapTypeBtn);
+          }}
           image={require('../../Source/Img/Home/Home_cat/chakan.png')}
         />
+        {this.state.showMapTypeBtn
+          ? ['卫星', '标准'].map((title, index) => {
+              return (
+                <ActionBtn
+                  style={[
+                    Style.typeBtn,
+                    this.props.alertVTopMargin
+                      ? {marginTop: this.props.alertVTopMargin}
+                      : {},
+                    {
+                      width: Style.typeBtn.width * 1.5,
+                      right:
+                        Style.typeBtn.right +
+                        Style.typeBtn.width +
+                        index * Style.typeBtn.width * 1.5,
+                      shadowOffset: {},
+                      shadowOpacity: 0,
+                    },
+                  ]}
+                  title={title}
+                  key={index}
+                  onPress={() => this._changeMapType(index)}
+                />
+              );
+            })
+          : null}
         {this.props.showRefreshDataBtn ? (
           <ActionBtn
+            rounded
             style={[Style.funcBtn, {marginBottom: 78.5}]}
             onPress={this.props.onClickRefreshDataBtn}
             image={require('../../Source/Img/Home/Home_cat/refresh.png')}
@@ -94,6 +130,7 @@ class JFLMap extends React.PureComponent {
         ) : null}
         {this.props.showLocationBtn ? (
           <ActionBtn
+            rounded
             style={Style.funcBtn}
             onPress={() => {
               this._onClickLocationBtn();
@@ -103,6 +140,22 @@ class JFLMap extends React.PureComponent {
         ) : null}
       </Container>
     );
+  }
+  /**
+   * 是否展示地图类型选择按钮
+   */
+  _showMapTypeBtn(show = true) {
+    this.setState({showMapTypeBtn: show ?? true});
+  }
+
+  /**
+   * 切换地图类型
+   * @param {*} type   0-卫星, 1-标准
+   */
+  _changeMapType(type = 0) {
+    var mapType = type == 1 ? 'standard' : 'satellite';
+    this.state.showMapTypeBtn = false;
+    this.setState({mapType: mapType});
   }
 
   /**跳转到定位点 */
@@ -160,6 +213,8 @@ class ActionBtn extends React.PureComponent {
     ...ViewPropTypes,
     /**图片 */
     image: PropTypes.any,
+    /**标题(设置image后，则该项无效) */
+    title: PropTypes.string,
     /**点击事件 */
     onPress: PropTypes.func,
   };
@@ -167,14 +222,29 @@ class ActionBtn extends React.PureComponent {
   render() {
     return (
       <Button transparent {...this.props}>
-        <Thumbnail
-          source={this.props.image}
-          style={{
-            flex: 1,
-            width: Style.typeBtn.width,
-            height: Style.typeBtn.height,
-          }}
-        />
+        {this.props.image ? (
+          <Thumbnail
+            source={this.props.image}
+            style={{
+              flex: 1,
+              width: Style.typeBtn.width,
+              height: Style.typeBtn.height,
+            }}
+          />
+        ) : (
+          <Text
+            style={{
+              backgroundColor: Color.jfl_FFFFFF,
+              flex: 1,
+              color: Color.jfl_373737,
+              fontSize: 13,
+              textAlign: 'center',
+              paddingLeft: 0,
+              paddingRight: 0,
+            }}>
+            {this.props.title}
+          </Text>
+        )}
       </Button>
     );
   }

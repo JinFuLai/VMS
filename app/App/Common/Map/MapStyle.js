@@ -16,6 +16,7 @@ export const Style = StyleSheet.create({
     },
     shadowColor: Color.jfl_373737,
     shadowOpacity: 0.5,
+    borderRadius: 0,
   },
   funcBtn: {
     position: 'absolute',
@@ -23,7 +24,6 @@ export const Style = StyleSheet.create({
     marginLeft: 14.5,
     width: 34,
     height: 34,
-    borderRadius: 17,
     marginBottom: 30.5,
     shadowOffset: {
       width: 3,
