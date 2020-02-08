@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {ViewPropTypes, DeviceEventEmitter} from 'react-native';
 import {I18n} from '../Language/I18n';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Marker, Callout, Polyline} from 'react-native-maps';
 import {Button, Container, Thumbnail, Text} from 'native-base';
 import {Style} from './MapStyle';
 import {Color} from '../Tools';
@@ -17,8 +17,11 @@ class JFLMap extends React.PureComponent {
       mapType: null,
       showMapTypeBtn: false, //是否展示地图类型选择按钮
       marks: [], //标记点
+      showMarkPaopao: true, //点击mark，是否展示浮窗
       historyPoint: [], //历史轨迹点集合
+      historyMark: null, //历史轨迹显示的mark点
     };
+    this.historyMarkIndex = 0; //historyMark所显示的点在historyPoint的位置
   }
 
   static propTypes = {
@@ -64,10 +67,21 @@ class JFLMap extends React.PureComponent {
     if (this.state.mapType == undefined) {
       this.state.mapType = this.props.mapType;
     }
+    var historyP = this.state.historyPoint
+      .filter((item, index) => {
+        return item.gps_point && item.vehicle && item.device;
+      })
+      .map((item, index) => {
+        return {
+          latitude: item.gps_point.latitude,
+          longitude: item.gps_point.longitude,
+        };
+      });
     return (
       <Container>
         <MapView
           {...this.props}
+          rotateEnabled={false} //禁止旋转
           style={([this.props.style], {width: '100%', height: '100%'})}
           mapType={this.state.mapType}
           provider={'google'}
@@ -96,16 +110,26 @@ class JFLMap extends React.PureComponent {
               );
             })
             .map((vechile, index) => {
-              return (
-                <Marker
-                  key={index}
-                  coordinate={{
-                    latitude: vechile.device.last_gps_point.latitude,
-                    longitude: vechile.device.last_gps_point.longitude,
-                  }}
-                />
+              var device = vechile.device ? vechile.device : {};
+              return this._returnMark(
+                vechile,
+                device,
+                device.last_gps_point,
+                index,
               );
             })}
+          <Polyline
+            strokeColor={Color.jfl_37BCAD}
+            strokeWidth={4}
+            coordinates={historyP}
+          />
+          {this.state.historyMark &&
+            this._returnMark(
+              this.state.historyMark.vechile,
+              this.state.historyMark.device,
+              this.state.historyMark.gps_point,
+              'historyPoint',
+            )}
         </MapView>
         <ActionBtn
           style={[
@@ -166,6 +190,43 @@ class JFLMap extends React.PureComponent {
       </Container>
     );
   }
+
+  /**
+   * 设置marker点
+   * @param {*} vechile
+   * @param {*} device
+   * @param {*} point
+   * @param {*} key
+   */
+  _returnMark(vechile, device, point, key) {
+    return (
+      <Marker
+        key={key}
+        coordinate={{
+          latitude: point.latitude,
+          longitude: point.longitude,
+        }}
+        rotation={point.direction}>
+        <Thumbnail
+          source={require('../../Source/Img/Home/Home/car.png')}
+          style={{width: 30, height: 30}}
+        />
+        {this.state.showMarkPaopao ? (
+          <Callout>
+            <Text
+              style={{
+                width: 240,
+                fontSize: 13,
+              }}>{`车牌号码： ${vechile.plate ??
+              '暂无数据'} \n设备类型：  ${device.device_type ??
+              '暂无数据'}\n身份ID： 暂无数据\n联系方式： 暂无数据\nIMEI号：  ${device.imei ??
+              '暂无数据'}\nSIM卡号：  ${device.simcard ??
+              '暂无数据'}\n车辆识别号： ${vechile.number ?? '暂无数据'}`}</Text>
+          </Callout>
+        ) : null}
+      </Marker>
+    );
+  }
   /**
    * 是否展示地图类型选择按钮
    */
@@ -176,10 +237,20 @@ class JFLMap extends React.PureComponent {
   /**跳转到定位点 */
   _onClickLocationBtn() {
     if (this.state.myLocation) {
+      this._moveToPoint(this.state.myLocation);
+    }
+  }
+
+  /**
+   * 地图移动到指定点
+   * @param {*} point {latitude: number, longitude:number}
+   */
+  _moveToPoint(point) {
+    if (point) {
       var _this = this;
       this.MapView.getCamera()
         .then(camera => {
-          camera.center = this.state.myLocation;
+          camera.center = point;
           camera.zoom = 15;
           _this.MapView.animateCamera(camera);
         })
@@ -207,25 +278,68 @@ class JFLMap extends React.PureComponent {
     this.setState({mapType: mapType});
   }
 
-  /**设置MARK点 */
+  /**
+   * 设置MARK点
+   * @param {[vehicle]} array [vehicle]
+   */
   setMarks(array) {
     array && this.setState({marks: array});
   }
 
   /**移除MARK点 */
-  removeAllMarks() {}
+  removeAllMarks() {
+    this.setState({marks: []});
+  }
 
-  /**设置历史轨迹 */
-  setPolylines(array) {}
+  /**
+   * 设置历史轨迹
+   * @param {[location]} array [location]
+   */
+  setPolylines(array) {
+    var polints = array.filter((item, index) => {
+      return item.gps_point && item.vehicle && item.device;
+    });
+    polints && this.setState({historyPoint: polints, historyMark: polints[0]});
+    polints && polints[0] && this._moveToPoint(polints[0].gps_point);
+  }
 
   /**开始历史轨迹动画 */
-  startHistoryAnimation() {}
+  startHistoryAnimation() {
+    this.historyMarkIndex += 1;
+    if (this.historyMarkIndex < this.state.historyPoint.length) {
+      this.timer = setTimeout(() => {
+        this.startHistoryAnimation();
+      }, 1000);
+    } else {
+      this.historyMarkIndex = 0;
+      this.timer = null;
+    }
+    this.setState({
+      historyMark: this.state.historyPoint[this.historyMarkIndex],
+    });
+    this._moveToPoint(this.state.historyPoint[this.historyMarkIndex].gps_point);
+  }
 
   /**结束历史轨迹动画 */
-  stopHistoryAnimation() {}
+  stopHistoryAnimation() {
+    this.timer = null;
+  }
 
   /**设置一个车辆定位 */
-  setLocationItem(item) {}
+  setLocationItem(item) {
+    item && this.setState({marks: [item]});
+    item.device &&
+      item.device.last_gps_point &&
+      this._moveToPoint(item.device.last_gps_point);
+  }
+
+  /**
+   * 点击mark，是否展示paopao
+   * @param {*} show
+   */
+  showMarkPaopaoView(show = true) {
+    this.setState({showMarkPaopao: show ?? true});
+  }
 }
 
 class ActionBtn extends React.PureComponent {

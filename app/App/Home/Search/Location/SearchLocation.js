@@ -57,6 +57,7 @@ export default class SearchLocation extends BaseComponent {
   componentDidMount() {
     // const data = this.props.navigation.state.params.data;
     // this.JFLMap.setLocationItem(data);
+    this.JFLMap.showMarkPaopaoView(false);
     this.getData();
   }
 

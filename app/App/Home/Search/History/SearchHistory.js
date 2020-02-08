@@ -63,6 +63,7 @@ export default class SearchHistory extends BaseComponent {
   }
 
   componentDidMount() {
+    this.JFLMap.showMarkPaopaoView(false);
     const data = this.props.navigation.state.params.data;
     this.JFLMap.setLocationItem(data);
   }
