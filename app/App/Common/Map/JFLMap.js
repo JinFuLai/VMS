@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {ViewPropTypes, DeviceEventEmitter} from 'react-native';
 import {I18n} from '../Language/I18n';
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import {Button, Container, Thumbnail, Text} from 'native-base';
 import {Style} from './MapStyle';
 import {Color} from '../Tools';
@@ -16,6 +16,8 @@ class JFLMap extends React.PureComponent {
       myLocation: null,
       mapType: null,
       showMapTypeBtn: false, //是否展示地图类型选择按钮
+      marks: [], //标记点
+      historyPoint: [], //历史轨迹点集合
     };
   }
 
@@ -66,6 +68,7 @@ class JFLMap extends React.PureComponent {
       <Container>
         <MapView
           {...this.props}
+          style={([this.props.style], {width: '100%', height: '100%'})}
           mapType={this.state.mapType}
           provider={'google'}
           ref={ref => (this.MapView = ref)}
@@ -80,8 +83,30 @@ class JFLMap extends React.PureComponent {
                 this._onClickLocationBtn();
               }
             }
-          }}
-        />
+          }}>
+          {this.props.children}
+          {/**显示标记点 */
+          this.state.marks
+            .filter((vechile, index) => {
+              return (
+                vechile.device &&
+                vechile.device.last_gps_point &&
+                vechile.device.last_gps_point.latitude &&
+                vechile.device.last_gps_point.longitude
+              );
+            })
+            .map((vechile, index) => {
+              return (
+                <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: vechile.device.last_gps_point.latitude,
+                    longitude: vechile.device.last_gps_point.longitude,
+                  }}
+                />
+              );
+            })}
+        </MapView>
         <ActionBtn
           style={[
             Style.typeBtn,
@@ -115,7 +140,7 @@ class JFLMap extends React.PureComponent {
                   ]}
                   title={title}
                   key={index}
-                  onPress={() => this._changeMapType(index)}
+                  onPress={() => this.setMapType(index)}
                 />
               );
             })
@@ -148,16 +173,6 @@ class JFLMap extends React.PureComponent {
     this.setState({showMapTypeBtn: show ?? true});
   }
 
-  /**
-   * 切换地图类型
-   * @param {*} type   0-卫星, 1-标准
-   */
-  _changeMapType(type = 0) {
-    var mapType = type == 1 ? 'standard' : 'satellite';
-    this.state.showMapTypeBtn = false;
-    this.setState({mapType: mapType});
-  }
-
   /**跳转到定位点 */
   _onClickLocationBtn() {
     if (this.state.myLocation) {
@@ -165,6 +180,7 @@ class JFLMap extends React.PureComponent {
       this.MapView.getCamera()
         .then(camera => {
           camera.center = this.state.myLocation;
+          camera.zoom = 15;
           _this.MapView.animateCamera(camera);
         })
         .catch(error => {
@@ -181,11 +197,20 @@ class JFLMap extends React.PureComponent {
   /**设置语言('0'-英语，'1'-中文) */
   setLanguage(type) {}
 
-  /**设置地图类型 */
-  setMapType(type) {}
+  /**
+   * 切换地图类型
+   * @param {*} type   0-卫星, 1-标准
+   */
+  setMapType(type = 1) {
+    var mapType = type == 1 ? 'standard' : 'satellite';
+    this.state.showMapTypeBtn = false;
+    this.setState({mapType: mapType});
+  }
 
   /**设置MARK点 */
-  setMarks(array) {}
+  setMarks(array) {
+    array && this.setState({marks: array});
+  }
 
   /**移除MARK点 */
   removeAllMarks() {}

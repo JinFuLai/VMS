@@ -44,7 +44,6 @@ class Home extends BaseComponent {
           showsUserLocation={true}
           showLocationBtn={true}
           showRefreshDataBtn={true}
-          style={{flex: 1}}
           onClickBottomBtnBlock={event => {
             let dic = event.nativeEvent;
             if (dic.index === 0) {
