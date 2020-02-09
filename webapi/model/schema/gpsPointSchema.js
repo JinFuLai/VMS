@@ -11,5 +11,7 @@ const gpsPointSchema = new Schema({
     direction: Number,
     datetime: Date,
     custom_data: { any: Object},
+    /**位置信息*/
+    address: String
 });
 module.exports = gpsPointSchema;

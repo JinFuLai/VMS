@@ -5,6 +5,7 @@ const vehicle = require('../Model/vehicle');
 const manufactor = require('../Model/manufactor');
 const consts = require('../Helper/consts');
 const Helper = require('../Helper/Helper');
+const http = require('http');
 
 /**通用回复 */
 class MsgGeneral {
@@ -60,6 +61,26 @@ async function creatManufactor(info) {
         .catch(err => {//创建失败
             return [err,null];
         });
+}
+
+/**获取地理编码 */
+async function getLocationAddrerss(locatin) {
+    const {latitude, longitude} = locatin;
+
+    var options = {
+        hostname: `http://jinfulaikeji.com:2000/api//app/geocoder?longitude=${longitude}&latitude=${latitude}`,
+        port: 443,
+        path: '/',
+        method: 'POST'
+    };
+    var request = https.request(options, function (response) {
+        if (response && response.code == 200) {
+            return [null,response.data];
+        }else{
+            return [response.message ? response.message : 'error', null];
+        }
+    });
+    request.end();
 }
 
 class NetWorkHelper {
@@ -160,6 +181,13 @@ class NetWorkHelper {
      * @param {MsgGeneral} callback 回调 
      */
     static async updatDeviceInfo(imei,info,callback){
+        //先获取位置信息
+        if (info.last_gps_point && info.last_gps_point.latitude && info.last_gps_point.longitude) {
+            const [err, address] = await awaitWrap(getLocationAddrerss(info.last_gps_point));//查找出设备
+            if (address) {
+                info.last_gps_point.address = address;
+            }
+        }
         const [err, devices] = await awaitWrap(device.find({imei: imei}));
         if (err) {
             console.log(err);
@@ -246,7 +274,7 @@ class NetWorkHelper {
      * @param {[location]} histroy 更新的位置信息数组 [location]
      * @param {MsgGeneral} callback 回调 
      */
-    static async updatDeviceHistory(imei,histroy = [],callback){
+    static async updatDeviceHistory(imei,histroy = [1],callback){
         // histroy.sort((a,b) =>{//按时间顺序重新排列
         //     if (a.last_gps_point.datetime > b.last_gps_point.datetime) {
         //         return 1;
@@ -254,6 +282,17 @@ class NetWorkHelper {
         //         return -1;
         //     }
         // });
+        
+        ///根据经纬度获取位置信息
+        for (let index = 0; index < histroy.length; index++) {
+            const element = histroy[index];
+            if (element.gps_point && element.gps_point.latitude && element.gps_point.longitude) {
+                const [err, address] = await awaitWrap(getLocationAddrerss(element.gps_point));//查找出设备
+                if (address) {
+                    element.gps_point.address = address;
+                }
+            }
+        }
         const [err, deviceRes] = await awaitWrap(device.find({imei: imei}));//查找出设备
         if (err) {
             console.log(err);
