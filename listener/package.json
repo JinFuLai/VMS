@@ -5,7 +5,8 @@
   "main": "app.js",
   "dependencies": {
     "iconv-lite": "^0.5.0",
-    "mongoose": "^5.8.4"
+    "mongoose": "^5.8.4",
+    "request": "^2.88.0"
   },
   "devDependencies": {},
   "scripts": {

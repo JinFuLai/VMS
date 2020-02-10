@@ -5,7 +5,7 @@ const vehicle = require('../Model/vehicle');
 const manufactor = require('../Model/manufactor');
 const consts = require('../Helper/consts');
 const Helper = require('../Helper/Helper');
-const http = require('http');
+const request = require("request");
 
 /**通用回复 */
 class MsgGeneral {
@@ -66,21 +66,21 @@ async function creatManufactor(info) {
 /**获取地理编码 */
 async function getLocationAddrerss(locatin) {
     const {latitude, longitude} = locatin;
-
-    var options = {
-        hostname: `http://jinfulaikeji.com:2000/api//app/geocoder?longitude=${longitude}&latitude=${latitude}`,
-        port: 443,
-        path: '/',
-        method: 'POST'
-    };
-    var request = https.request(options, function (response) {
-        if (response && response.code == 200) {
-            return [null,response.data];
+    request({
+        url: `http://192.168.0.104:2001/api//app/geocoder?longitude=${longitude}&latitude=${latitude}`,
+        method: "post",//如果是post就涉及到跨域的问题了
+        json: true,
+        headers: {
+            "content-type": "application/json",
+        },
+        body: {}
+    }, function (error, response, body) {
+        if (!error && response.statusCode == 200 && body && body.data) {
+            return [null,body.data];
         }else{
-            return [response.message ? response.message : 'error', null];
+            return [error ? error : 'error', null];
         }
-    });
-    request.end();
+    }); 
 }
 
 class NetWorkHelper {

@@ -1,7 +1,6 @@
 const reponseHelper = require('../helper/responsehelper');
 const geographical = require('../model/geographical');
-// const http = require('http');
-var request = require("request");
+const request = require("request");
 
 /**
  * 对接收到的经度（纬度）做一些处理
@@ -70,14 +69,23 @@ module.exports = function (app) {
         }
         if (appConfig && appConfig.length > 0) {
             ///数据存在
-            res.json(reponseHelper.Success(appConfig[0]));
+            res.json(reponseHelper.Success(appConfig[0].address));
         } else {
             ///不存在在数据，查询百度接口
             request(`http://api.map.baidu.com/reverse_geocoding/v3/?ak=BOrl4tlIQ1Rx22FI0tRrRE5MmLnob6Hk&output=json&coordtype=wgs84ll&location=${parseFloat(latitudeStr)},${parseFloat(longitudeStr)}`, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var bodyJson = JSON.parse(body);
                     if (bodyJson != undefined && bodyJson.status != undefined && bodyJson.status == 0 && bodyJson.result) {
-                        res.json(reponseHelper.Success(bodyJson.result.formatted_address));
+                        //保存数据
+                        var newGeographical = new geographical({key: key, address: bodyJson.result.formatted_address});
+                        newGeographical.save()
+                            .then(item => {//添加成功
+                                res.json(reponseHelper.Success(bodyJson.result.formatted_address));
+                            })
+                            .catch(err => {//创建失败
+                                res.json(reponseHelper.Error(err));
+                            });
+                        
                     }else{
                         res.json(reponseHelper.Error(response.statusMessage));
                     }
