@@ -33,10 +33,6 @@ target 'VMS' do
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-
-  #百度地图
-  pod "BaiduMapKit", '~> 5.0.0'
-  pod 'BMKLocationKit'
   
   #约束
   pod 'SnapKit'
@@ -62,6 +58,11 @@ target 'VMS' do
   pod 'react-native-google-maps', :path => rn_maps_path
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
+
+  #百度地图
+  # pod "BaiduMapKit", '~> 5.0.0'
+  # pod 'BMKLocationKit'
+  pod 'react-native-baidu-map', :path => '../node_modules/react-native-baidu-map'
 
   target 'VMSTests' do
     inherit! :search_paths

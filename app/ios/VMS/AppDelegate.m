@@ -59,16 +59,16 @@
   [self.window makeKeyAndVisible];
   
   //百度地图相关
-  BMKMapManager *mapManager = [[BMKMapManager alloc] init];
-  // 如果要关注网络及授权验证事件，请设定generalDelegate参数
-  BOOL ret = [mapManager start:@"FKNzI3CxD0GQwYagDOSfnHUGUfZgcNia"  generalDelegate:nil];
-  if (!ret) {
-      NSLog(@"manager start failed!");
-  }
-//  //设置为GCJ02坐标
-//  [BMKMapManager setCoordinateTypeUsedInBaiduMapSDK: BMK_COORDTYPE_COMMON];
-  //定位
-  [[BMKLocationAuth sharedInstance] checkPermisionWithKey:@"FKNzI3CxD0GQwYagDOSfnHUGUfZgcNia" authDelegate:self];
+//  BMKMapManager *mapManager = [[BMKMapManager alloc] init];
+//  // 如果要关注网络及授权验证事件，请设定generalDelegate参数
+//  BOOL ret = [mapManager start:@"Za6BsogYqHMDKHebmY5Hjrz4Oxsk3QjY"  generalDelegate:nil];
+//  if (!ret) {
+//      NSLog(@"manager start failed!");
+//  }
+////  //设置为GCJ02坐标
+////  [BMKMapManager setCoordinateTypeUsedInBaiduMapSDK: BMK_COORDTYPE_COMMON];
+//  //定位
+//  [[BMKLocationAuth sharedInstance] checkPermisionWithKey:@"Za6BsogYqHMDKHebmY5Hjrz4Oxsk3QjY" authDelegate:self];
   //谷歌地图
   [GMSServices provideAPIKey:@"AIzaSyBT6v9p64rmCpRmZou0Hd6s5x9bD2y1-t0"];
   return YES;

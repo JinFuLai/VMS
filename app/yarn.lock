@@ -5884,6 +5884,11 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.npm.taobao.org/react-lifecycles-compat/download/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha1-TxonOv38jzSIqMUWv9p4+HI1I2I=
 
+react-native-baidu-map@^1.0.26:
+  version "1.0.26"
+  resolved "https://registry.npm.taobao.org/react-native-baidu-map/download/react-native-baidu-map-1.0.26.tgz#1615d47c49bd18eb6850260503c14d80b0538335"
+  integrity sha1-FhXUfEm9GOtoUCYFA8FNgLBTgzU=
+
 react-native-drawer@2.5.1:
   version "2.5.1"
   resolved "https://registry.npm.taobao.org/react-native-drawer/download/react-native-drawer-2.5.1.tgz#08b9314184f48c724f1b467f8859797369798654"
