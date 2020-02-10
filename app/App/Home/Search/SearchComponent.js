@@ -54,7 +54,7 @@ export class LocationBottom extends PureComponent {
         <Text style={SearchComponentStyle.LocationBottomDetailsStyle}>
           {data.purchase_date ?? ''} 卫星定位
         </Text>
-        <Text style={SearchComponentStyle.LocationBottomDetailsStyle}>
+        {/* <Text style={SearchComponentStyle.LocationBottomDetailsStyle}>
           {I18n.t('location_longitude') +
             ' ' +
             ((data.device &&
@@ -68,6 +68,14 @@ export class LocationBottom extends PureComponent {
             ((data.device &&
               data.device.last_gps_point &&
               data.device.last_gps_point.latitude) ??
+              '')}
+        </Text> */}
+        <Text style={SearchComponentStyle.LocationBottomDetailsStyle}>
+          {I18n.t('location_address') +
+            ' ' +
+            ((data.device &&
+              data.device.last_gps_point &&
+              data.device.last_gps_point.address) ??
               '')}
         </Text>
         <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
@@ -243,7 +251,7 @@ export class WarningBottom extends PureComponent {
               {device.last_gps_point ? device.last_gps_point.datetime : null}
               卫星定位
             </Text>
-            <Text style={SearchComponentStyle.warningBottomTextStyle}>
+            {/* <Text style={SearchComponentStyle.warningBottomTextStyle}>
               {I18n.t('location_longitude') +
                 ' ' +
                 (device.last_gps_point
@@ -254,6 +262,12 @@ export class WarningBottom extends PureComponent {
               {I18n.t('location_latitude') +
                 ' ' +
                 (device.last_gps_point ? device.last_gps_point.latitude : null)}
+            </Text> */}
+            <Text style={SearchComponentStyle.warningBottomTextStyle}>
+              {I18n.t('location_address') +
+                ' ' +
+                (device.last_gps_point &&
+                  (device.last_gps_point.address ?? ''))}
             </Text>
             <Row style={{height: 17}}>
               <Text style={SearchComponentStyle.warningBottomTextStyle}>

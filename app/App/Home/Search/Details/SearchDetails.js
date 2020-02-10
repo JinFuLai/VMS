@@ -92,7 +92,10 @@ export default class SearchDetails extends BaseComponent {
                 title: I18n.t('details_latitude'),
                 info: device.last_gps_point && device.last_gps_point.latitude,
               },
-              // {title: I18n.t('details_address'), info: '广东省惠州市'},
+              {
+                title: I18n.t('details_address'),
+                info: device.last_gps_point && device.last_gps_point.address,
+              },
             ],
           },
           {

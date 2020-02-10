@@ -70,6 +70,7 @@ export default {
   location_history: '历史轨迹',
   location_details: '设备详情',
   location_unable: '无法获取位置信息',
+  location_address: '地址',
 
   register: '注册',
   register_success: '注册成功',

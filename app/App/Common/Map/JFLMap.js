@@ -221,7 +221,12 @@ class JFLMap extends React.PureComponent {
               '暂无数据'} \n设备类型：  ${device.device_type ??
               '暂无数据'}\n身份ID： 暂无数据\n联系方式： 暂无数据\nIMEI号：  ${device.imei ??
               '暂无数据'}\nSIM卡号：  ${device.simcard ??
-              '暂无数据'}\n车辆识别号： ${vechile.number ?? '暂无数据'}`}</Text>
+              '暂无数据'}\n车辆识别号： ${vechile.number ??
+              '暂无数据'}\n地址： ${
+              device.last_gps_point
+                ? device.last_gps_point.address ?? '暂无数据'
+                : '暂无数据'
+            }`}</Text>
           </Callout>
         ) : null}
       </Marker>
