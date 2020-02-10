@@ -19,6 +19,7 @@
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.3.7",
     "mongoose-to-swagger": "0.0.4",
+    "request": "^2.88.0",
     "swagger-jsdoc": "^3.2.3"
   },
   "author": "Frank",
