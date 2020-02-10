@@ -67,7 +67,7 @@ async function creatManufactor(info) {
 async function getLocationAddrerss(locatin) {
     const {latitude, longitude} = locatin;
     request({
-        url: `http://192.168.0.104:2001/api//app/geocoder?longitude=${longitude}&latitude=${latitude}`,//地址待确定
+        url: `http://jinfulaikeji.com:2001/api/app/geocoder?longitude=${longitude}&latitude=${latitude}`,
         method: "post",//如果是post就涉及到跨域的问题了
         json: true,
         headers: {
