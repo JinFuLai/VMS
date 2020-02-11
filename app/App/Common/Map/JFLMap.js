@@ -4,16 +4,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {ViewPropTypes, DeviceEventEmitter} from 'react-native';
 import {I18n} from '../Language/I18n';
-import MapView, {Marker, Callout, Polyline} from 'react-native-maps';
-import {Button, Container, Thumbnail, Text} from 'native-base';
+import {Button, Container, Thumbnail, Text, View} from 'native-base';
 import {Style} from './MapStyle';
 import {Color} from '../Tools';
+import { MapView , Location} from 'react-native-baidumap-sdk';
+const {Marker, Callout, Polyline} = MapView;
 
 class JFLMap extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      myLocation: null,
+      myLocation: null, // 我的位置
+      center: null, //地图中心
       mapType: null,
       showMapTypeBtn: false, //是否展示地图类型选择按钮
       marks: [], //标记点
@@ -44,7 +46,7 @@ class JFLMap extends React.PureComponent {
     onClickRefreshDataBtn: PropTypes.func,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.refreshLanguage();
     this._navListener = DeviceEventEmitter.addListener('MapType', type => {
       if (type == 0) {
@@ -57,10 +59,22 @@ class JFLMap extends React.PureComponent {
         this.forceUpdate();
       }
     });
+
+    await Location.init();
+    Location.setOptions({ gps: true });
+    this._LocationListener = Location.addLocationListener(location => {
+      var point = {
+          latitude:location.latitude,
+          longitude:location.longitude
+      };
+      this.setState({ myLocation: point, center: point});
+    });
+    Location.start();
   }
 
   componentWillUnmount() {
-    this._navListener.remove();
+    this._navListener && this._navListener.remove();
+    this._LocationListener && this._LocationListener.remove();
   }
 
   render() {
@@ -81,26 +95,16 @@ class JFLMap extends React.PureComponent {
       <Container>
         <MapView
           {...this.props}
-          rotateEnabled={false} //禁止旋转
-          style={([this.props.style], {width: '100%', height: '100%'})}
-          mapType={this.state.mapType}
-          provider={'google'}
           ref={ref => (this.MapView = ref)}
-          onUserLocationChange={event => {
-            if (event.nativeEvent && event.nativeEvent.coordinate) {
-              var toLocation = this.state.myLocation == null;
-              this.state.myLocation = {
-                latitude: event.nativeEvent.coordinate.latitude,
-                longitude: event.nativeEvent.coordinate.longitude,
-              };
-              if (this.state.myLocation && toLocation) {
-                this._onClickLocationBtn();
-              }
-            }
-          }}>
+          rotateDisabled={true} //禁止旋转
+          style={([this.props.style], {width: '100%', height: '100%'})}
+          satellite={this.state.mapType === 0}
+          locationEnabled={this.props.showsUserLocation}
+          location={this.state.myLocation}
+          center={this.state.center}>
           {this.props.children}
-          {/**显示标记点 */
-          this.state.marks
+          {/* 显示标记点 */}
+          {this.state.marks
             .filter((vechile, index) => {
               return (
                 vechile.device &&
@@ -119,9 +123,9 @@ class JFLMap extends React.PureComponent {
               );
             })}
           <Polyline
-            strokeColor={Color.jfl_37BCAD}
-            strokeWidth={4}
-            coordinates={historyP}
+            color={Color.jfl_37BCAD}
+            width={4}
+            points={historyP}
           />
           {this.state.historyMark &&
             this._returnMark(
@@ -202,21 +206,29 @@ class JFLMap extends React.PureComponent {
     return (
       <Marker
         key={key}
+        image={'car'}
         coordinate={{
           latitude: point.latitude,
           longitude: point.longitude,
         }}
-        rotation={point.direction}>
-        <Thumbnail
-          source={require('../../Source/Img/Home/Home/car.png')}
-          style={{width: 30, height: 30}}
-        />
+        // view={()=>
+        //   <Thumbnail
+        //   source={require('../../Source/Img/Home/Home/car.png')}
+        //   style={{width: 30, height: 30}}
+        // />
+        // }
+        >
         {this.state.showMarkPaopao ? (
           <Callout>
             <Text
               style={{
                 width: 240,
                 fontSize: 13,
+                backgroundColor: Color.jfl_FFFFFF,
+                opacity: 0.8,
+                padding: 10,
+                borderRadius: 4,
+                overflow: 'hidden',
               }}>{`车牌号码： ${vechile.plate ??
               '暂无数据'} \n设备类型：  ${device.device_type ??
               '暂无数据'}\n身份ID： 暂无数据\n联系方式： 暂无数据\nIMEI号：  ${device.imei ??
@@ -241,9 +253,7 @@ class JFLMap extends React.PureComponent {
 
   /**跳转到定位点 */
   _onClickLocationBtn() {
-    if (this.state.myLocation) {
-      this._moveToPoint(this.state.myLocation);
-    }
+    this.setState({center: this.state.myLocation});
   }
 
   /**
@@ -251,18 +261,7 @@ class JFLMap extends React.PureComponent {
    * @param {*} point {latitude: number, longitude:number}
    */
   _moveToPoint(point) {
-    if (point) {
-      var _this = this;
-      this.MapView.getCamera()
-        .then(camera => {
-          camera.center = point;
-          camera.zoom = 15;
-          _this.MapView.animateCamera(camera);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
+    this.setState({center: point});
   }
 
   /**刷新语言显示 */
@@ -278,9 +277,8 @@ class JFLMap extends React.PureComponent {
    * @param {*} type   0-卫星, 1-标准
    */
   setMapType(type = 1) {
-    var mapType = type == 1 ? 'standard' : 'satellite';
     this.state.showMapTypeBtn = false;
-    this.setState({mapType: mapType});
+    this.setState({mapType: type});
   }
 
   /**

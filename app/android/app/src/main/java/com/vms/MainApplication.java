@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import cn.qiuxiang.react.baidumap.BaiduMapPackage;
 import org.lovebing.reactnative.baidumap.BaiduMapPackage;
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
 import com.facebook.react.ReactNativeHost;

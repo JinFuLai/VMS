@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View} from 'native-base';
 import PropTypes from 'prop-types';
-import {LocationBottom} from '../../Home/Search/SearchComponent';
+// import {LocationBottom} from '../../Home/Search/SearchComponent';
 
 export default class BDMap extends Component {
   constructor(props) {

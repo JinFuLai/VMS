@@ -62,7 +62,7 @@ target 'VMS' do
   #百度地图
   # pod "BaiduMapKit", '~> 5.0.0'
   # pod 'BMKLocationKit'
-  pod 'react-native-baidu-map', :path => '../node_modules/react-native-baidu-map'
+  pod 'react-native-baidumap-sdk', path: '../node_modules/react-native-baidumap-sdk/lib/ios'
 
   target 'VMSTests' do
     inherit! :search_paths

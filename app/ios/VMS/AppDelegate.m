@@ -10,15 +10,16 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-#import <BaiduMapAPI_Base/BMKBaseComponent.h>
-#import <BMKLocationkit/BMKLocationComponent.h>
+//#import <BaiduMapAPI_Base/BMKBaseComponent.h>
+//#import <BMKLocationkit/BMKLocationComponent.h>
 #if RCT_DEV
 #import <React/RCTDevLoadingView.h>
 #endif
 
 #import <GoogleMaps/GoogleMaps.h>
 
-@interface AppDelegate()<BMKLocationAuthDelegate>
+@interface AppDelegate()
+//<BMKLocationAuthDelegate>
 
 @end
 
@@ -83,7 +84,7 @@
 #endif
 }
 
-- (void)onCheckPermissionState:(BMKLocationAuthErrorCode)iError{
-  NSLog(@"百度定位sdk注册错误：%ld", (long)iError);
-}
+//- (void)onCheckPermissionState:(BMKLocationAuthErrorCode)iError{
+//  NSLog(@"百度定位sdk注册错误：%ld", (long)iError);
+//}
 @end
