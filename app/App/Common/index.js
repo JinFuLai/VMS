@@ -3,11 +3,9 @@ import {StyleSheet, Screen, Color} from './Tools';
 import {CommonStyle} from './Common';
 import NormalCell from './NormalCell';
 import AlertView from './AlertView';
-import Map from './Map/Map';
 import {I18n} from './Language/I18n';
 import HttpUtils from './NetWork/NetWork';
 import Loading from './Loading';
-import BDMap from './Map/BDMap';
 import JFLMap from './Map/JFLMap';
 import {storage} from './Storage';
 import {toast as Toast} from './Toast';
@@ -23,11 +21,9 @@ export {
   NormalCell,
   AlertView,
   CommonStyle,
-  Map,
   I18n,
   HttpUtils,
   Loading,
-  BDMap,
   JFLMap,
   storage,
   Toast,
