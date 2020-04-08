@@ -9,6 +9,8 @@ import {Button, Container, Thumbnail, Text} from 'native-base';
 import {Style} from './MapStyle';
 import {Color} from '../Tools';
 
+import GpsUtil from './GPSTool/GpsUtil';
+
 class JFLGoogleMap extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -46,17 +48,6 @@ class JFLGoogleMap extends React.PureComponent {
 
   componentDidMount() {
     this.refreshLanguage();
-    this._navListener = DeviceEventEmitter.addListener('MapType', type => {
-      if (type == 0) {
-        //百度
-        this.isGoogleMap = false;
-        this.forceUpdate();
-      } else if (type == 1) {
-        //谷歌
-        this.isGoogleMap = true;
-        this.forceUpdate();
-      }
-    });
   }
 
   componentWillUnmount() {
@@ -199,12 +190,16 @@ class JFLGoogleMap extends React.PureComponent {
    * @param {*} key
    */
   _returnMark(vechile, device, point, key) {
+    let coordinate = GpsUtil.gps84_To_Gcj02(
+      point.longitude,
+      point.latitude,
+    ).toJson();
     return (
       <Marker
         key={key}
         coordinate={{
-          latitude: point.latitude,
-          longitude: point.longitude,
+          latitude: coordinate.latitude,
+          longitude: coordinate.longitude,
         }}
         rotation={point.direction}>
         <Thumbnail
@@ -217,16 +212,20 @@ class JFLGoogleMap extends React.PureComponent {
               style={{
                 width: 240,
                 fontSize: 13,
-              }}>{`车牌号码： ${vechile.plate ??
-              '暂无数据'} \n设备类型：  ${device.device_type ??
-              '暂无数据'}\n身份ID： 暂无数据\n联系方式： 暂无数据\nIMEI号：  ${device.imei ??
-              '暂无数据'}\nSIM卡号：  ${device.simcard ??
-              '暂无数据'}\n车辆识别号： ${vechile.number ??
-              '暂无数据'}\n地址： ${
-              device.last_gps_point
-                ? device.last_gps_point.address ?? '暂无数据'
-                : '暂无数据'
-            }`}</Text>
+              }}>
+              {vechile
+                ? `车牌号码： ${vechile.plate ??
+                    '暂无数据'} \n设备类型：  ${device.device_type ??
+                    '暂无数据'}\n身份ID： 暂无数据\n联系方式： 暂无数据\nIMEI号：  ${device.imei ??
+                    '暂无数据'}\nSIM卡号：  ${device.simcard ??
+                    '暂无数据'}\n车辆识别号： ${vechile.number ??
+                    '暂无数据'}\n地址： ${
+                    device.last_gps_point
+                      ? device.last_gps_point.address ?? '暂无数据'
+                      : '暂无数据'
+                  }`
+                : null}
+            </Text>
           </Callout>
         ) : null}
       </Marker>
@@ -251,11 +250,15 @@ class JFLGoogleMap extends React.PureComponent {
    * @param {*} point {latitude: number, longitude:number}
    */
   _moveToPoint(point) {
+    let coordinate = GpsUtil.gps84_To_Gcj02(
+      point.longitude,
+      point.latitude,
+    ).toJson();
     if (point) {
       var _this = this;
       this.MapView.getCamera()
         .then(camera => {
-          camera.center = point;
+          camera.center = coordinate;
           camera.zoom = 15;
           _this.MapView.animateCamera(camera);
         })

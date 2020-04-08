@@ -5,6 +5,8 @@ import {ViewPropTypes, DeviceEventEmitter} from 'react-native';
 import JFLGoogleMap from './JFLGoogleMap';
 import JFLBaiduMap from './JFLBaiduMap';
 
+var isGoogleMap = false;
+
 class JFLMap extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -36,11 +38,11 @@ class JFLMap extends React.PureComponent {
     this._navListener = DeviceEventEmitter.addListener('MapType', type => {
       if (type == 0) {
         //百度
-        this.isGoogleMap = false;
+        isGoogleMap = false;
         this.forceUpdate();
       } else if (type == 1) {
         //谷歌
-        this.isGoogleMap = true;
+        isGoogleMap = true;
         this.forceUpdate();
       }
     });
@@ -51,7 +53,7 @@ class JFLMap extends React.PureComponent {
   }
 
   render() {
-    if (this.isGoogleMap) {
+    if (isGoogleMap) {
       return <JFLGoogleMap ref={ref => (this.JFLMap = ref)} {...this.props} />;
     } else {
       return <JFLBaiduMap ref={ref => (this.JFLMap = ref)} {...this.props} />;

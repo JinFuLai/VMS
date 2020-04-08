@@ -10,6 +10,8 @@ import {Color} from '../Tools';
 import {MapView, Location} from 'react-native-baidumap-sdk';
 const {Marker, Callout, Polyline} = MapView;
 
+import GpsUtil from './GPSTool/GpsUtil';
+
 class JFLBaiduMap extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -48,18 +50,6 @@ class JFLBaiduMap extends React.PureComponent {
 
   async componentDidMount() {
     this.refreshLanguage();
-    this._navListener = DeviceEventEmitter.addListener('MapType', type => {
-      if (type == 0) {
-        //百度
-        this.isGoogleMap = false;
-        this.forceUpdate();
-      } else if (type == 1) {
-        //谷歌
-        this.isGoogleMap = true;
-        this.forceUpdate();
-      }
-    });
-
     await Location.init();
     Location.setOptions({gps: true});
     this._LocationListener = Location.addLocationListener(location => {
@@ -91,6 +81,17 @@ class JFLBaiduMap extends React.PureComponent {
           longitude: item.gps_point.longitude,
         };
       });
+    var bdCenter = null;
+    if (
+      this.state.center &&
+      this.state.center.longitude &&
+      this.state.center.latitude
+    ) {
+      bdCenter = GpsUtil.gps84_To_Bd09(
+        this.state.center.longitude,
+        this.state.center.latitude,
+      ).toJson();
+    }
     return (
       <Container>
         <MapView
@@ -100,8 +101,17 @@ class JFLBaiduMap extends React.PureComponent {
           style={([this.props.style], {width: '100%', height: '100%'})}
           satellite={this.state.mapType === 0}
           locationEnabled={this.props.showsUserLocation}
-          location={this.state.myLocation}
-          center={this.state.center}>
+          location={
+            this.state.myLocation
+              ? GpsUtil.gps84_To_Bd09(
+                  this.state.myLocation.longitude,
+                  this.state.myLocation.latitude,
+                ).toJson()
+              : null
+          }
+          center={bdCenter}
+          // center={this.state.center}
+        >
           {this.props.children}
           {/* 显示标记点 */}
           {this.state.marks
@@ -199,14 +209,15 @@ class JFLBaiduMap extends React.PureComponent {
    * @param {*} key
    */
   _returnMark(vechile, device, point, key) {
+    let coordinate = GpsUtil.gps84_To_Bd09(
+      point.longitude,
+      point.latitude,
+    ).toJson();
     return (
       <Marker
         key={key}
         image={'car'}
-        coordinate={{
-          latitude: point.latitude,
-          longitude: point.longitude,
-        }}
+        coordinate={coordinate}
         // view={()=>
         //   <Thumbnail
         //   source={require('../../Source/Img/Home/Home/car.png')}
@@ -225,16 +236,20 @@ class JFLBaiduMap extends React.PureComponent {
                 padding: 10,
                 borderRadius: 4,
                 overflow: 'hidden',
-              }}>{`车牌号码： ${vechile.plate ??
-              '暂无数据'} \n设备类型：  ${device.device_type ??
-              '暂无数据'}\n身份ID： 暂无数据\n联系方式： 暂无数据\nIMEI号：  ${device.imei ??
-              '暂无数据'}\nSIM卡号：  ${device.simcard ??
-              '暂无数据'}\n车辆识别号： ${vechile.number ??
-              '暂无数据'}\n地址： ${
-              device.last_gps_point
-                ? device.last_gps_point.address ?? '暂无数据'
-                : '暂无数据'
-            }`}</Text>
+              }}>
+              {vechile
+                ? `车牌号码： ${vechile.plate ??
+                    '暂无数据'} \n设备类型：  ${device.device_type ??
+                    '暂无数据'}\n身份ID： 暂无数据\n联系方式： 暂无数据\nIMEI号：  ${device.imei ??
+                    '暂无数据'}\nSIM卡号：  ${device.simcard ??
+                    '暂无数据'}\n车辆识别号： ${vechile.number ??
+                    '暂无数据'}\n地址： ${
+                    device.last_gps_point
+                      ? device.last_gps_point.address ?? '暂无数据'
+                      : '暂无数据'
+                  }`
+                : null}
+            </Text>
           </Callout>
         ) : null}
       </Marker>
