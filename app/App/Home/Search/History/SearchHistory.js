@@ -80,8 +80,8 @@ export default class SearchHistory extends BaseComponent {
   _clickDetailsBottomBtn(index) {
     if (index === 0) {
       const data = this.props.navigation.state.params.data;
-      const deviceID = data && data.device && data.device._id;
-      if (!deviceID) {
+      const vehicleID = data && data._id;
+      if (!vehicleID) {
         Toast.show(I18n.t('no_more'));
         return;
       }
@@ -94,7 +94,7 @@ export default class SearchHistory extends BaseComponent {
       this.setState({refresh: true});
       var _this = this;
       HttpUtils.postRequest_inUrl(HttpUtils.AllUrl.Vehicle.Histroy, true, {
-        deviceID: deviceID,
+        vehicleID: vehicleID,
         start: start,
         end: end,
       }).then(response => {

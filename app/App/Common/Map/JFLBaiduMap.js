@@ -57,13 +57,13 @@ class JFLBaiduMap extends React.PureComponent {
         latitude: location.latitude,
         longitude: location.longitude,
       };
+      Location.stop();
       this.setState({myLocation: point, center: point});
     });
     Location.start();
   }
 
   componentWillUnmount() {
-    this._navListener && this._navListener.remove();
     this._LocationListener && this._LocationListener.remove();
   }
 
@@ -83,6 +83,7 @@ class JFLBaiduMap extends React.PureComponent {
       });
     var bdCenter = null;
     if (
+      this.props.showsUserLocation &&
       this.state.center &&
       this.state.center.longitude &&
       this.state.center.latitude

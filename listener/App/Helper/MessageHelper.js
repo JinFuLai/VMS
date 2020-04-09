@@ -55,7 +55,7 @@ class MessageHelper {
     static getHeader(msgArray) {
         var id = msgArray[0] + msgArray[1];//消息ID 
         var bodyAttribute = Helper.changeByteString(msgArray[2] + msgArray[3],16,2)//消息体属性(16位的2进制字符数据)
-        var imei = `${msgArray[4][1]}` + msgArray.slice(5,10).join(''); //终端手机号
+        var imei = msgArray.length > 10 ? `${msgArray[4][1]}` + msgArray.slice(5,10).join('') : null; //终端手机号
         var num = parseInt(msgArray[10] + msgArray[11],16);//消息流水号 
         var rsa = bodyAttribute.charAt(15-10) === '1'//消息体是否经过 RSA 算法加密
         var packageTotal = null;//消息总包数 
@@ -378,7 +378,7 @@ class MessageHelper {
         var terminalType = Helper.getStringFrom(bodyArray.slice(9,29),16).join('');//bodyArray.slice(9,29).join('');
         var terminalID = Helper.getStringFrom(bodyArray.slice(29,36),16).join('');//bodyArray.slice(29,36).join('');
         var plateColor = parseInt(bodyArray.slice(36,37),16);
-        var identification = iconvLite.decode(Helper.getStringFrom(bodyArray.slice(37),16).join(''),'gbk');
+        var identification = iconvLite.decode(Helper.getStringFrom(bodyArray.slice(37,45),16).join(''),'gbk');
         return {
             /**省域ID - 标示终端安装车辆所在的省域，0保留，由平台取默认值。省域ID采用GB/T 2260中规定的行政区划代码六位中前两位 */
             provincialID: provincialID,

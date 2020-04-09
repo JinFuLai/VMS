@@ -8,6 +8,7 @@ mongoose.set('useFindAndModify', false);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
+console.log('正在连接mongoose...');
 db.once('open', function() {
     // we're connected!
     console.log('mongoose连接成功');

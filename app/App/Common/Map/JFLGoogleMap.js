@@ -50,10 +50,6 @@ class JFLGoogleMap extends React.PureComponent {
     this.refreshLanguage();
   }
 
-  componentWillUnmount() {
-    this._navListener.remove();
-  }
-
   render() {
     if (this.state.mapType == undefined) {
       this.state.mapType = this.props.mapType;

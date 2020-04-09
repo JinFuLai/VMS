@@ -227,5 +227,3 @@ class BBPlugin {
 }
 
 module.exports = BBPlugin;
-
-new BBPlugin();

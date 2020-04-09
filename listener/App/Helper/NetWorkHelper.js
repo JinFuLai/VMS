@@ -39,6 +39,7 @@ async function creatVehicle(info) {
             return [err,null];
         });
 }
+
 /**创建设备 */
 async function creatDevice(info) {
     var newDevice = new device(info);
@@ -274,7 +275,9 @@ class NetWorkHelper {
      * @param {[location]} histroy 更新的位置信息数组 [location]
      * @param {MsgGeneral} callback 回调 
      */
-    static async updatDeviceHistory(imei,histroy = [1],callback){
+    static async updatDeviceHistory(imei,histroy = [],callback){
+        ///此处只能获取到imei，所以逻辑是：imie-》查找出设备（目前第一个，没有则创建）-》查找出车辆（目前取第一个）
+
         // histroy.sort((a,b) =>{//按时间顺序重新排列
         //     if (a.last_gps_point.datetime > b.last_gps_point.datetime) {
         //         return 1;
@@ -286,10 +289,10 @@ class NetWorkHelper {
         ///根据经纬度获取位置信息
         for (let index = 0; index < histroy.length; index++) {
             const element = histroy[index];
-            if (element.gps_point && element.gps_point.latitude && element.gps_point.longitude) {
-                const [err, address] = await awaitWrap(getLocationAddrerss(element.gps_point));//查找出设备
+            if (element.last_gps_point && element.last_gps_point.latitude && element.last_gps_point.longitude) {
+                const [err, address] = await awaitWrap(getLocationAddrerss(element.last_gps_point));//查找出设备
                 if (address) {
-                    element.gps_point.address = address;
+                    element.last_gps_point.address = address;
                 }
             }
         }
@@ -301,8 +304,6 @@ class NetWorkHelper {
         }
         var resultDev = null;
         if (deviceRes.length <= 0) {//不存在设备时
-            // callback(MsgGeneral.res_0());///不操作，直接返回正确
-            // return;
             //创建设备
             var newDevice = new device({imei: imei});
             let result = await newDevice.save();

@@ -24,9 +24,9 @@ module.exports = function (app) {
      *    produces:
      *    - application/json
      *    parameters:
-     *       - name: deviceID
+     *       - name: vehicleID
      *         type: string
-     *         description: 设备id
+     *         description: 车辆id
      *         in: query
      *         required: true
      *       - name: start
@@ -44,7 +44,7 @@ module.exports = function (app) {
      *          description: Successfully   
      */
     app.post('/vehicle/history', function (req, res) {
-        var { deviceID, start ,end } = req.query;
+        var { vehicleID, start ,end } = req.query;
         // location.find({'device.imei': imei})
         var startDate = null,endDate = null;
         if (start == null) {
@@ -58,7 +58,8 @@ module.exports = function (app) {
             endDate = new Date(end);
         }
         var options = endDate != null ? {$gte: startDate, $lt: endDate} : {$gte: startDate};
-        location.find({device: deviceID, 'gps_point.datetime':options})
+        console.log(vehicleID);
+        location.find({vehicle: vehicleID, 'gps_point.datetime':options})
             .populate('device')
             .populate('vehicle')
             // .populate('driver')//有问题😓
