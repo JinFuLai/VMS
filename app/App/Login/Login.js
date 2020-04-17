@@ -10,6 +10,7 @@ import {
   HttpUtils,
   I18n,
   BaseComponent,
+  UserInfo,
 } from '../Common/index';
 import {StatusBar, Keyboard} from 'react-native';
 import {
@@ -158,11 +159,7 @@ export class LoginScreen extends BaseComponent {
         _this.setState({isRefresh: false});
         if (response) {
           if ((response.code == 200) & (response.data != null)) {
-            storage.save({
-              key: 'User',
-              data: response.data,
-              expires: 1000 * 3600 * 24 * 30,
-            });
+            UserInfo.saveUserInfo(response.data);
             _this._goToView('Tab');
           } else if (response.code === 211) {
             _this._goToView('Register', {username: _this.state.username});

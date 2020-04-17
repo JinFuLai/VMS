@@ -12,6 +12,7 @@ import {
   HttpUtils,
   PickerView,
   BaseComponent,
+  UserInfo,
 } from '../../Common/index';
 import {Item, Container, Input, Button, Text, Thumbnail} from 'native-base';
 import ImagePicker from 'react-native-image-picker';
@@ -268,11 +269,7 @@ export default class ProfileScreen extends BaseComponent {
       }
       this.setState({isRefresh: false});
       if ((response.code === 200) & (response.data !== null)) {
-        storage.save({
-          key: 'User',
-          data: response.data,
-          expires: 1000 * 3600 * 24 * 30,
-        });
+        UserInfo.saveUserInfo(response.data);
         this.setState({user: response.data});
       } else {
         Toast.show(response.message);
@@ -326,11 +323,7 @@ export default class ProfileScreen extends BaseComponent {
       _this.setState({isRefresh: false});
       if (response) {
         if ((response.code === 200) & (response.data !== null)) {
-          storage.save({
-            key: 'User',
-            data: response.data,
-            expires: 1000 * 3600 * 24 * 30,
-          });
+          UserInfo.saveUserInfo(response.data);
           Toast.show(response.message);
           _this.props.navigation.state.params.refresh();
           _this.props.navigation.goBack();

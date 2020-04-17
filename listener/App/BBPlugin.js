@@ -120,6 +120,7 @@ class BBPlugin {
     OnRecievedData(listener,socket,bufferMessage)
     {        
         //获取原始消息
+        // var messageStr = bufferMessage.toString();//测试用
         var messageStr = Helper.getOriginalMsg(bufferMessage);
 
         if (messageStr.split(' ').length <= 1) {
@@ -168,6 +169,20 @@ class BBPlugin {
             });
         }else if (msg.header.ID == "0704") {//定位数据批量上传
             let body = msg._getBody_0704();
+            // msg.header.IMEI = "14788120517"
+            // let element = body.devices[0]
+            // element.imei = "14788120517"
+            // let devicesE = [BBPlugin.getD(element,104.060182571411,30.6675210056677,"2020/04/08 10:11:00"),
+            //     BBPlugin.getD(element,104.064817428589,30.6670042185002,"2020/04/08 10:12:0"),
+            //     BBPlugin.getD(element,104.070053100586,30.6671518722586,"2020/04/08 10:13:00"),
+            //     BBPlugin.getD(element,104.070739746094,30.6600642373471,"2020/04/08 10:14:00"),
+            //     BBPlugin.getD(element,104.071168899536,30.655781872696,"2020/04/08 10:15:00"),
+            //     BBPlugin.getD(element,104.065418243408,30.6547481700454,"2020/04/08 10:16:00"),
+            //     BBPlugin.getD(element,104.0602684021,30.6623530096149,"2020/04/08 10:17:00"),
+            //     BBPlugin.getD(element,104.060354232788,30.6656014965412,"2020/04/08 10:18:00"),
+            //     BBPlugin.getD(element,104.0602684021,30.6665612558709,"2020/04/08 10:19:00")
+            // ]
+            // body.devices = devicesE;
             //批量更新历史数据
             NetWorkHelper.updatDeviceHistory(msg.header.IMEI,body.devices,function (result) {
                 //返回通用应答
@@ -183,6 +198,20 @@ class BBPlugin {
             // }
 
         }
+    }
+
+    /**
+     * 测试用
+     * @param {*} element 
+     * @param {*} longitude 
+     * @param {*} latitude 
+     */
+    static getD(element,longitude, latitude, datetime){
+        var e = element;
+        e.last_gps_point.latitude = latitude;
+        e.last_gps_point.longitude = longitude;
+        e.last_gps_point.datetime = datetime;
+        return  e
     }
 
     /**

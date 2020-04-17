@@ -6,9 +6,11 @@ import {
   Screen,
   StyleSheet,
   Color,
+  awaitWrap,
   storage,
   Loading,
   I18n,
+  UserInfo,
 } from '../../Common/index';
 import {
   View,
@@ -131,26 +133,7 @@ export class My extends PureComponent {
   }
 
   loadUserInfo() {
-    this.setState({isLoading: true});
-    storage
-      .load({
-        key: 'User',
-      })
-      .then(info => {
-        this.state.user = info;
-        this.setState({isLoading: false});
-      })
-      .catch(err => {
-        this.setState({isLoading: false});
-        switch (err.name) {
-          case 'NotFoundError':
-            // TODO;
-            break;
-          case 'ExpiredError':
-            // TODO
-            break;
-        }
-      });
+    this.setState({user: UserInfo.user});
   }
 
   _getDefaultData = () => {

@@ -32,7 +32,7 @@ class BBSocket {
                 // this.recieveData();
                 reciveDataFunc(socket,chunk);
             });
-        
+        // socket.write("nihao");//测试用
             // When the client requests to end the TCP connection with the server, the server
             // ends the connection.
             socket.on('end', function() {

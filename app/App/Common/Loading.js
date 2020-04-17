@@ -22,7 +22,7 @@ export default class Loading extends Component {
       'ArcAlt',
       'Plane',
     ];
-    var type = s[Math.floor(Math.random() * s.length)];
+    var type = 'FadingCircleAlt';//s[Math.floor(Math.random() * s.length)];
     return (
       <View
         style={{

@@ -1,5 +1,5 @@
 /* jshint esversion: 6 */
-import {StyleSheet, Screen, Color} from './Tools';
+import {StyleSheet, Screen, Color, awaitWrap} from './Tools';
 import {CommonStyle} from './Common';
 import NormalCell from './NormalCell';
 import AlertView from './AlertView';
@@ -13,11 +13,13 @@ import PickerView from './PickerView';
 import SearchHistroy from './SearchHistroy';
 // var SearchHistroy = require('./SearchHistroy');
 import BaseComponent from './BaseComponent';
+import UserInfo from './UserInfo';
 
 export {
   Screen,
   Color,
   StyleSheet,
+  awaitWrap,
   NormalCell,
   AlertView,
   CommonStyle,
@@ -30,4 +32,5 @@ export {
   PickerView,
   SearchHistroy,
   BaseComponent,
+  UserInfo,
 };

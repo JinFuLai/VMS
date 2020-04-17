@@ -2,7 +2,7 @@
 /* eslint-disable eqeqeq */
 import PropTypes from 'prop-types';
 import React from 'react';
-import {ViewPropTypes, DeviceEventEmitter} from 'react-native';
+import {ViewPropTypes} from 'react-native';
 import {I18n} from '../Language/I18n';
 import MapView, {Marker, Callout, Polyline} from 'react-native-maps';
 import {Button, Container, Thumbnail, Text} from 'native-base';
@@ -186,10 +186,7 @@ class JFLGoogleMap extends React.PureComponent {
    * @param {*} key
    */
   _returnMark(vechile, device, point, key) {
-    let coordinate = GpsUtil.gps84_To_Gcj02(
-      point.longitude,
-      point.latitude,
-    ).toJson();
+    let coordinate = this.getRightPoint(point);
     return (
       <Marker
         key={key}
@@ -246,10 +243,7 @@ class JFLGoogleMap extends React.PureComponent {
    * @param {*} point {latitude: number, longitude:number}
    */
   _moveToPoint(point) {
-    let coordinate = GpsUtil.gps84_To_Gcj02(
-      point.longitude,
-      point.latitude,
-    ).toJson();
+    let coordinate = this.getRightPoint(point);
     if (point) {
       var _this = this;
       this.MapView.getCamera()
@@ -343,6 +337,23 @@ class JFLGoogleMap extends React.PureComponent {
    */
   showMarkPaopaoView(show = true) {
     this.setState({showMarkPaopao: show ?? true});
+  }
+
+  /**
+   * 获取正确的点
+   * @param {*} point
+   */
+  getRightPoint(point) {
+    if (this.state.mapType == 'standard' || this.state.mapType == undefined) {
+      // return GpsUtil.gps84_To_Gcj02(point.longitude, point.latitude).toJson();
+      return {longitude: point.longitude, latitude: point.latitude};
+      // return {longitude: 104.064817428589, latitude: 30.6670042185002};
+    } else {
+      // return {longitude: point.longitude, latitude: point.latitude};
+      return GpsUtil.gcj_To_Gps84(point.longitude, point.latitude).toJson();
+      // return GpsUtil.gcj_To_Gps84(104.064817428589, 30.6670042185002).toJson();
+      // return {longitude: 104.064817428589, latitude: 30.6670042185002};
+    }
   }
 }
 

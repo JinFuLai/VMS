@@ -3,7 +3,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {PureComponent} from 'react';
 import {Image, DeviceEventEmitter, View} from 'react-native';
-import {Color, I18n, storage, Loading, HttpUtils} from './Common/index';
+import {Color, I18n, awaitWrap,  storage, Loading, HttpUtils, UserInfo} from './Common/index';
 import {
   createAppContainer,
   NavigationActions,
@@ -96,25 +96,17 @@ export default class RootScreen extends PureComponent {
   }
 
   /**判断是否已经登录app */
-  getLoginState() {
-    var timeout_promise = new Promise((resolve, reject) => {
-      storage
-        .load({
-          key: 'User',
-        })
-        .then(user => {
-          if (user && user.token != null) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        })
-        .catch(() => {
-          resolve(false);
-        });
-    });
-    var abortable_promise = Promise.race([timeout_promise]);
-    return abortable_promise;
+  async getLoginState() {
+    const [error,user] = await awaitWrap(UserInfo.loadLocalUserInfo());
+    if (error) {
+      return false;
+    } else {
+      if (user && user.token != null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   /**获取并设置语言 */

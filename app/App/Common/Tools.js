@@ -55,4 +55,17 @@ export const Color = {
   jfl_4F4F4F: '#4F4F4F',
   jfl_282828: '#282828',
   jfl_565656: '#565656',
-};
+}; 
+
+/**
+ * 抽离成公共方法
+ */
+export function awaitWrap(promise) {
+  return promise
+    .then(data => {
+      return [null, data];
+    })
+    .catch(err => {
+      return [err, null];
+    });
+}

@@ -2,9 +2,9 @@
 /* eslint-disable eqeqeq */
 import PropTypes from 'prop-types';
 import React from 'react';
-import {ViewPropTypes, DeviceEventEmitter} from 'react-native';
+import {ViewPropTypes} from 'react-native';
 import {I18n} from '../Language/I18n';
-import {Button, Container, Thumbnail, Text, View} from 'native-base';
+import {Button, Container, Thumbnail, Text} from 'native-base';
 import {Style} from './MapStyle';
 import {Color} from '../Tools';
 import {MapView, Location} from 'react-native-baidumap-sdk';
@@ -81,17 +81,17 @@ class JFLBaiduMap extends React.PureComponent {
           longitude: item.gps_point.longitude,
         };
       });
+
+    var bdLocation = this.state.myLocation
+      ? this.getRightPoint(this.state.myLocation)
+      : null;
     var bdCenter = null;
     if (
-      this.props.showsUserLocation &&
       this.state.center &&
       this.state.center.longitude &&
       this.state.center.latitude
     ) {
-      bdCenter = GpsUtil.gps84_To_Bd09(
-        this.state.center.longitude,
-        this.state.center.latitude,
-      ).toJson();
+      bdCenter = this.getRightPoint(this.state.center);
     }
     return (
       <Container>
@@ -102,14 +102,7 @@ class JFLBaiduMap extends React.PureComponent {
           style={([this.props.style], {width: '100%', height: '100%'})}
           satellite={this.state.mapType === 0}
           locationEnabled={this.props.showsUserLocation}
-          location={
-            this.state.myLocation
-              ? GpsUtil.gps84_To_Bd09(
-                  this.state.myLocation.longitude,
-                  this.state.myLocation.latitude,
-                ).toJson()
-              : null
-          }
+          location={bdLocation}
           center={bdCenter}
           // center={this.state.center}
         >
@@ -210,10 +203,7 @@ class JFLBaiduMap extends React.PureComponent {
    * @param {*} key
    */
   _returnMark(vechile, device, point, key) {
-    let coordinate = GpsUtil.gps84_To_Bd09(
-      point.longitude,
-      point.latitude,
-    ).toJson();
+    let coordinate = this.getRightPoint(point);
     return (
       <Marker
         key={key}
@@ -354,6 +344,16 @@ class JFLBaiduMap extends React.PureComponent {
    */
   showMarkPaopaoView(show = true) {
     this.setState({showMarkPaopao: show ?? true});
+  }
+
+  /**
+   * 获取正确的点
+   * @param {*} point
+   */
+  getRightPoint(point) {
+    // return {longitude: 104.064817428589, latitude: 30.6670042185002};
+    // return GpsUtil.gcj02_To_Bd09(104.064817428589, 30.6670042185002).toJson();
+    return GpsUtil.gcj02_To_Bd09(point.longitude, point.latitude).toJson();
   }
 }
 
