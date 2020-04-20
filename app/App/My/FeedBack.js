@@ -4,7 +4,7 @@ import React, {PureComponent} from 'react';
 import {
   Color,
   CommonStyle,
-  Loading,
+  LoadingTool,
   Toast,
   HttpUtils,
   I18n,
@@ -21,7 +21,6 @@ export default class FeedBack extends BaseComponent {
     super(props);
     this.state = {
       ...this.state, //共用父类属性
-      // isRefresh: false,
     };
   }
 
@@ -77,7 +76,6 @@ export default class FeedBack extends BaseComponent {
             {I18n.t('commit')}
           </Text>
         </Item>
-        {this.state.isRefresh ? <Loading /> : null}
       </Container>
     );
   }
@@ -90,7 +88,7 @@ export default class FeedBack extends BaseComponent {
   /**提交反馈意见 */
   _onClickCommitBtn() {
     if (this.state.feedback) {
-      this.setState({isRefresh: true});
+      LoadingTool.startShowLoading();
       var _this = this;
       HttpUtils.postRequest(HttpUtils.AllUrl.User.Feedback, true, {
         content: this.state.feedback,
@@ -98,7 +96,7 @@ export default class FeedBack extends BaseComponent {
         if (_this.unmount) {
           return;
         }
-        _this.setState({isRefresh: false});
+        LoadingTool.stopLoading();
         if (response && response.code === 200) {
           //   this.props.navigation.goBack();
           _this.setState({feedback: null});

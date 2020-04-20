@@ -4,13 +4,13 @@
 /* jshint esversion: 6 */
 import {
   Color,
-  Loading,
   storage,
   Toast,
   HttpUtils,
   I18n,
   BaseComponent,
   UserInfo,
+  LoadingTool,
 } from '../Common/index';
 import {StatusBar, Keyboard} from 'react-native';
 import {
@@ -36,7 +36,6 @@ export class LoginScreen extends BaseComponent {
       ...this.state,
       username: null,
       password: null,
-      isRefresh: false,
     };
   }
 
@@ -134,7 +133,6 @@ export class LoginScreen extends BaseComponent {
             </Footer>
           </Item>
         </View>
-        {this.state.isRefresh ? <Loading /> : null}
       </Container>
     );
   }
@@ -148,7 +146,7 @@ export class LoginScreen extends BaseComponent {
     Keyboard.dismiss();
     var _this = this;
     if (this.state.username != null && this.state.password != null) {
-      this.setState({isRefresh: true});
+      LoadingTool.showLoading();
       HttpUtils.postRequest(HttpUtils.AllUrl.User.Login, false, {
         username: this.state.username,
         password: this.state.password,
@@ -156,7 +154,7 @@ export class LoginScreen extends BaseComponent {
         if (_this.unmount) {
           return;
         }
-        _this.setState({isRefresh: false});
+        LoadingTool.stopLoading();
         if (response) {
           if ((response.code == 200) & (response.data != null)) {
             UserInfo.saveUserInfo(response.data);

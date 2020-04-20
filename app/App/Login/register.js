@@ -2,7 +2,7 @@
 /* jshint esversion: 6 */
 import {
   Color,
-  Loading,
+  LoadingTool,
   Toast,
   HttpUtils,
   I18n,
@@ -34,7 +34,6 @@ export default class Register extends BaseComponent {
       ...this.state,
       username: null,
       password: null,
-      isRefresh: false,
     };
   }
 
@@ -130,7 +129,6 @@ export default class Register extends BaseComponent {
             </Footer>
           </Item>
         </View>
-        {this.state.isRefresh ? <Loading /> : null}
       </Container>
     );
   }
@@ -152,7 +150,7 @@ export default class Register extends BaseComponent {
     Keyboard.dismiss();
     var _this = this;
     if (this.state.username != null && this.state.password != null) {
-      this.setState({isRefresh: true});
+      LoadingTool.startShowLoading();
       HttpUtils.postRequest(HttpUtils.AllUrl.User.Create, false, {
         username: this.state.username,
         password: this.state.password,
@@ -160,7 +158,7 @@ export default class Register extends BaseComponent {
         if (_this.unmount) {
           return;
         }
-        _this.setState({isRefresh: false});
+        LoadingTool.stopLoading();
         if (response) {
           if (response.code === 200) {
             Toast.show(I18n.t('register_success'));

@@ -4,7 +4,7 @@ import React, {PureComponent} from 'react';
 import {
   Color,
   CommonStyle,
-  Loading,
+  LoadingTool,
   Toast,
   HttpUtils,
   I18n,
@@ -24,9 +24,7 @@ export default class ChangePswCommit extends BaseComponent {
 
   constructor(props) {
     super(props);
-    this.state = {
-      // isRefresh: false,
-    };
+    this.state = {};
   }
 
   render() {
@@ -88,7 +86,6 @@ export default class ChangePswCommit extends BaseComponent {
             {I18n.t('finish')}
           </Text>
         </Item>
-        {this.state.isRefresh ? <Loading /> : null}
       </Container>
     );
   }
@@ -105,7 +102,7 @@ export default class ChangePswCommit extends BaseComponent {
         this.state.confirm &&
         this.state.password === this.state.confirm
       ) {
-        this.setState({isRefresh: true});
+        LoadingTool.startShowLoading();
         var _this = this;
         HttpUtils.postRequest(HttpUtils.AllUrl.User.ChangePassword, true, {
           verification: this.props.navigation.state.params.verification,
@@ -115,7 +112,7 @@ export default class ChangePswCommit extends BaseComponent {
           if (_this.unmount) {
             return;
           }
-          this.setState({isRefresh: false});
+          LoadingTool.stopLoading();
           if (response && response.code === 200) {
             _this._goToView('Setting');
           } else {

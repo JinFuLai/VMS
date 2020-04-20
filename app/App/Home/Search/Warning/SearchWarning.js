@@ -5,7 +5,7 @@ import {
   AlertView,
   I18n,
   HttpUtils,
-  Loading,
+  LoadingTool,
   Toast,
   BaseComponent,
 } from '../../../Common/index';
@@ -59,7 +59,6 @@ export default class SearchWarning extends BaseComponent {
           // clickLeftBtn={()=>(this.refs.AlertView_my.closeAlert())}
           // clickRightBtn={()=>(this.refs.AlertView_my.closeAlert())}
         />
-        {this.state.refresh ? <Loading /> : null}
       </Container>
     );
   }
@@ -94,7 +93,7 @@ export default class SearchWarning extends BaseComponent {
     if (!id) {
       return;
     }
-    this.setState({refresh: true});
+    LoadingTool.startShowLoading();
     var _this = this;
     HttpUtils.postRequest_inUrl(HttpUtils.AllUrl.Vehicle.warnMsg, true, {
       id: id,
@@ -102,7 +101,7 @@ export default class SearchWarning extends BaseComponent {
       if (_this.unmount) {
         return;
       }
-      _this.setState({refresh: false});
+      LoadingTool.stopLoading();
       if (response.code === 200) {
         if (response.data && response.data.length > 0) {
           _this.setState({data: response.data});

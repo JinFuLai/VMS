@@ -9,7 +9,7 @@ import {
   JFLMap,
   I18n,
   HttpUtils,
-  Loading,
+  LoadingTool,
   BaseComponent,
 } from '../Common/index';
 import Search from './Search/Search';
@@ -89,7 +89,6 @@ class Home extends BaseComponent {
             </Item>
           </Header>
         </JFLMap>
-        {this.state.refresh ? <Loading /> : null}
       </Container>
     );
   }
@@ -129,14 +128,14 @@ class Home extends BaseComponent {
    */
   refreshInfo(showLoading = true) {
     if (showLoading) {
-      this.setState({refresh: true});
+      LoadingTool.startShowLoading();
     }
     var _this = this;
     HttpUtils.getRequest(HttpUtils.AllUrl.Vehicle.All, true).then(response => {
       if (_this.unmount) {
         return;
       }
-      _this.setState({refresh: false});
+      LoadingTool.stopLoading();
       if (response.code === 200) {
         if (response.data && response.data.length > 0) {
           _this.JFLMap && _this.JFLMap.removeAllMarks();

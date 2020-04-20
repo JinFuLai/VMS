@@ -3,7 +3,16 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {PureComponent} from 'react';
 import {Image, DeviceEventEmitter, View} from 'react-native';
-import {Color, I18n, awaitWrap,  storage, Loading, HttpUtils, UserInfo} from './Common/index';
+import {
+  Color,
+  I18n,
+  awaitWrap,
+  storage,
+  HttpUtils,
+  UserInfo,
+  LoadComponent,
+  LoadingTool,
+} from './Common/index';
 import {
   createAppContainer,
   NavigationActions,
@@ -18,19 +27,18 @@ import MyScreen from './My/Home/My';
 import LoginScreen from './Login/Login';
 import GuideScreen from './Guide/Guide';
 import Register from './Login/register';
+import { Container } from 'native-base';
 
 export default class RootScreen extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      refresh: false,
-    };
+    this.state = {};
   }
 
   _goToView(name) {
     // call navigate for AppNavigator here:
-    // this.navigator &&
-    //   this.navigator.dispatch(NavigationActions.navigate({routeName: name}));
+    this.navigator &&
+      this.navigator.dispatch(NavigationActions.navigate({routeName: name}));
     const resetAction = StackActions.reset({
       index: 0,
       actions: [NavigationActions.navigate({routeName: name})],
@@ -40,12 +48,18 @@ export default class RootScreen extends PureComponent {
 
   render() {
     return (
-      <AppContainer
-        ref={nav => {
-          this.navigator = nav;
-        }}>
-        {this.state.refresh ? <Loading /> : null}
-      </AppContainer>
+      <Container>
+        <AppContainer
+          ref={nav => {
+            this.navigator = nav;
+          }}
+        />
+        <LoadComponent
+          ref={ref => {
+            global.mLoadingComponentRef = ref;
+          }}
+        />
+      </Container>
     );
   }
 
@@ -97,7 +111,7 @@ export default class RootScreen extends PureComponent {
 
   /**判断是否已经登录app */
   async getLoginState() {
-    const [error,user] = await awaitWrap(UserInfo.loadLocalUserInfo());
+    const [error, user] = await awaitWrap(UserInfo.loadLocalUserInfo());
     if (error) {
       return false;
     } else {
@@ -136,11 +150,11 @@ export default class RootScreen extends PureComponent {
 
   /**获取app使用的地图类型 0-百度，1-谷歌 */
   getMapType() {
-    this.setState({refresh: true});
+    LoadingTool.startShowLoading();
     var _this = this;
     HttpUtils.getRequest(HttpUtils.AllUrl.System.MapType, false).then(
       response => {
-        _this.setState({refresh: false});
+        LoadingTool.stopLoading();
         if (response.code === 200) {
           if (response.data) {
             DeviceEventEmitter.emit('MapType', response.data);
@@ -225,7 +239,7 @@ export class TabBarItem extends PureComponent<Props> {
 
 class Nonecreen extends PureComponent {
   render() {
-    return <View />;
+    return <Container />;
   }
 }
 

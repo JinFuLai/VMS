@@ -6,11 +6,11 @@ import {StatusBar} from 'react-native';
 import {
   CommonStyle,
   Color,
-  Loading,
   HttpUtils,
   Toast,
   I18n,
   BaseComponent,
+  LoadingTool,
 } from '../../Common/index';
 import {Container, Content, Text, List} from 'native-base';
 import {ListHomeItem} from '../../List/Home/ListHomeComponent';
@@ -59,7 +59,6 @@ export default class SearchResult extends BaseComponent {
             })}
           </List>
         </Content>
-        {this.state.refresh ? <Loading /> : null}
       </Container>
     );
   }
@@ -84,7 +83,7 @@ export default class SearchResult extends BaseComponent {
   };
 
   componentDidMount() {
-    this.setState({refresh: true});
+    LoadingTool.startShowLoading();
     var _this = this;
     HttpUtils.postRequest_inUrl(HttpUtils.AllUrl.Vehicle.Search, true, {
       keyword: this.props.navigation.state.params.data,
@@ -93,7 +92,7 @@ export default class SearchResult extends BaseComponent {
       if (_this.unmount) {
         return;
       }
-      _this.setState({refresh: false});
+      LoadingTool.stopLoading();
       if (response.code === 200) {
         if (response.data && response.data.length > 0) {
           _this.setState({list: response.data});

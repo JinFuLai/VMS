@@ -5,7 +5,6 @@ import NormalCell from './NormalCell';
 import AlertView from './AlertView';
 import {I18n} from './Language/I18n';
 import HttpUtils from './NetWork/NetWork';
-import Loading from './Loading';
 import JFLMap from './Map/JFLMap';
 import {storage} from './Storage';
 import {toast as Toast} from './Toast';
@@ -14,6 +13,8 @@ import SearchHistroy from './SearchHistroy';
 // var SearchHistroy = require('./SearchHistroy');
 import BaseComponent from './BaseComponent';
 import UserInfo from './UserInfo';
+import LoadingTool from './Load/LoadingTool';
+import LoadComponent from './Load/LoadComponent';
 
 export {
   Screen,
@@ -25,7 +26,6 @@ export {
   CommonStyle,
   I18n,
   HttpUtils,
-  Loading,
   JFLMap,
   storage,
   Toast,
@@ -33,4 +33,6 @@ export {
   SearchHistroy,
   BaseComponent,
   UserInfo,
+  LoadingTool,
+  LoadComponent,
 };

@@ -7,10 +7,9 @@ import {
   StyleSheet,
   Color,
   awaitWrap,
-  storage,
-  Loading,
   I18n,
   UserInfo,
+  LoadingTool,
 } from '../../Common/index';
 import {
   View,
@@ -44,6 +43,8 @@ import {
   SystemMessage,
 } from '../MyIndex';
 
+import Modal from 'react-native-modalbox';
+
 export class My extends PureComponent {
   static navigationOptions = ({navigation}) => ({
     headerLeft: () => <View />,
@@ -76,7 +77,6 @@ export class My extends PureComponent {
   constructor() {
     super();
     this.state = {
-      isLoading: false,
       user: null,
     };
     this._goToView = this._goToView.bind(this);
@@ -127,7 +127,18 @@ export class My extends PureComponent {
             />
           </View>
         </View>
-        {this.state.isLoading ? <Loading /> : null}
+        {/* <Modal
+          backdropPressToClose={true}
+          style={{
+            backgroundColor: 'transparent',
+            height: 360,
+            position: 'absolute',
+            top: (deviceheight - 360) / 2,
+            left: 0,
+            width: devicewidth,
+          }}
+          ref={'calendarstart'}
+        /> */}
       </Container>
     );
   }

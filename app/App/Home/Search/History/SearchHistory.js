@@ -5,10 +5,10 @@ import {
   CommonStyle,
   JFLMap,
   I18n,
-  Loading,
   HttpUtils,
   Toast,
   BaseComponent,
+  LoadingTool,
 } from '../../../Common/index';
 import {Container, Text, Grid, Row} from 'native-base';
 import {HistoryBottom} from '../SearchComponent';
@@ -24,7 +24,6 @@ export default class SearchHistory extends BaseComponent {
     super(props);
     this.state = {
       ...this.state,
-      refresh: false,
       data: [],
     };
   }
@@ -57,7 +56,6 @@ export default class SearchHistory extends BaseComponent {
           driving={data.driving}
           clickDetailsBtn={index => this._clickDetailsBottomBtn(index)}
         />
-        {this.state.refresh ? <Loading /> : null}
       </Container>
     );
   }
@@ -91,7 +89,7 @@ export default class SearchHistory extends BaseComponent {
       const end = `${this.picker
         .getEndDay()
         .join('/')} ${this.picker.getEndTime().join(':')}`;
-      this.setState({refresh: true});
+      LoadingTool.startShowLoading();
       var _this = this;
       HttpUtils.postRequest_inUrl(HttpUtils.AllUrl.Vehicle.Histroy, true, {
         vehicleID: vehicleID,
@@ -101,7 +99,7 @@ export default class SearchHistory extends BaseComponent {
         if (_this.unmount) {
           return;
         }
-        _this.setState({refresh: false});
+        LoadingTool.stopLoading();
         if (response && response.code === 200) {
           if (response.data && response.data.length > 0) {
             this.JFLMap.setPolylines(response.data);

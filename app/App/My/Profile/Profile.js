@@ -7,7 +7,7 @@ import {
   Color,
   I18n,
   storage,
-  Loading,
+  LoadingTool,
   Toast,
   HttpUtils,
   PickerView,
@@ -36,7 +36,7 @@ export default class ProfileScreen extends BaseComponent {
     headerRight: () => {
       <Button transparent onPress={() => navigation.state.params.saveUser()}>
         <Text style={{color: Color.jfl_FFFFFF}}>{I18n.t('save')}</Text>
-      </Button>
+      </Button>;
     },
   });
   constructor() {
@@ -51,7 +51,7 @@ export default class ProfileScreen extends BaseComponent {
   render() {
     let user = this.state.user;
     if (user == null) {
-      return <Container>{this.state.isRefresh ? <Loading /> : null}</Container>;
+      return <Container />;
     } else {
       return (
         <Container style={{backgroundColor: Color.jfl_F7F7F7}}>
@@ -88,7 +88,6 @@ export default class ProfileScreen extends BaseComponent {
             'contact.email',
             user.contact && user.contact.email,
           )}
-          {this.state.isRefresh ? <Loading /> : null}
           <PickerView
             ref={ref => (this.PickerView = ref)}
             callOneValue={(value, tag) => this.callOneValue(value, tag)}
@@ -252,7 +251,7 @@ export default class ProfileScreen extends BaseComponent {
     if (user == null) {
       return;
     }
-    this.setState({isRefresh: true});
+    LoadingTool.startShowLoading();
     if (this.state.selectedImg) {
       this._updateUserPhoto(this.state.selectedImg);
     } else {
@@ -262,12 +261,12 @@ export default class ProfileScreen extends BaseComponent {
 
   /**加载用户信息 */
   _loadUserInfo() {
-    this.setState({isRefresh: true});
+    LoadingTool.startShowLoading();
     HttpUtils.getRequest(HttpUtils.AllUrl.User.User, true).then(response => {
       if (this.unmount) {
         return;
       }
-      this.setState({isRefresh: false});
+      LoadingTool.stopLoading();
       if ((response.code === 200) & (response.data !== null)) {
         UserInfo.saveUserInfo(response.data);
         this.setState({user: response.data});
@@ -301,7 +300,7 @@ export default class ProfileScreen extends BaseComponent {
             //TODO:头像修改成功后，在修改用户信息
             _this._updateUserInfo();
           } else {
-            _this.setState({isRefresh: false});
+            LoadingTool.stopLoading();
             Toast.show(response.message);
           }
         }
@@ -320,7 +319,7 @@ export default class ProfileScreen extends BaseComponent {
       if (_this.unmount) {
         return;
       }
-      _this.setState({isRefresh: false});
+      LoadingTool.stopLoading();
       if (response) {
         if ((response.code === 200) & (response.data !== null)) {
           UserInfo.saveUserInfo(response.data);

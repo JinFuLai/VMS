@@ -6,10 +6,10 @@ import {
   CommonStyle,
   JFLMap,
   I18n,
-  Loading,
   HttpUtils,
   Toast,
   BaseComponent,
+  LoadingTool,
 } from '../../../Common/index';
 import {Container, Text, Grid, Row} from 'native-base';
 import {LocationBottom} from '../SearchComponent';
@@ -25,7 +25,6 @@ export default class SearchLocation extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
-      refresh: false,
       data: null,
     };
   }
@@ -49,7 +48,6 @@ export default class SearchLocation extends BaseComponent {
             clickDetailsBtn={index => this._clickDetailsBottomBtn(index, data)}
           />
         ) : null}
-        {this.state.refresh ? <Loading /> : null}
       </Container>
     );
   }
@@ -82,7 +80,7 @@ export default class SearchLocation extends BaseComponent {
     if (!id) {
       return;
     }
-    this.setState({refresh: true});
+    LoadingTool.startShowLoading();
     var _this = this;
     HttpUtils.postRequest(HttpUtils.AllUrl.Vehicle.Location, true, {
       id: id,
@@ -90,7 +88,7 @@ export default class SearchLocation extends BaseComponent {
       if (_this.unmount) {
         return;
       }
-      _this.setState({refresh: false});
+      LoadingTool.stopLoading();
       if (response && response.code === 200) {
         if (response.data) {
           _this.setState({data: response.data});

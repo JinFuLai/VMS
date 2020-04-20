@@ -8,10 +8,10 @@ import {
   StyleSheet,
   Color,
   I18n,
-  Loading,
   SearchHistroy,
   Toast,
   BaseComponent,
+  LoadingTool,
 } from '../../Common/index';
 import {
   Container,
@@ -32,7 +32,6 @@ export default class Search extends BaseComponent {
   constructor() {
     super();
     this.state = {
-      refresh: false,
       history: [],
     };
     this._goToView = this._goToView.bind(this);
@@ -118,20 +117,19 @@ export default class Search extends BaseComponent {
             </Text>
           </View>
         )}
-        {this.state.refresh ? <Loading /> : null}
       </Container>
     );
   }
 
   componentDidMount() {
-    this.setState({refresh: true});
+    LoadingTool.startShowLoading();
     SearchHistroy.getHistroy()
       .then(list => {
         this.state.history = list;
-        this.setState({refresh: false});
+        LoadingTool.stopLoading();
       })
       .catch(_ => {
-        this.setState({refresh: false});
+        LoadingTool.stopLoading();
         // Toast.show('暂无历史记录');
       });
   }

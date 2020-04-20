@@ -4,11 +4,11 @@ import {
   StyleSheet,
   Color,
   CommonStyle,
-  Loading,
   I18n,
   HttpUtils,
   Toast,
   BaseComponent,
+  LoadingTool,
 } from '../../../Common/index';
 import {Container, Text, View} from 'native-base';
 import {SectionList} from 'react-native';
@@ -23,7 +23,6 @@ export default class SearchDetails extends BaseComponent {
   constructor(props) {
     super(props);
     this.state = {
-      refresh: false,
       info: null,
     };
   }
@@ -121,7 +120,6 @@ export default class SearchDetails extends BaseComponent {
             }}
           />
         ) : null}
-        {this.state.refresh ? <Loading /> : null}
       </Container>
     );
   }
@@ -152,7 +150,7 @@ export default class SearchDetails extends BaseComponent {
     if (!id) {
       return;
     }
-    this.setState({refresh: true});
+    LoadingTool.startShowLoading();
     var _this = this;
     HttpUtils.postRequest(HttpUtils.AllUrl.Vehicle.Location, true, {
       id: id,
@@ -160,7 +158,7 @@ export default class SearchDetails extends BaseComponent {
       if (_this.unmount) {
         return;
       }
-      _this.setState({refresh: false});
+      LoadingTool.stopLoading();
       if (response && response.code === 200) {
         if (response.data) {
           _this.setState({data: response.data});
