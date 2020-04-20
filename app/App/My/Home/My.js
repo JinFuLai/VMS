@@ -6,7 +6,6 @@ import {
   Screen,
   StyleSheet,
   Color,
-  awaitWrap,
   I18n,
   UserInfo,
   LoadingTool,
@@ -42,8 +41,6 @@ import {
   Message,
   SystemMessage,
 } from '../MyIndex';
-
-import Modal from 'react-native-modalbox';
 
 export class My extends PureComponent {
   static navigationOptions = ({navigation}) => ({
@@ -111,6 +108,7 @@ export class My extends PureComponent {
             style={style.headStyle}
             onPress={() =>
               this._goToView('Profile', {refresh: () => this.loadUserInfo()})
+              // global.loginScreenRef && global.loginScreenRef.open()
             }
           />
           <View style={style.listContentViewStyle}>
@@ -127,18 +125,6 @@ export class My extends PureComponent {
             />
           </View>
         </View>
-        {/* <Modal
-          backdropPressToClose={true}
-          style={{
-            backgroundColor: 'transparent',
-            height: 360,
-            position: 'absolute',
-            top: (deviceheight - 360) / 2,
-            left: 0,
-            width: devicewidth,
-          }}
-          ref={'calendarstart'}
-        /> */}
       </Container>
     );
   }

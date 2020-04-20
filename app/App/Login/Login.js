@@ -138,8 +138,10 @@ export class LoginScreen extends BaseComponent {
   }
 
   _goToView = (view, data = null) => {
-    const {navigate} = this.props.navigation;
-    navigate(view, data);
+    if (this.props.navigation) {
+      const {navigate} = this.props.navigation;
+      navigate(view, data);
+    }
   };
 
   _clickLoginBtn() {

@@ -27,7 +27,9 @@ import MyScreen from './My/Home/My';
 import LoginScreen from './Login/Login';
 import GuideScreen from './Guide/Guide';
 import Register from './Login/register';
-import { Container } from 'native-base';
+import {Container} from 'native-base';
+import Modal from 'react-native-modalbox';
+import LoginModal from './Login/LoginModal';
 
 export default class RootScreen extends PureComponent {
   constructor(props) {
@@ -54,6 +56,17 @@ export default class RootScreen extends PureComponent {
             this.navigator = nav;
           }}
         />
+        {/* <Modal
+          backdropPressToClose={true}
+          style={{
+            flex: 1,
+            backgroundColor: 'transparent',
+          }}
+          ref={ref => {
+            global.loginScreenRef = ref;
+          }}>
+          <LoginScreen />
+        </Modal> */}
         <LoadComponent
           ref={ref => {
             global.mLoadingComponentRef = ref;
