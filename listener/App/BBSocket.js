@@ -2,15 +2,16 @@ const HashTable = require('./HashTable');
 const Net = require('net');
 // The port on which the server is listening.
 // const port = 8090;
+var config = require('../App/Config/config');
 
 class BBSocket {
     /**
      * 新建Socket
      * @param {*} port 监听的端口
      */
-    constructor(port = 5818){
+    constructor(port = config.LISTENER_PORT){
         this.server = new Net.Server();
-        this.port = port != null ? port : 5818;
+        this.port = port != null ? port : config.LISTENER_PORT;
         this.recieveData = null;
         this.clientArr = new HashTable();//所有连接的客服端[socket]
     }

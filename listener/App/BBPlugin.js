@@ -4,6 +4,7 @@ const BBSocket = require('./BBSocket');
 const MsgHelper = require('./Helper/MessageHelper');
 const MsgResHelper = require('./Helper/MsgResponseHelper')
 const NetWorkHelper = require('./Helper/NetWorkHelper');
+var config = require('../App/Config/config');
 
 class BBPlugin {
     constructor(){
@@ -97,7 +98,7 @@ class BBPlugin {
 
     createNewListener() {
         var that=this;
-        var listener = new BBSocket(5818);
+        var listener = new BBSocket(config.LISTENER_PORT);
         let reciveDataFunc = function (socket,message) {
             that.OnRecievedData(listener,socket,message);
         }

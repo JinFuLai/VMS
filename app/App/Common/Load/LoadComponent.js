@@ -66,11 +66,17 @@ export default class LoadComponent extends Component {
             width: '100%',
             height: '100%',
             backgroundColor: 'black',
-            opacity: 0.2,
+            opacity: 0.5,
           }}
         />
         {/* <Spinner color={'#3BBC72'} style={{opacity:1}}/> */}
-        <Spinner isVisible={true} size={100} type={type} color={'#37BCAD'} />
+        <Spinner
+          isVisible={true}
+          size={70}
+          type={type}
+          color={'#37BCAD'}
+          style={{transform: [{translateX: -10}, {translateY: -40}]}}
+        />
       </View>
     );
   }

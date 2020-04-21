@@ -30,15 +30,16 @@ export default class MyHead extends PureComponent {
             style={style.imgStyle}
           />
           <Text style={style.txtStyle}>{this.props.name}</Text>
-          <Text style={style.txtStyle}>
+          <Text style={[style.txtStyle, {fontSize: 12}]}>
             {I18n.t('my_signature')}:{this.props.mark}
           </Text>
           <Button
             transparent
-            containerStyle={style.btnStyle}
-            style={{fontSize: 12}}
+            style={style.btnStyle}
             onPress={this.props.onPress}>
-            <Text style={{color: Color.jfl_FFFFFF}}>{I18n.t('my_edit')}</Text>
+            <Text style={{color: Color.jfl_FFFFFF, fontSize: 11}}>
+              {I18n.t('my_edit')}
+            </Text>
           </Button>
         </View>
       </View>
@@ -58,10 +59,10 @@ const style = StyleSheet.create({
     height: '100%',
   },
   imgStyle: {
-    width: 70,
-    height: 70,
+    width: 71,
+    height: 71,
     // resizeMode: 'contain',
-    borderRadius: 35,
+    borderRadius: 35.5,
     alignContent: 'center',
     overflow: 'hidden',
     backgroundColor: Color.jfl_000000,
@@ -87,14 +88,18 @@ const style = StyleSheet.create({
     borderColor: Color.jfl_FFFFFF,
     borderWidth: 0.5,
     marginTop: 15,
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
     justifyContent: 'center',
     backgroundColor: Color.jfl_37BCAD,
     shadowOffset: {
       width: 3,
       height: 0,
     },
-    shadowColor: Color.jfl_FFFFFF,
-    shadowRadius: 4,
-    shadowOpacity: 0.6,
+    // shadowColor: Color.jfl_FFFFFF,
+    // shadowRadius: 4,
+    // shadowOpacity: 0.6,
   },
 });

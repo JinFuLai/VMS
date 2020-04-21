@@ -28,8 +28,6 @@ import LoginScreen from './Login/Login';
 import GuideScreen from './Guide/Guide';
 import Register from './Login/register';
 import {Container} from 'native-base';
-import Modal from 'react-native-modalbox';
-import LoginModal from './Login/LoginModal';
 
 export default class RootScreen extends PureComponent {
   constructor(props) {
@@ -56,17 +54,6 @@ export default class RootScreen extends PureComponent {
             this.navigator = nav;
           }}
         />
-        {/* <Modal
-          backdropPressToClose={true}
-          style={{
-            flex: 1,
-            backgroundColor: 'transparent',
-          }}
-          ref={ref => {
-            global.loginScreenRef = ref;
-          }}>
-          <LoginScreen />
-        </Modal> */}
         <LoadComponent
           ref={ref => {
             global.mLoadingComponentRef = ref;
@@ -260,7 +247,12 @@ const AppNavigator = createStackNavigator(
   {
     None: {screen: Nonecreen},
     Guide: {screen: GuideScreen},
-    Login: {screen: LoginScreen},
+    Login: {
+      screen: LoginScreen,
+      navigationOptions: ({navigation}) => ({
+        gestureEnabled: false,
+      }),
+    },
     Tab: {screen: Tab},
     Register: {
       screen: Register,

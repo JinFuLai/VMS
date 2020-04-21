@@ -94,7 +94,7 @@ export class My extends PureComponent {
           backgroundColor={Color.jfl_37BCAD}
           translucent={false}
         />
-        <View style={{alignItems: 'center'}}>
+        <View style={{alignItems: 'center', height: '100%'}}>
           <MyHead
             name={user ? user.username : ''}
             mark={user ? user.mark : ''}
@@ -108,7 +108,6 @@ export class My extends PureComponent {
             style={style.headStyle}
             onPress={() =>
               this._goToView('Profile', {refresh: () => this.loadUserInfo()})
-              // global.loginScreenRef && global.loginScreenRef.open()
             }
           />
           <View style={style.listContentViewStyle}>
@@ -118,7 +117,7 @@ export class My extends PureComponent {
               data={data}
               renderItem={this._renderItem}
               keyExtractor={item => item.key}
-              scrollEnabled={false}
+              // scrollEnabled={false}
               ItemSeparatorComponent={this._separator}
               refreshing={true} // 是否刷新 ，自带刷新控件
               onRefresh={this.refresh} // 刷新方法,写了此方法，下拉才会出现  刷新控件，使用此方法必须写 refreshing
@@ -247,6 +246,7 @@ const style = StyleSheet.create({
     shadowColor: Color.jfl_373737,
     shadowRadius: 4,
     shadowOpacity: 0.4,
+    maxHeight: '60%',
   },
   listStyle: {
     borderRadius: 4,
