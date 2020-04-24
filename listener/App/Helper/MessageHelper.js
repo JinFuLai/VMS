@@ -370,7 +370,7 @@ class MessageHelper {
     _getBody_0100(bodyArray = this.body) {
         var bodyArray = this.body;
         if (!(bodyArray && bodyArray.length > 0)) {
-            return;
+            return {};
         }
         var provincialID = Helper.changeByteString(bodyArray.slice(0,2).join(''),16,10,2);
         var countyID = Helper.changeByteString(bodyArray.slice(2,4).join(''),16,10,4);

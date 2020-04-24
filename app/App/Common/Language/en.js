@@ -18,6 +18,8 @@ export default {
   no_more: 'No More',
   delete: 'Delete',
   try_again_later: 'Please try again later',
+  timeout_romise: 'Timeout Promise',
+  not_logged_in: 'Not Logged In',
 
   search: 'Search',
   search_records: 'Search Records',

@@ -12,6 +12,7 @@ import {
   UserInfo,
   LoadComponent,
   LoadingTool,
+  Config,
 } from './Common/index';
 import {
   createAppContainer,
@@ -142,6 +143,7 @@ export default class RootScreen extends PureComponent {
     this._getLauguage();
     this._setAppShowState();
     this.getMapType();
+    this._getSystenPostion();
   }
 
   componentWillUnmount() {
@@ -151,17 +153,39 @@ export default class RootScreen extends PureComponent {
   /**获取app使用的地图类型 0-百度，1-谷歌 */
   getMapType() {
     LoadingTool.startShowLoading();
-    var _this = this;
     HttpUtils.getRequest(HttpUtils.AllUrl.System.MapType, false).then(
       response => {
         LoadingTool.stopLoading();
         if (response.code === 200) {
           if (response.data) {
-            DeviceEventEmitter.emit('MapType', response.data);
+            Config.isGoogleMap = response.data === 1;
+            DeviceEventEmitter.emit('isGoogleMap', Config.isGoogleMap);
           }
         }
       },
     );
+  }
+
+  /**通过链接，判断app是否在国内 */
+  _getSystenPostion() {
+    var _this = this;
+    fetch('https://www.google.com', {
+      method: 'GET',
+    })
+      .then(response => {
+        Config.isStayInChina = response.status === 200;
+        DeviceEventEmitter.emit('isStayInChina', Config.isStayInChina);
+        setTimeout(() => {
+          _this._getSystenPostion();
+        }, 60000);
+      })
+      .catch(error => {
+        Config.isStayInChina = false;
+        DeviceEventEmitter.emit('isStayInChina', Config.isStayInChina);
+        setTimeout(() => {
+          _this._getSystenPostion();
+        }, 60000);
+      });
   }
 }
 

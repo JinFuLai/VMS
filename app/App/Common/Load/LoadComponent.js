@@ -75,7 +75,7 @@ export default class LoadComponent extends Component {
           size={70}
           type={type}
           color={'#37BCAD'}
-          style={{transform: [{translateX: -10}, {translateY: -40}]}}
+          style={{transform: [{translateX: -10}, {translateY: -36}]}}
         />
       </View>
     );

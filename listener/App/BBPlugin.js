@@ -132,6 +132,11 @@ class BBPlugin {
         var msg = new MsgHelper(messageStr);
         console.log("收到数据IMEI:" + msg.header.IMEI);
 
+        if (msg.header.IMEI == null || msg.header.IMEI == undefined) {
+            BBPlugin.replyRegisterMsg(listener,socket,msg,'3');
+            return;
+        }
+
         var _listener = listener,_socket = socket;
         if (msg.header.ID == "0100") // 终端注册
         {

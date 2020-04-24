@@ -52,11 +52,15 @@ class MsgResponseHelper {
         var bodyAttributeA = getArray(Helper.changeByteString(bodyAttribute,2,16,4),2)
         array = array.concat(bodyAttributeA);
         //IMEI
-        var IMEIA = getArray(IMEI,6)
-        array = array.concat(IMEIA);
+        if (IMEI) {
+            var IMEIA = getArray(IMEI,6)
+            array = array.concat(IMEIA);
+        }
         //msgNum
-        var numA = getArray(msgNum.toString(16),2)
-        array = array.concat(numA);
+        if (msgNum) {
+            var numA = getArray(msgNum.toString(16),2)
+            array = array.concat(numA);
+        }
         //msgPackage
         if (msgPackage) {array = array.concat(msgPackage);}
         return array;

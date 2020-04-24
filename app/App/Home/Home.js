@@ -4,6 +4,7 @@ import {StatusBar, Platform, DeviceEventEmitter} from 'react-native';
 import {Container, Header, Input, Item, Icon, Button} from 'native-base';
 import {createStackNavigator} from 'react-navigation-stack';
 import {
+  Screen,
   Color,
   StyleSheet,
   JFLMap,
@@ -24,7 +25,45 @@ import {
 
 class Home extends BaseComponent {
   static navigationOptions = () => ({
-    headerShown: false,
+    headerShown: true,
+    headerTransparent: true,
+    header: ({navigation}) => {
+      const {navigate} = navigation;
+      return (
+        <Header
+          noShadow
+          searchBar
+          style={{
+            borderBottomWidth: 0,
+            backgroundColor: Color.jfl_clear,
+            paddingTop: 0,
+          }}>
+          <StatusBar
+            barStyle="dark-content"
+            translucent={false}
+            backgroundColor={Color.jfl_FFFFFF}
+          />
+          <Item style={style.searchStyle}>
+            <Icon name="ios-search" />
+            <Input
+              placeholder={I18n.t('list_search_title')}
+              style={{fontSize: 14}}
+              editable={false}
+            />
+            <Button
+              transparent
+              style={{
+                position: 'absolute',
+                backgroundColor: Color.jfl_clear,
+                width: '100%',
+                height: '100%',
+              }}
+              onPress={() => navigate('Search')}
+            />
+          </Item>
+        </Header>
+      );
+    },
   });
 
   constructor(props) {
@@ -35,7 +74,7 @@ class Home extends BaseComponent {
 
   render() {
     return (
-      <Container>
+      <Container style={{backgroundColor: 'red'}}>
         <JFLMap
           ref={ref => {
             this.JFLMap = ref;
@@ -59,36 +98,8 @@ class Home extends BaseComponent {
           }}
           onClickRefreshDataBtn={event => {
             this.refreshInfo();
-          }}>
-          <Header
-            noShadow
-            searchBar
-            style={{borderBottomWidth: 0, backgroundColor: Color.jfl_clear}}>
-            <StatusBar
-              barStyle="dark-content"
-              translucent={false}
-              backgroundColor={Color.jfl_FFFFFF}
-            />
-            <Item style={style.searchStyle}>
-              <Icon name="ios-search" />
-              <Input
-                placeholder={I18n.t('list_search_title')}
-                style={{fontSize: 14}}
-                editable={false}
-              />
-              <Button
-                transparent
-                style={{
-                  position: 'absolute',
-                  backgroundColor: Color.jfl_clear,
-                  width: '100%',
-                  height: '100%',
-                }}
-                onPress={() => this._goToView('Search')}
-              />
-            </Item>
-          </Header>
-        </JFLMap>
+          }}
+        />
       </Container>
     );
   }

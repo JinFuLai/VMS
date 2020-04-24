@@ -43,8 +43,7 @@ class GpsUtil {
    * 84 to (百度坐标系 (BD-09) * @param lon * @param lat * @return
    * */
   static gps84_To_Bd09(lon, lat) {
-    let gps = GpsUtil.transform(lon, lat);
-    let gcl = GpsUtil.gps84_To_Gcj02(gps.getWgLongitude(), gps.getWgLatitude());
+    let gcl = GpsUtil.gps84_To_Gcj02(lon, lat);
     let bd = GpsUtil.gcj02_To_Bd09(gcl.getWgLongitude(), gcl.getWgLatitude());
     return bd;
   }

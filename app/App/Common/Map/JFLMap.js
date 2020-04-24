@@ -4,8 +4,9 @@ import React from 'react';
 import {ViewPropTypes, DeviceEventEmitter} from 'react-native';
 import JFLGoogleMap from './JFLGoogleMap';
 import JFLBaiduMap from './JFLBaiduMap';
+import Config from '../Config';
 
-var isGoogleMap = false;
+// var isGoogleMap = false;
 
 class JFLMap extends React.PureComponent {
   constructor(props) {
@@ -35,17 +36,12 @@ class JFLMap extends React.PureComponent {
 
   componentDidMount() {
     this.refreshLanguage();
-    this._navListener = DeviceEventEmitter.addListener('MapType', type => {
-      if (type == 0) {
-        //百度
-        isGoogleMap = false;
+    this._navListener = DeviceEventEmitter.addListener(
+      'isGoogleMap',
+      isGoogleMap => {
         this.forceUpdate();
-      } else if (type == 1) {
-        //谷歌
-        isGoogleMap = true;
-        this.forceUpdate();
-      }
-    });
+      },
+    );
   }
 
   componentWillUnmount() {
@@ -53,7 +49,7 @@ class JFLMap extends React.PureComponent {
   }
 
   render() {
-    if (isGoogleMap) {
+    if (Config.isGoogleMap) {
       return <JFLGoogleMap ref={ref => (this.JFLMap = ref)} {...this.props} />;
     } else {
       return <JFLBaiduMap ref={ref => (this.JFLMap = ref)} {...this.props} />;

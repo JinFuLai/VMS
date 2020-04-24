@@ -1,5 +1,5 @@
 let LoadingTool = {
-  showLoading(timeOut = 10000) {
+  showLoading(timeOut = 100000) {
     this.startShowLoading();
     this.timerLoading = setTimeout(() => {
       this.stopLoading();

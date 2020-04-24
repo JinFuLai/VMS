@@ -14,13 +14,16 @@ import {
 //     return RnStyleSheet.create(styles);
 //   },
 // };
+import { Header } from 'react-navigation-stack';
 export const StyleSheet = RnStyleSheet;
+
 
 export const Screen = {
   width: Dimensions.get('window').width,
   height: Dimensions.get('window').height,
   ScreenWidth: Dimensions.get('screen').width,
   ScreenHeight: Dimensions.get('screen').height,
+  NavHeight: Header.HEIGHT,
 };
 
 export const Color = {

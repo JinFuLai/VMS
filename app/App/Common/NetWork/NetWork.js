@@ -4,6 +4,7 @@ import {Component} from 'react';
 import {DeviceEventEmitter} from 'react-native';
 import {storage} from '../Storage';
 import AllUrl from './AllUrl';
+import {I18n} from '../Language/I18n';
 
 const RequestType = {
   POST: 'POST',
@@ -23,7 +24,7 @@ function getHeader(haveToken) {
             header.token = user.token;
             resolve(header);
           } else {
-            reject('未登录');
+            reject(I18n.t('not_logged_in'));
           }
         })
         .catch(err => {
@@ -62,16 +63,15 @@ const handleUrl = url => params => {
 /**
  * fetch 网络请求超时处理
  * @param original_promise 原始的fetch
- * @param timeout 超时时间 30s
+ * @param timeout 超时时间 90s
  * @returns {Promise.<*>}
  */
-const timeoutFetch = (original_fetch, timeout = 30000) => {
+const timeoutFetch = (original_fetch, timeout = 90000) => {
   let timeoutBlock = () => {};
   let timeout_promise = new Promise((resolve, reject) => {
     timeoutBlock = () => {
       // 请求超时处理
-      // reject('timeout promise');
-      reject('timeout promise');
+      reject(I18n.t('timeout_promise'));
     };
   });
 

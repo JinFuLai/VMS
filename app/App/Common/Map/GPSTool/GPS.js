@@ -24,7 +24,7 @@ class Gps {
     return this.longitude + ',' + this.latitude;
   }
 
-  toJson(count = 8) {
+  toJson(count = 12) {
     let result = {
       longitude: this.longitude.toFixed(count) * 1,
       latitude: this.latitude.toFixed(count) * 1,

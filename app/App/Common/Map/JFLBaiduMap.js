@@ -8,6 +8,7 @@ import {Button, Container, Thumbnail, Text} from 'native-base';
 import {Style} from './MapStyle';
 import {Color} from '../Tools';
 import {MapView, Location} from 'react-native-baidumap-sdk';
+import Config from '../Config';
 const {Marker, Callout, Polyline} = MapView;
 
 import GpsUtil from './GPSTool/GpsUtil';
@@ -351,9 +352,13 @@ class JFLBaiduMap extends React.PureComponent {
    * @param {*} point
    */
   getRightPoint(point) {
-    // return {longitude: 104.064817428589, latitude: 30.6670042185002};
-    // return GpsUtil.gcj02_To_Bd09(104.064817428589, 30.6670042185002).toJson();
-    return GpsUtil.gcj02_To_Bd09(point.longitude, point.latitude).toJson();
+    // return {longitude: 114.09634671450235, latitude: 22.862430424310013};
+    // return GpsUtil.gcj02_To_Bd09(104.07073114153093, 30.6667655562939).toJson();
+    if (Config.isStayInChina) {
+      return GpsUtil.gcj02_To_Bd09(point.longitude, point.latitude).toJson();
+    } else {
+      return GpsUtil.gps84_To_Bd09(point.longitude, point.latitude).toJson();
+    }
   }
 }
 

@@ -18,6 +18,8 @@ export default {
   no_more: '没有更多了',
   delete: '删除',
   try_again_later: '请稍后重试',
+  timeout_promise: '请求超时',
+  not_logged_in: '用户未登录',
 
   search: '搜索',
   search_records: '历史搜索记录',
@@ -131,5 +133,4 @@ export default {
   list_all: '全部',
   list_online: '在线',
   list_offline: '离线',
-
 };

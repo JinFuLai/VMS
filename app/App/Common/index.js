@@ -15,6 +15,7 @@ import BaseComponent from './BaseComponent';
 import UserInfo from './UserInfo';
 import LoadingTool from './Load/LoadingTool';
 import LoadComponent from './Load/LoadComponent';
+import Config from './Config';
 
 export {
   Screen,
@@ -35,4 +36,5 @@ export {
   UserInfo,
   LoadingTool,
   LoadComponent,
+  Config,
 };
