@@ -5,6 +5,7 @@ import {DeviceEventEmitter} from 'react-native';
 import {storage} from '../Storage';
 import AllUrl from './AllUrl';
 import {I18n} from '../Language/I18n';
+import LoadingTool from '../Load/LoadingTool';
 
 const RequestType = {
   POST: 'POST',
@@ -156,6 +157,7 @@ export default class HttpUtils extends Component {
                 .json()
                 .then(json => {
                   if (json.code === 456) {
+                    LoadingTool.stopLoading();
                     storage.remove({key: 'User'});
                     DeviceEventEmitter.emit('RootGoToView', 'Login');
                   } else {
@@ -211,6 +213,7 @@ export default class HttpUtils extends Component {
                 .json()
                 .then(json => {
                   if (json.code === 456) {
+                    LoadingTool.stopLoading();
                     storage.remove({key: 'User'});
                     DeviceEventEmitter.emit('RootGoToView', 'Login');
                   } else {

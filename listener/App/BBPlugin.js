@@ -174,7 +174,7 @@ class BBPlugin {
                 BBPlugin.replyGeneralMsg(_listener,_socket,msg,result);
             });
         }else if (msg.header.ID == "0704") {//定位数据批量上传
-            let body = msg._getBody_0704();
+            // let body = msg._getBody_0704();
             // msg.header.IMEI = "14788120517"
             // let element = body.devices[0]
             // element.imei = "14788120517"
@@ -213,7 +213,7 @@ class BBPlugin {
      * @param {*} latitude 
      */
     static getD(element,longitude, latitude, datetime){
-        var e = element;
+        const e = JSON.parse(JSON.stringify(element));
         e.last_gps_point.latitude = latitude;
         e.last_gps_point.longitude = longitude;
         e.last_gps_point.datetime = datetime;

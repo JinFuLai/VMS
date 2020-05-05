@@ -4,6 +4,7 @@ const BAIDU_LBS_TYPE = 'bd09ll';
 const pi = 3.1415926535897932384626;
 const a = 6378245.0;
 const ee = 0.00669342162296594323;
+const x_pi = pi * 3000.0 / 180.0;
 
 class GpsUtil {
   /**
@@ -67,8 +68,8 @@ class GpsUtil {
   static gcj02_To_Bd09(gg_lon, gg_lat) {
     let x = gg_lon,
       y = gg_lat;
-    let z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * pi);
-    let theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * pi);
+    let z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * x_pi);
+    let theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * x_pi);
     let bd_lon = z * Math.cos(theta) + 0.0065;
     let bd_lat = z * Math.sin(theta) + 0.006;
     let gps = new Gps(bd_lon, bd_lat);
@@ -82,8 +83,8 @@ class GpsUtil {
   static bd09_To_Gcj02(bd_lon, bd_lat) {
     let x = bd_lon - 0.0065,
       y = bd_lat - 0.006;
-    let z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * pi);
-    let theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * pi);
+    let z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi);
+    let theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi);
     let gg_lon = z * Math.cos(theta);
     let gg_lat = z * Math.sin(theta);
     return new Gps(gg_lon, gg_lat);

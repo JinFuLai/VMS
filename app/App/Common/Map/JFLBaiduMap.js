@@ -47,21 +47,25 @@ class JFLBaiduMap extends React.PureComponent {
     alertVTopMargin: PropTypes.number,
     /** 点击刷新数据按钮的回调 */
     onClickRefreshDataBtn: PropTypes.func,
+    /**地图放大等级 */
+    zoomLevel: PropTypes.number,
   };
 
   async componentDidMount() {
     this.refreshLanguage();
-    await Location.init();
-    Location.setOptions({gps: true});
-    this._LocationListener = Location.addLocationListener(location => {
-      var point = {
-        latitude: location.latitude,
-        longitude: location.longitude,
-      };
-      Location.stop();
-      this.setState({myLocation: point, center: point});
-    });
-    Location.start();
+    if (this.props.showsUserLocation && this.props.showsUserLocation == true) {
+      await Location.init();
+      Location.setOptions({gps: true});
+      this._LocationListener = Location.addLocationListener(location => {
+        var point = {
+          latitude: location.latitude,
+          longitude: location.longitude,
+        };
+        Location.stop();
+        this.setState({myLocation: point, center: point});
+      });
+      Location.start();
+    }
   }
 
   componentWillUnmount() {
@@ -77,10 +81,10 @@ class JFLBaiduMap extends React.PureComponent {
         return item.gps_point && item.vehicle && item.device;
       })
       .map((item, index) => {
-        return {
+        return this.getRightPoint({
           latitude: item.gps_point.latitude,
           longitude: item.gps_point.longitude,
-        };
+        });
       });
 
     var bdLocation = this.state.myLocation
@@ -104,6 +108,7 @@ class JFLBaiduMap extends React.PureComponent {
           satellite={this.state.mapType === 0}
           locationEnabled={this.props.showsUserLocation}
           location={bdLocation}
+          zoomLevel={this.props.zoomLevel ?? 13}
           center={bdCenter}
           // center={this.state.center}
         >
@@ -323,7 +328,11 @@ class JFLBaiduMap extends React.PureComponent {
     this.setState({
       historyMark: this.state.historyPoint[this.historyMarkIndex],
     });
-    this._moveToPoint(this.state.historyPoint[this.historyMarkIndex].gps_point);
+    this.state.historyPoint &&
+      this.state.historyPoint[this.historyMarkIndex] &&
+      this._moveToPoint(
+        this.state.historyPoint[this.historyMarkIndex].gps_point,
+      );
   }
 
   /**结束历史轨迹动画 */
@@ -348,12 +357,10 @@ class JFLBaiduMap extends React.PureComponent {
   }
 
   /**
-   * 获取正确的点
+   * 获取正确的点(坐标系转化)
    * @param {*} point
    */
   getRightPoint(point) {
-    // return {longitude: 114.09634671450235, latitude: 22.862430424310013};
-    // return GpsUtil.gcj02_To_Bd09(104.07073114153093, 30.6667655562939).toJson();
     if (Config.isStayInChina) {
       return GpsUtil.gcj02_To_Bd09(point.longitude, point.latitude).toJson();
     } else {

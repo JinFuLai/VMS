@@ -25,7 +25,7 @@ class JFLGoogleMap extends React.PureComponent {
     };
     this.historyMarkIndex = 0; //historyMark所显示的点在historyPoint的位置
   }
-
+  /** */
   static propTypes = {
     ...ViewPropTypes,
     /**地图类型 */
@@ -59,10 +59,10 @@ class JFLGoogleMap extends React.PureComponent {
         return item.gps_point && item.vehicle && item.device;
       })
       .map((item, index) => {
-        return {
+        return this.getRightPoint({
           latitude: item.gps_point.latitude,
           longitude: item.gps_point.longitude,
-        };
+        });
       });
     return (
       <Container>
@@ -74,7 +74,12 @@ class JFLGoogleMap extends React.PureComponent {
           provider={'google'}
           ref={ref => (this.MapView = ref)}
           onUserLocationChange={event => {
-            if (event.nativeEvent && event.nativeEvent.coordinate) {
+            if (
+              this.props.showsUserLocation &&
+              this.props.showsUserLocation == true &&
+              event.nativeEvent &&
+              event.nativeEvent.coordinate
+            ) {
               var toLocation = this.state.myLocation == null;
               this.state.myLocation = {
                 latitude: event.nativeEvent.coordinate.latitude,
@@ -315,7 +320,11 @@ class JFLGoogleMap extends React.PureComponent {
     this.setState({
       historyMark: this.state.historyPoint[this.historyMarkIndex],
     });
-    this._moveToPoint(this.state.historyPoint[this.historyMarkIndex].gps_point);
+    this.state.historyPoint &&
+      this.state.historyPoint[this.historyMarkIndex] &&
+      this._moveToPoint(
+        this.state.historyPoint[this.historyMarkIndex].gps_point,
+      );
   }
 
   /**结束历史轨迹动画 */
@@ -340,19 +349,16 @@ class JFLGoogleMap extends React.PureComponent {
   }
 
   /**
-   * 获取正确的点
+   * 获取正确的点(坐标系转化)
    * @param {*} point
    */
   getRightPoint(point) {
     if (this.state.mapType == 'standard' || this.state.mapType == undefined) {
-      // return GpsUtil.gps84_To_Gcj02(point.longitude, point.latitude).toJson();
       return {longitude: point.longitude, latitude: point.latitude};
-      // return {longitude: 104.064817428589, latitude: 30.6670042185002};
+      // return {longitude: 104.070053100586, latitude: 30.6671518722586};
     } else {
-      // return {longitude: point.longitude, latitude: point.latitude};
       return GpsUtil.gcj_To_Gps84(point.longitude, point.latitude).toJson();
-      // return GpsUtil.gcj_To_Gps84(104.064817428589, 30.6670042185002).toJson();
-      // return {longitude: 104.064817428589, latitude: 30.6670042185002};
+      // return GpsUtil.gcj_To_Gps84(104.070053100586, 30.6671518722586).toJson();
     }
   }
 }

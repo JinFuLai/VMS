@@ -32,16 +32,15 @@ class JFLMap extends React.PureComponent {
     alertVTopMargin: PropTypes.number,
     /** 点击刷新数据按钮的回调 */
     onClickRefreshDataBtn: PropTypes.func,
+    /**地图放大等级 */
+    zoomLevel: PropTypes.number,
   };
 
   componentDidMount() {
     this.refreshLanguage();
-    this._navListener = DeviceEventEmitter.addListener(
-      'isGoogleMap',
-      isGoogleMap => {
-        this.forceUpdate();
-      },
-    );
+    this._navListener = DeviceEventEmitter.addListener('isGoogleMap', _ => {
+      this.forceUpdate();
+    });
   }
 
   componentWillUnmount() {

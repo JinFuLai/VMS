@@ -172,25 +172,6 @@ module.exports = function (app) {
   *     summary: 登录
   *     produces:
   *       - application/json
-  *     parameters:
-  *       - name: body
-  *         description: 参数
-  *         in: body
-  *         required: true
-  *         schema:
-  *           title: login
-  *           properties:
-  *             username:
-  *               type: string
-  *               description: 昵称
-  *               default: 昵称
-  *             password:
-  *               type: string
-  *               description: 密码
-  *               default: 密码
-  *           required: 
-  *             - username
-  *             - password
   *     responses:
   *       200:
   *         description: Successfully

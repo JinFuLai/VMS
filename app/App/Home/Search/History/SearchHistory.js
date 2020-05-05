@@ -105,6 +105,8 @@ export default class SearchHistory extends BaseComponent {
             this.JFLMap.setPolylines(response.data);
             this.JFLMap.startHistoryAnimation();
           } else {
+            this.JFLMap.stopHistoryAnimation();
+            this.JFLMap.setPolylines([]);
             Toast.show(I18n.t('no_more'));
           }
         } else {
