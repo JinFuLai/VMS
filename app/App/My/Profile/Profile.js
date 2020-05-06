@@ -33,11 +33,11 @@ const options = {
 export default class ProfileScreen extends BaseComponent {
   static navigationOptions = ({navigation}) => ({
     title: I18n.t('my_profile'),
-    headerRight: () => {
+    headerRight: () => (
       <Button transparent onPress={() => navigation.state.params.saveUser()}>
         <Text style={{color: Color.jfl_FFFFFF}}>{I18n.t('save')}</Text>
-      </Button>;
-    },
+      </Button>
+    ),
   });
   constructor() {
     super();
@@ -62,6 +62,7 @@ export default class ProfileScreen extends BaseComponent {
             false,
           )}
           {this.returnImgItem()}
+          {this.returnItem(I18n.t('my_nickname'), 'nickname', user.nickname)}
           {this.returnItem(I18n.t('my_gender'), 'gender', user.gender)}
           {this.returnItem(
             I18n.t('my_contact_first_name'),

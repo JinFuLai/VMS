@@ -103,9 +103,9 @@ export default {
           routes: [
             { path: '/basic/index', name: 'index', component: './404' },
             { path: '/basic/user', name: 'user', component: './Basic/UserList.js' },
-            { path: '/basic/role', name: 'role', component: './Welcome' },
-            { path: '/basic/account', name: 'account', component: './Welcome' },
-            { path: '/basic/department', name: 'department', component: './Welcome' },
+            { path: '/basic/role', name: 'role', component: './Basic/RoleList.js' },
+            { path: '/basic/account', name: 'account', component: './Basic/UserList.js' },
+            { path: '/basic/department', name: 'department', component: './Basic/UserList.js' },
           ],
         },
         {

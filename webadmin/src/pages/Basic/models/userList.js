@@ -1,4 +1,5 @@
-import { queryUserList } from '@/services/basic';
+import { queryUserList,queryUserDelete } from '@/services/user';
+
 export default {
   namespace: 'userList',
 
@@ -10,20 +11,39 @@ export default {
   },
 
   effects: {
-    *search({ payload }, { call, put }) {
+    *search({ payload,callback }, { call, put }) {
       const response = yield call(queryUserList, payload);
       yield put({
         type: 'refresh',
-        payload: response.data,
+        payload: {
+          data: response != null ? response.data : {
+            dataList: [],
+            pagination: {},
+          }
+        }
       });
+      if (callback) callback(response);
     },
+    *delete({ payload,callback }, { call, put }) {
+      const response = yield call(queryUserDelete, payload);
+      yield put({
+        type: 'delete',
+        payload: {
+          data: response != null ? response.data : {
+            dataList: [],
+            pagination: {},
+          }
+        }
+      });
+      if (callback) callback(response);
+    }
   },
 
   reducers: {
     refresh(state, action) {
       return {
         ...state,
-        data: action.payload,
+        ...action.payload,
       };
     },
   },

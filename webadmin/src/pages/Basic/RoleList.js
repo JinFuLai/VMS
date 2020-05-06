@@ -47,14 +47,14 @@ const columns = [
   },
 ];
 
-@connect(({ role }) => ({
-  role,
+@connect(({ roleList }) => ({
+  roleList,
 }))
 class RoleList extends React.Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'role/fetch',
+      type: 'roleList/search',
     });
   }
 
@@ -81,7 +81,7 @@ class RoleList extends React.Component {
 
   render() {
     const {
-      role: { data },
+      roleList: { dataList },
     } = this.props;
 
     const { loading, selectedRowKeys } = this.state;
@@ -112,7 +112,7 @@ class RoleList extends React.Component {
                             </span>
                         */}
           </div>
-          <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+          <Table rowSelection={rowSelection} columns={columns} dataSource={dataList} />
         </PageHeaderWrapper>
       </div>
     );

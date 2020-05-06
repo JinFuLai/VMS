@@ -27,7 +27,7 @@ module.exports = function (app) {
    *    produces:
    *    - application/json
    *    parameters:
-   *    - name: user
+   *    - name: username
    *      in: body
    *      description: "用户信息"
    *      required: false
@@ -156,7 +156,9 @@ module.exports = function (app) {
 *         description: Successfully
 */
   app.delete("/user/delete", (req, res) => {
-    user.remove({ _id: req.query.id }, function (err) {
+    const {id = ''} = req.query;
+    const ids = id.split(',');
+    user.remove({ id: {$in:ids}}, function (err) {
       if (!err) {
         res.json(reponseHelper.Success("删除成功"));
       }

@@ -122,6 +122,7 @@ export default {
   my_agreement: 'Agreement',
   my_profile: 'Profile',
   my_username: 'UserName',
+  my_nickname: 'NickName',
   my_photo: 'Photo',
   my_gender: 'Gender',
   my_contact_first_name: 'First Name',
