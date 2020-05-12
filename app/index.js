@@ -12,7 +12,9 @@ import {AppRegistry, Platform} from 'react-native';
 import {name as appName} from './app.json';
 import RooScreen from './App/RooScreen';
 
-import {Initializer} from 'react-native-baidumap-sdk';
+// import {Initializer} from 'react-native-baidumap-sdk';
+import {Initializer} from './App/Common/Baidumap/index';
+
 if (Platform.OS === 'ios') {
   Initializer.init('Za6BsogYqHMDKHebmY5Hjrz4Oxsk3QjY'); //.catch(e => console.error(e))
 }

@@ -7,7 +7,8 @@ import {I18n} from '../Language/I18n';
 import {Button, Container, Thumbnail, Text} from 'native-base';
 import {Style} from './MapStyle';
 import {Color} from '../Tools';
-import {MapView, Location} from 'react-native-baidumap-sdk';
+// import {MapView, Location} from 'react-native-baidumap-sdk';
+import {MapView, Location} from '../Baidumap/index';
 import Config from '../Config';
 const {Marker, Callout, Polyline} = MapView;
 
@@ -86,7 +87,6 @@ class JFLBaiduMap extends React.PureComponent {
           longitude: item.gps_point.longitude,
         });
       });
-
     var bdLocation = this.state.myLocation
       ? this.getRightPoint(this.state.myLocation)
       : null;
@@ -132,7 +132,7 @@ class JFLBaiduMap extends React.PureComponent {
                 index,
               );
             })}
-          <Polyline color={Color.jfl_37BCAD} width={4} points={historyP} />
+          {historyP.length > 0 && this._returnHistoryLine(historyP)}
           {this.state.historyMark &&
             this._returnMark(
               this.state.historyMark.vechile,
@@ -252,6 +252,15 @@ class JFLBaiduMap extends React.PureComponent {
       </Marker>
     );
   }
+
+  /**
+   * 绘制历史轨迹
+   * @param {*} historyP
+   */
+  _returnHistoryLine(historyP) {
+    return <Polyline color={Color.jfl_37BCAD} width={4} points={historyP} />;
+  }
+
   /**
    * 是否展示地图类型选择按钮
    */
@@ -316,6 +325,7 @@ class JFLBaiduMap extends React.PureComponent {
 
   /**开始历史轨迹动画 */
   startHistoryAnimation() {
+    this.stopHistoryAnimation();
     this.historyMarkIndex += 1;
     if (this.historyMarkIndex < this.state.historyPoint.length) {
       this.timer = setTimeout(() => {

@@ -18,5 +18,5 @@ export async function queryUserList(pargram:any) {
 }
 
 export async function queryUserDelete(pargram:any) {
-  return request(`${BASE_URL}/api/user/delete`, { method: 'POST', data: {...pargram},});
+  return request(`${BASE_URL}/api/user/delete`, { method: 'Delete', data: {...pargram},});
 }

@@ -26,15 +26,11 @@ export default {
     },
     *delete({ payload,callback }, { call, put }) {
       const response = yield call(queryUserDelete, payload);
-      yield put({
-        type: 'delete',
-        payload: {
-          data: response != null ? response.data : {
-            dataList: [],
-            pagination: {},
-          }
-        }
-      });
+      // const ids = payload.id;
+      // yield put({
+      //   type: 'delete',
+      //   deleteIds: ids,
+      // });
       if (callback) callback(response);
     }
   },
@@ -46,5 +42,12 @@ export default {
         ...action.payload,
       };
     },
+    // delete(state, action) {
+    //   // this.state.data.dataList
+    //   console.log(action.deleteIds);
+    //   return {
+    //     ...state,
+    //   };
+    // },
   },
 };

@@ -71,7 +71,7 @@ class UserList extends React.Component {
           <Divider type="vertical" />
           <a>停用</a>
           <Divider type="vertical" />
-          <Button type='link' onClick={()=>this._showDeleteModel()} >
+          <Button type='link' onClick={()=>this._showDeleteModel(user._id)} >
           删除
           </Button>
         </span>
@@ -89,6 +89,7 @@ class UserList extends React.Component {
     loadingSearch: false,
     loading: false,
     showDeleteModal: false,
+    shouldDeleteIds: null, // 将要删除的ids字符串集合，用‘，’隔开
   };
 
   start = () => {
@@ -145,7 +146,7 @@ class UserList extends React.Component {
         <Spin spinning={this.state.loading} tip='Loading'>
           <PageHeaderWrapper>
             <div style={{ marginBottom: 16 }}>
-              <Button type="primary" onClick={this._showDeleteModel} disabled={!hasSelected} loading={loadingDelete}>
+              <Button type="primary" onClick={()=>this._showDeleteModel(this.state.selectedRowKeys != null ? this.state.selectedRowKeys.join(',') : null)} disabled={!hasSelected} loading={loadingDelete}>
                 批量删除
               </Button>
               <Button type="primary" style={{ marginLeft: 10 }}>
@@ -169,7 +170,7 @@ class UserList extends React.Component {
             closable={false}
             centered
             visible = {this.state.showDeleteModal}
-            onOk={()=>this._deleteUser(selectedRowKeys.join(','))}
+            onOk={this._deleteUser}
             onCancel={this._hiddenDeleteModel}
           >
             <p>确认删除?</p>
@@ -183,28 +184,28 @@ class UserList extends React.Component {
     this.setState({showDeleteModal: false})
   }
   
-  _showDeleteModel = () => {
-    this.setState({showDeleteModal: true})
+  _showDeleteModel = ids => {
+    this.setState({showDeleteModal: true, shouldDeleteIds: ids})
+    console.log(ids);
   }
 
-  _deleteUser = userIds => {
-    this.setState({showDeleteModal: false})
-    // const { dispatch } = this.props;
-    // const _this = this;
-    // dispatch({
-    //   type: 'userList/delete',
-    //   payload: (userIds && userIds.length > 0) ? {id:userIds} : {},
-    //   callback:()=>{
-    //     _this.setState({
-    //       selectedRowKeys: [],
-    //       loadingSearch: false,
-    //       loadingDelete: false,
-    //       loading: false,
-    //     });
-    //   }
-    // });
+  _deleteUser = () => {
+    this.setState({showDeleteModal: false, loading: true})
+    const { dispatch } = this.props;
+    const _this = this;
+    dispatch({
+      type: 'userList/delete',
+      payload: (this.state.shouldDeleteIds && this.state.shouldDeleteIds.length > 0) ? {id:this.state.shouldDeleteIds} : {},
+      callback:()=>{
+        _this.setState({
+          selectedRowKeys: [],
+          loadingSearch: false,
+          loadingDelete: false,
+          loading: false,
+        });
+      }
+    });
   }
-
 }
 
 export default UserList;
