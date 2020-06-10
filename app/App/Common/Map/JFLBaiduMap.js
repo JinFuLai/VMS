@@ -7,8 +7,7 @@ import {I18n} from '../Language/I18n';
 import {Button, Container, Thumbnail, Text} from 'native-base';
 import {Style} from './MapStyle';
 import {Color} from '../Tools';
-// import {MapView, Location} from 'react-native-baidumap-sdk';
-import {MapView, Location} from '../Baidumap/index';
+import {MapView, Location} from 'react-native-baidumap-sdk';
 import Config from '../Config';
 const {Marker, Callout, Polyline} = MapView;
 

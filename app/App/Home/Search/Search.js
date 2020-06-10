@@ -125,7 +125,7 @@ export default class Search extends BaseComponent {
     LoadingTool.startShowLoading();
     SearchHistroy.getHistroy()
       .then(list => {
-        this.state.history = list;
+        this.setState({history: list});
         LoadingTool.stopLoading();
       })
       .catch(_ => {

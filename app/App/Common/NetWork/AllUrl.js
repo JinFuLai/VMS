@@ -2,8 +2,8 @@
 import {Component} from 'react';
 
 /*基本接口*/
-export const baseUrl = 'http://jinfulaikeji.com:2000/api';
-// export const baseUrl = 'http://192.168.0.194:2000/api';
+// export const baseUrl = 'http://jinfulaikeji.com:2000/api';
+export const baseUrl = 'http://192.168.0.194:2000/api';
 // export const baseUrl = 'http://192.168.0.103:2000/api';
 // export const baseUrl = 'http://192.168.1.111:2000/api';
 

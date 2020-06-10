@@ -59,7 +59,7 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   
-  //百度地图相关
+//  百度地图相关
 //  BMKMapManager *mapManager = [[BMKMapManager alloc] init];
 //  // 如果要关注网络及授权验证事件，请设定generalDelegate参数
 //  BOOL ret = [mapManager start:@"Za6BsogYqHMDKHebmY5Hjrz4Oxsk3QjY"  generalDelegate:nil];

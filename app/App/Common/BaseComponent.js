@@ -30,9 +30,9 @@ function inject_unount(Target){
   // 对setState的改装，setState查看目前是否已经销毁
   let setState = Target.prototype.setState;
   Target.prototype.setState = function() {
-    if (this.unmount) {
-      return;
-    }
+    // if (this.unmount) {
+    //   return;
+    // }
     setState.call(this, ...arguments);
   };
 
