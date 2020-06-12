@@ -1,7 +1,7 @@
-import { queryUserList } from '../service';
+import { queryList,queryDelete } from '../service';
 
 export default {
-  namespace: 'userList',
+  namespace: 'companyList',
 
   state: {
     data: {
@@ -12,7 +12,7 @@ export default {
 
   effects: {
     *search({ payload,callback }, { call, put }) {
-      const response = yield call(queryUserList, payload);
+      const response = yield call(queryList, payload);
       yield put({
         type: 'refresh',
         payload: {
@@ -21,11 +21,11 @@ export default {
             pagination: {},
           }
         }
-      });
+      }); 
       if (callback) callback(response);
     },
     *delete({ payload,callback }, { call, put }) {
-      const response = yield call(queryUserDelete, payload);
+      const response = yield call(queryDelete, payload);
       // const ids = payload.id;
       // yield put({
       //   type: 'delete',

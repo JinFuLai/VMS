@@ -69,6 +69,7 @@ export default defineConfig({
               path: '/',
               redirect: '/dashboard/analysis',
             },
+            //基本管理
             {
               path: '/dashboard',
               name: 'dashboard',
@@ -80,24 +81,83 @@ export default defineConfig({
                   path: '/dashboard/analysis',
                   component: './dashboard/analysis',
                 },
-                {
-                  name: 'monitor',
-                  icon: 'smile',
-                  path: '/dashboard/monitor',
-                  component: './dashboard/monitor',
-                },
-                {
-                  name: 'workplace',
-                  icon: 'smile',
-                  path: '/dashboard/workplace',
-                  component: './dashboard/workplace',
-                },
+                // {
+                //   name: 'monitor',
+                //   icon: 'smile',
+                //   path: '/dashboard/monitor',
+                //   component: './dashboard/monitor',
+                // },
+                // {
+                //   name: 'workplace',
+                //   icon: 'smile',
+                //   path: '/dashboard/workplace',
+                //   component: './dashboard/workplace',
+                // },
                 {
                   name: 'userinfo',
                   icon: 'smile',
                   path: '/dashboard/userinfo',
                   component: './dashboard/userinfo',
                 },
+                {
+                  name: 'role',
+                  icon: 'smile',
+                  path: '/dashboard/role',
+                  component: './dashboard/role',
+                },
+                {
+                  name: 'company',
+                  icon: 'smile',
+                  path: '/dashboard/company',
+                  component: './dashboard/company',
+                },
+                {
+                  name: 'department',
+                  icon: 'smile',
+                  path: '/dashboard/department',
+                  component: './dashboard/department',
+                },
+              ],
+            },
+            //车辆管理
+            {
+              path: '/car',
+              icon: 'car',
+              name: 'car',
+              routes: [
+                {
+                  name: 'carMessage',
+                  icon: 'smile',
+                  path: '/car/carMessage',
+                  component: './car/carMessage',
+                },
+              ],
+            },
+            //数据管理
+            {
+              path: '/data',
+              icon: 'ProjectOutlined',
+              name: 'data',
+              routes: [
+                
+              ],
+            },
+            //报表统计
+            {
+              path: '/statement',
+              icon: 'PieChartOutlined',
+              name: 'statement',
+              routes: [
+                
+              ],
+            },
+            //系统设置
+            {
+              path: '/system',
+              icon: 'SettingOutlined',
+              name: 'system',
+              routes: [
+                
               ],
             },
             {

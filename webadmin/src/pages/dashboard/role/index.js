@@ -1,67 +1,44 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-console */
-/* eslint-disable react/sort-comp */
+
 import React from 'react';
 
 import { connect } from 'dva';
 import { Table, Divider, Tag, Button, Input, Avatar, Modal, Spin } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import AddUserForm from './components/addUserForm';
-import UpdateUserForm from './components/updateUserForm';
-import Table_ from './components/table';
+import AddForm from './components/addForm';
+import UpdateForm from './components/updateForm';
 
 const { Search } = Input;
 
-@connect(({ userList }) => ({
-  userList,
+@connect(({ roleList }) => ({
+    roleList,
 }))
-class UserList extends React.Component {
+class RoleList extends React.Component {
 
   _columns = () => [
     {
-      title: '用户账号',
-      dataIndex: 'username',
-      key: 'username',
+      title: '角色名称',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: '用户头像',
-      dataIndex: 'photo',
-      key: 'photo',
-      render: photo => <Avatar src={photo} />,
+      title: '用户数量',
+      dataIndex: 'userNumber',
+      key: 'userNumber',
     },
     {
-      title: '用户昵称',
-      dataIndex: 'nickname',
-      key: 'nickname',
+      title: '所属公司',
+      dataIndex: 'company',
+      key: 'company',
     },
     {
-      title: '用户性别',
-      dataIndex: 'gender',
-      key: 'gender',
+      title: '权限数量',
+      dataIndex: 'accessNumber',
+      key: 'accessNumber',
     },
     {
-      title: '所在权限组',
-      dataIndex: 'permissionGroups',
-      key: 'permissionGroups',
-      render: permissionGroups => (
-        <span>
-          {permissionGroups != null ? permissionGroups.map(tag => (
-            <Tag color="blue" key={tag}>
-              {tag}
-            </Tag>
-          )) : ''}
-        </span>
-      ),
-    },
-    {
-      title: '拥有权限数',
-      dataIndex: 'number',
-      key: 'number',
-    },
-    {
-      title: '注册时间',
-      dataIndex: 'created_date',
-      key: 'created_date',
+      title: '角色描述',
+      dataIndex: 'describe',
+      key: 'describe',
     },
     {
       title: '操作',
@@ -72,12 +49,8 @@ class UserList extends React.Component {
             查看详情
           </Button>
           <Divider type="vertical" />
-          <Button type='link' onClick={() => this.showUpdateUser()} >
+          <Button type='link' onClick={() => this.showUpdate()} >
             编辑
-          </Button>
-          <Divider type="vertical" />
-          <Button type='link' onClick={() => this.showBlockUpModal()} >
-            停用
           </Button>
           <Divider type="vertical" />
           <Button type='link' onClick={() => this._showDeleteModel(user._id)} >
@@ -100,9 +73,9 @@ class UserList extends React.Component {
     showDeleteModal: false,
     blockUpModal: false,
     shouldDeleteIds: null, // 将要删除的ids字符串集合，用‘，’隔开
-    showAddUserForm: false,
+    showAddForm: false,
     confirmLoading: false,
-    showUpdateUserForm: false,
+    showUpdateForm: false,
     viewDetailsForm: false,
   };
 
@@ -126,10 +99,9 @@ class UserList extends React.Component {
     const { dispatch } = this.props;
     const _this = this;
     dispatch({
-      type: 'userList/search',
+      type: 'roleList/search',
       payload: (keyword && keyword.length > 0) ? { username: keyword } : {},
       callback: response => {
-        console.log(response);
         _this.setState({
           selectedRowKeys: [],
           loadingSearch: false,
@@ -141,10 +113,10 @@ class UserList extends React.Component {
 
   render() {
     const {
-      userList: { data },
+      roleList: { data },
     } = this.props;
 
-    const { loadingDelete, selectedRowKeys, loadingSearch, showAddUserForm,showUpdateUserForm, confirmLoading } = this.state;
+    const { loadingDelete, selectedRowKeys, loadingSearch, showAddForm,showUpdateForm, confirmLoading } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -153,7 +125,7 @@ class UserList extends React.Component {
     const dataSource = data.dataList ? data.dataList.map(user => {
       user.key = user._id;
       return user
-    }) : [];
+    }) : []; 
     const columns = this._columns();
     return (
       <div style={{ padding: 24, background: '#fff' }}>
@@ -163,8 +135,8 @@ class UserList extends React.Component {
               <Button type="primary" onClick={() => this._showDeleteModel(this.state.selectedRowKeys != null ? this.state.selectedRowKeys.join(',') : null)} disabled={!hasSelected} loading={loadingDelete}>
                 批量删除
               </Button>
-              <Button type="primary" style={{ marginLeft: 10 }} onClick={() => this.showAddUser()}>
-                添加用户
+              <Button type="primary" style={{ marginLeft: 10 }} onClick={() => this.showAdd()}>
+                添加角色
               </Button>
               <Search
                 placeholder="请输入查询内容"
@@ -178,10 +150,8 @@ class UserList extends React.Component {
               />
             </div>
             <Table rowSelection={rowSelection} columns={columns} dataSource={dataSource} />
-            {/* <Table_ rowSelection={rowSelection} columns={columns} dataSource={dataSource}></Table_> */}
           </PageHeaderWrapper>
           <Modal
-            // title="确定删除？"
             closable={false}
             centered
             visible={this.state.showDeleteModal}
@@ -191,33 +161,24 @@ class UserList extends React.Component {
             <p>确认删除?</p>
           </Modal>
           <Modal
-            closable={false}
-            centered
-            visible={this.state.blockUpModal}
-            onOk={this.hideBlockUpModal}
-            onCancel={this.hideBlockUpModal}
+            title="添加角色"
+            width="900px"
+            onOk={this.hideAdd}
+            confirmLoading={confirmLoading}
+            onCancel={this.hideAdd}
+            visible={this.state.showAddForm}
           >
-            <p>确认停用?</p>
+            <AddForm></AddForm>
           </Modal>
           <Modal
-            title="添加用户"
+            title="编辑角色"
             width="900px"
-            onOk={this.hideAddUser}
+            onOk={this.hideUpdate}
             confirmLoading={confirmLoading}
-            onCancel={this.hideAddUser}
-            visible={this.state.showAddUserForm}
+            onCancel={this.hideUpdate}
+            visible={this.state.showUpdateForm}
           >
-            <AddUserForm></AddUserForm>
-          </Modal>
-          <Modal
-            title="编辑用户"
-            width="900px"
-            onOk={this.hideUpdateUser}
-            confirmLoading={confirmLoading}
-            onCancel={this.hideUpdateUser}
-            visible={this.state.showUpdateUserForm}
-          >
-            <UpdateUserForm></UpdateUserForm>
+            <UpdateForm></UpdateForm>
           </Modal>
           <Modal
             title="查看详情"
@@ -232,17 +193,17 @@ class UserList extends React.Component {
       </div>
     );
   }
-  showAddUser = () => {
-    this.setState({ showAddUserForm: true })
+  showAdd = () => {
+    this.setState({ showAddForm: true })
   }
-  hideAddUser = () => {
-    this.setState({ showAddUserForm: false })
+  hideAdd = () => {
+    this.setState({ showAddForm: false })
   }
-  showUpdateUser = () => {
-    this.setState({ showUpdateUserForm: true })
+  showUpdate = () => {
+    this.setState({ showUpdateForm: true })
   }
-  hideUpdateUser = () => {
-    this.setState({ showUpdateUserForm: false })
+  hideUpdate = () => {
+    this.setState({ showUpdateForm: false })
   }
   showViewDetails = () => {
     this.setState({ viewDetailsForm: true })
@@ -250,12 +211,7 @@ class UserList extends React.Component {
   hideViewDetails = () => {
     this.setState({ viewDetailsForm: false })
   }
-  showBlockUpModal = () => {
-    this.setState({ blockUpModal: true })
-  }
-  hideBlockUpModal = () => {
-    this.setState({ blockUpModal: false })
-  }
+ 
   _hiddenDeleteModel = () => {
     this.setState({ showDeleteModal: false })
   }
@@ -270,7 +226,7 @@ class UserList extends React.Component {
     const { dispatch } = this.props;
     const _this = this;
     dispatch({
-      type: 'userList/delete',
+      type: 'roleList/delete',
       payload: (this.state.shouldDeleteIds && this.state.shouldDeleteIds.length > 0) ? { id: this.state.shouldDeleteIds } : {},
       callback: () => {
         _this.setState({
@@ -284,4 +240,4 @@ class UserList extends React.Component {
   }
 }
 
-export default UserList;
+export default RoleList;

@@ -24,6 +24,10 @@ export async function updateRule(params) {
     data: { ...params, method: 'update' },
   });
 }
+
+export async function queryUserList(params) {
+  return request(`${BASE_URL}/api/user/list`, { method: 'POST', data: {...params},});
+}
 export async function queryUserDelete(params) {
   return request(`${BASE_URL}/api/user/delete`, { method: 'Delete', data: {...params},});
 }
