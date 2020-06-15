@@ -1,4 +1,5 @@
 import { Form, Input, InputNumber, Button, Row, Col, Select, Checkbox } from 'antd';
+import CarTabs from './tabs';
 const layout = {
     labelCol: {
         span: 8,
@@ -7,14 +8,14 @@ const layout = {
         span: 26,
     },
 };
-// const layout_ = {
-//     labelCol: {
-//         span: 2.5,
-//     },
-//     wrapperCol: {
-//         span: 21,
-//     },
-// };
+const layout_ = {
+    labelCol: {
+        span: 4,
+    },
+    wrapperCol: {
+        span: 26,
+    },
+};
 const validateMessages = {
     required: '${label}不能为空!',
 };
@@ -46,34 +47,18 @@ const AddUser = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={8} key={11}>
+                </Row>
+            </Form>
+            <Form  {...layout_} name="nest-messages_" onFinish={onFinish} validateMessages={validateMessages}>
+                <Row gutter={24}>
+                    <Col span={16} key={1}>
                         <Form.Item name="remark" label="备注" rules={[{ required: true, }]}>
                             <Input />
                         </Form.Item>
                     </Col>
                 </Row>
             </Form>
-            {/* <Form  {...layout_} name="nest-messages_" onFinish={onFinish} validateMessages={validateMessages}>
-                <Row gutter={24}>
-                    <Col span={24} key={4}>
-                        <Form.Item name="checkbox-group" label="权限赋予" rules={[{ required: true, }]}>
-                            <Checkbox.Group style={{ width: '100%' }} >
-                                <Row gutter={24}>
-                                    <Col span={5}>
-                                        <Checkbox value="A" style={{ lineHeight: '32px' }}>权限一</Checkbox>
-                                    </Col>
-                                    <Col span={5}>
-                                        <Checkbox value="B" style={{ lineHeight: '32px' }}>权限二</Checkbox>
-                                    </Col>
-                                    <Col span={5}>
-                                        <Checkbox value="c" style={{ lineHeight: '32px' }}>权限三</Checkbox>
-                                    </Col>
-                                </Row>
-                            </Checkbox.Group>,
-                     </Form.Item>
-                    </Col>
-                </Row>
-            </Form> */}
+            <CarTabs></CarTabs>
         </div>
     );
 };

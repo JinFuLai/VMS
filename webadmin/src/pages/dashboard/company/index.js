@@ -7,6 +7,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import AddForm from './components/addForm';
 import UpdateForm from './components/updateForm';
 
+
 const { Search } = Input;
 
 @connect(({ companyList }) => ({

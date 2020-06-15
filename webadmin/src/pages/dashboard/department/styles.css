@@ -1,0 +1,16 @@
+.layoutBox{
+    display: flex;
+    text-align:center;
+    align-items: center;
+    justify-content: space-between;
+    width: 852px;
+    height: 50px;
+}
+.leftBut{
+    width: 100px;
+    height: 20px;
+}
+.rightSum{
+    width: 100px;
+    height: 20px;
+}
