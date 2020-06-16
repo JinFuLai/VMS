@@ -126,44 +126,44 @@ export default defineConfig({
               name: 'car',
               routes: [
                 {
-                  name: 'carMessage',
-                  icon: 'smile',
+                  name: 'carMessage', //车辆信息
+                  icon: 'ProfileOutlined',
                   path: '/car/carMessage',
                   component: './car/carMessage',
                 },
                 {
-                  name: 'insurance',
-                  icon: 'smile',
+                  name: 'insurance', //保险管理
+                  icon: 'AppstoreAddOutlined',
                   path: '/car/insurance',
                   component: './car/insurance',
                 },
                 {
-                  name: 'accidentRecords',
-                  icon: 'smile',
+                  name: 'accidentRecords', //事故记录
+                  icon: 'FormOutlined',
                   path: '/car/accidentRecords',
                   component: './car/accidentRecords',
                 },
                 {
-                  name: 'claimsRecords',
-                  icon: 'smile',
+                  name: 'claimsRecords', //理赔记录
+                  icon: 'FormOutlined',
                   path: '/car/claimsRecords',
                   component: './car/claimsRecords',
                 },
                 {
-                  name: 'maintainRecords',
-                  icon: 'smile',
+                  name: 'maintainRecords', //维修记录
+                  icon: 'FormOutlined',
                   path: '/car/maintainRecords',
                   component: './car/maintainRecords',
                 },
                 {
-                  name: 'upkeepRecords',
-                  icon: 'smile',
+                  name: 'upkeepRecords', //保养记录
+                  icon: 'FormOutlined',
                   path: '/car/upkeepRecords',
                   component: './car/upkeepRecords',
                 },
                 {
-                  name: 'securityCheckCondition',
-                  icon: 'smile',
+                  name: 'securityCheckCondition', //安检情况
+                  icon: 'AlertOutlined',
                   path: '/car/securityCheckCondition',
                   component: './car/securityCheckCondition',
                 },

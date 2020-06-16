@@ -171,6 +171,10 @@ class CarMessageList extends React.Component {
             <p>确认删除?</p>
           </Modal>
           <Modal
+           bodyStyle={{
+            height:'520px',
+            overflow:'auto'
+           }}
             title="添加车辆"
             width="900px"
             onOk={this.hideAdd}
@@ -194,7 +198,7 @@ class CarMessageList extends React.Component {
             title="查看详情"
             width="900px"
             onOk={this.hideViewDetails}
-            confirmLoading={confirmLoading}
+            confirmLoading={confirmLoading}   
             onCancel={this.hideViewDetails}
             visible={this.state.viewDetailsForm}
           >

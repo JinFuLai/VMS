@@ -161,6 +161,10 @@ class DepartmentList extends React.Component {
             <p>确认删除?</p>
           </Modal>
           <Modal
+           bodyStyle={{
+            height:'520px',
+            overflow:'auto'
+           }}
             title="添加部门"
             width="900px"
             onOk={this.hideAdd}

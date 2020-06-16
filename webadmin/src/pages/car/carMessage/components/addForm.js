@@ -1,8 +1,10 @@
 import { Form, Input, InputNumber, Button, Row, Col, Select, Checkbox, DatePicker } from 'antd';
 import UploadPhoto from './uploadPhoto';
+import TabsOilParametersList from './tabsOilParametersList';
+import TabsDriverList from './tabsDriverList';
 const layout = {
     labelCol: {
-        span: 8,
+        span: 9,
     },
     wrapperCol: {
         span: 26,
@@ -10,7 +12,7 @@ const layout = {
 };
 const layout_ = {
     labelCol: {
-        span: 2.5,
+        span: 3,
     },
     wrapperCol: {
         span: 21,
@@ -75,7 +77,7 @@ const AddUser = () => {
                     </Col>
                     <Col span={8} key={8}>
                         <Form.Item name="8" label="购买日期" rules={[{ required: true, }]}>
-                            <DatePicker style={{ width: 178 }} />
+                            <DatePicker style={{ width: 163 }} />
                         </Form.Item>
                     </Col>
                     <Col span={8} key={9}>
@@ -125,7 +127,7 @@ const AddUser = () => {
                     </Col>
                     <Col span={8} key={15}>
                         <Form.Item name="15" label="安装时间" rules={[{ required: true, }]}>
-                            <DatePicker style={{ width: 178 }} />
+                            <DatePicker style={{ width: 163 }} />
                         </Form.Item>
                     </Col>
                     <Col span={8} key={16}>
@@ -133,31 +135,56 @@ const AddUser = () => {
                             <Input />
                         </Form.Item>
                     </Col>
-
-
                 </Row>
             </Form>
-            {/* <Form  {...layout_} name="nest-messages_" onFinish={onFinish} validateMessages={validateMessages}>
+            <Form  {...layout_} name="nest-messages_" onFinish={onFinish} validateMessages={validateMessages}>
                 <Row gutter={24}>
-                    <Col span={24} key={4}>
-                        <Form.Item name="checkbox-group" label="权限赋予" rules={[{ required: true, }]}>
-                            <Checkbox.Group style={{ width: '100%' }} >
-                                <Row gutter={24}>
-                                    <Col span={5}>
-                                        <Checkbox value="A" style={{ lineHeight: '32px' }}>权限一</Checkbox>
-                                    </Col>
-                                    <Col span={5}>
-                                        <Checkbox value="B" style={{ lineHeight: '32px' }}>权限二</Checkbox>
-                                    </Col>
-                                    <Col span={5}>
-                                        <Checkbox value="c" style={{ lineHeight: '32px' }}>权限三</Checkbox>
-                                    </Col>
-                                </Row>
-                            </Checkbox.Group>,
-                     </Form.Item>
+                    <Col span={24} key={1}>
+                        <Form.Item name="oilNumber" label="油量参数">
+                            <TabsOilParametersList></TabsOilParametersList>
+                        </Form.Item>
+                    </Col>
+                    <Col span={24} key={2}>
+                        <Form.Item name="oilNumber" label="驾驶员">
+                            <TabsDriverList></TabsDriverList>
+                        </Form.Item>
                     </Col>
                 </Row>
-            </Form> */}
+            </Form>
+            <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+                <Row gutter={24}>
+                    <Col span={8} key={1}>
+                        <Form.Item name="1" label="可行驶区域" rules={[{ required: true, }]}>
+                            <Select>
+                                <Select.Option value="1">围栏1</Select.Option>
+                                <Select.Option value="2">围栏2</Select.Option>
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={8} key={2}>
+                        <Form.Item name="2" label="不可行驶区域" rules={[{ required: true, }]}>
+                            <Select>
+                                <Select.Option value="3">围栏1</Select.Option>
+                                <Select.Option value="4">围栏2</Select.Option>
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
+            <Form  {...layout_} name="nest-messages_" onFinish={onFinish} validateMessages={validateMessages}>
+                <Row gutter={24}>
+                    <Col span={24} key={1}>
+                        <Form.Item name="1" label="车辆照片" rules={[{ required: true, }]}>
+                            <UploadPhoto></UploadPhoto>
+                        </Form.Item>
+                    </Col>
+                    <Col span={16} key={2}>
+                        <Form.Item name="2" label="备注" rules={[{ required: true, }]}>
+                           <Input />
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
         </div>
     );
 };
