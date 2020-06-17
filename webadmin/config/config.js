@@ -76,7 +76,7 @@ export default defineConfig({
               icon: 'AppstoreOutlined',
               routes: [
                 {
-                  name: 'analysis',
+                  name: 'analysis',  //首页
                   icon: 'BankOutlined',
                   path: '/dashboard/analysis',
                   component: './dashboard/analysis',
@@ -94,25 +94,25 @@ export default defineConfig({
                 //   component: './dashboard/workplace',
                 // },
                 {
-                  name: 'userinfo',
+                  name: 'userinfo', //用户信息
                   icon: 'UserOutlined',
                   path: '/dashboard/userinfo',
                   component: './dashboard/userinfo',
                 },
                 {
-                  name: 'role',
+                  name: 'role',  //角色信息
                   icon: 'TeamOutlined',
                   path: '/dashboard/role',
                   component: './dashboard/role',
                 },
                 {
-                  name: 'company',
+                  name: 'company', //公司管理
                   icon: 'ApartmentOutlined',
                   path: '/dashboard/company',
                   component: './dashboard/company',
                 },
                 {
-                  name: 'department',
+                  name: 'department', //部门管理
                   icon: 'AppstoreAddOutlined',
                   path: '/dashboard/department',
                   component: './dashboard/department',
@@ -168,50 +168,50 @@ export default defineConfig({
                   component: './car/securityCheckCondition',
                 },
                 {
-                  name: 'annualInspectionRecords',
-                  icon: 'smile',
+                  name: 'annualInspectionRecords', //年检记录
+                  icon: 'FormOutlined',
                   path: '/car/annualInspectionRecords',
                   component: './car/annualInspectionRecords',
                 },
                 {
-                  name: 'deregulationRecords',
-                  icon: 'smile',
+                  name: 'deregulationRecords', //违章记录
+                  icon: 'FormOutlined',
                   path: '/car/deregulationRecords',
                   component: './car/deregulationRecords',
                 },
                 {
-                  name: 'scrapRecords',
-                  icon: 'smile',
+                  name: 'scrapRecords',  //报废记录
+                  icon: 'FormOutlined',
                   path: '/car/scrapRecords',
                   component: './car/scrapRecords',
                 },
                 {
-                  name: 'operatingCost',
-                  icon: 'smile',
+                  name: 'operatingCost', //运行费用
+                  icon: 'DollarOutlined',
                   path: '/car/operatingCost',
                   component: './car/operatingCost',
                 },
                 {
-                  name: 'useCarApplyRecords',
-                  icon: 'smile',
+                  name: 'useCarApplyRecords', //用车申请记录
+                  icon: 'FormOutlined',
                   path: '/car/useCarApplyRecords',
                   component: './car/useCarApplyRecords',
                 },
                 {
-                  name: 'maintenanceShopManagement',
-                  icon: 'smile',
+                  name: 'maintenanceShopManagement', //维修厂管理
+                  icon: 'AppstoreAddOutlined',
                   path: '/car/maintenanceShopManagement',
                   component: './car/maintenanceShopManagement',
                 },
                 {
-                  name: 'serveRecords',
-                  icon: 'smile',
+                  name: 'serveRecords', //服务记录
+                  icon: 'FormOutlined',
                   path: '/car/serveRecords',
                   component: './car/serveRecords',
                 },
                 {
-                  name: 'installRecords',
-                  icon: 'smile',
+                  name: 'installRecords', //装机记录
+                  icon: 'FormOutlined',
                   path: '/car/installRecords',
                   component: './car/installRecords',
                 },
