@@ -1,7 +1,36 @@
+/* 表单中标题样式 */
 .titleText{
     height: 35px;
     font-size: 15px;
     font-weight:bold;
     color: black;
     margin-left: 65px;
+}
+/* 表单中标签与选择框布局样式 */
+.layoutBoxStyle{
+    width: 314px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+.layoutBoxStyle_{
+    width: 314px;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+}
+.labelText{
+    font-size: 14px;
+    width: 127px;
+    height: 50px;
+    color:black;
+    margin: 0 0 0 10px;
+}
+.inputStyle{
+    width: 181px;
+    height: 50px;
+}
+/* 上传图片样式 */
+.uploadPhotoStyle{
+    width: 110px;
 }

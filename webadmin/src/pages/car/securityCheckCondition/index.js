@@ -4,7 +4,8 @@ import React from 'react';
 import { connect } from 'dva';
 import { Table, Divider, Tag, Button, Input, Avatar, Modal, Spin } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import AddForm from './components/addForm';
+// import AddForm from './components/addForm';
+import AddForm from './components/newAddForm';
 import UpdateForm from './components/updateForm';
 
 const { Search } = Input;

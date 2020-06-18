@@ -224,32 +224,32 @@ export default defineConfig({
               name: 'data',
               routes: [
                 {
-                  name: 'equipmentMessage',
-                  icon: 'smile',
+                  name: 'equipmentMessage', //设备信息
+                  icon: 'ProfileOutlined',
                   path: '/data/equipmentMessage',
                   component: './data/equipmentMessage',
                 },
                 {
-                  name: 'equipmentType',
-                  icon: 'smile',
+                  name: 'equipmentType', //设备类型
+                  icon: 'BlockOutlined',
                   path: '/data/equipmentType',
                   component: './data/equipmentType',
                 },
                 {
-                  name: 'equipmentManufacturer',
-                  icon: 'smile',
+                  name: 'equipmentManufacturer', //设备生产厂家
+                  icon: 'BuildOutlined',
                   path: '/data/equipmentManufacturer',
                   component: './data/equipmentManufacturer',
                 },
                 {
-                  name: 'driverMessage',
-                  icon: 'smile',
+                  name: 'driverMessage', //驾驶员信息
+                  icon: 'ProfileOutlined',
                   path: '/data/driverMessage',
                   component: './data/driverMessage',
                 },
                 {
-                  name: 'positionData',
-                  icon: 'smile',
+                  name: 'positionData', //位置数据
+                  icon: 'AimOutlined',
                   path: '/data/positionData',
                   component: './data/positionData',
                 },
