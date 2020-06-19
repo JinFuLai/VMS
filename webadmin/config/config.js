@@ -75,11 +75,17 @@ export default defineConfig({
               name: 'dashboard',
               icon: 'AppstoreOutlined',
               routes: [
+                // {
+                //   name: 'analysis',  //旧首页
+                //   icon: 'BankOutlined',
+                //   path: '/dashboard/analysis',
+                //   component: './dashboard/analysis',
+                // },
                 {
-                  name: 'analysis',  //首页
+                  name: 'homePage',  //首页
                   icon: 'BankOutlined',
-                  path: '/dashboard/analysis',
-                  component: './dashboard/analysis',
+                  path: '/dashboard/homePage',
+                  component: './dashboard/homePage',
                 },
                 // {
                 //   name: 'monitor',
@@ -254,32 +260,32 @@ export default defineConfig({
                   component: './data/positionData',
                 },
                 {
-                  name: 'rail',
-                  icon: 'smile',
+                  name: 'rail', //围栏
+                  icon: 'BorderlessTableOutlined',
                   path: '/data/rail',
                   component: './data/rail',
                 },
                 {
-                  name: 'equipmentInformation',
-                  icon: 'smile',
+                  name: 'equipmentInformation', //设备消息
+                  icon: 'ContainerOutlined',
                   path: '/data/equipmentInformation',
                   component: './data/equipmentInformation',
                 },
                 {
-                  name: 'SIMCardMessage',
-                  icon: 'smile',
+                  name: 'SIMCardMessage', //SIMCard信息
+                  icon: 'ProfileOutlined',
                   path: '/data/SIMCardMessage',
                   component: './data/SIMCardMessage',
                 },
                 {
-                  name: 'SIMCardType',
-                  icon: 'smile',
+                  name: 'SIMCardType', //SIMCard类型
+                  icon: 'BlockOutlined',
                   path: '/data/SIMCardType',
                   component: './data/SIMCardType',
                 },
                 {
-                  name: 'securityCheckProject',
-                  icon: 'smile',
+                  name: 'securityCheckProject', //安全检查项目
+                  icon: 'ForkOutlined',
                   path: '/data/securityCheckProject',
                   component: './data/securityCheckProject',
                 },

@@ -8,6 +8,7 @@ import { Table, Divider, Tag, Button, Input, Avatar, Modal, Spin } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import AddUserForm from './components/addUserForm';
 import UpdateUserForm from './components/updateUserForm';
+import ViewDetailsForm from './components/viewDetailsForm';
 import Table_ from './components/table';
 
 const { Search } = Input;
@@ -227,6 +228,7 @@ class UserList extends React.Component {
             onCancel={this.hideViewDetails}
             visible={this.state.viewDetailsForm}
           >
+          <ViewDetailsForm></ViewDetailsForm>
           </Modal>
         </Spin>
       </div>

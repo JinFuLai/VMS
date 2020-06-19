@@ -8,7 +8,8 @@ export default {
   'menu.register': '注册',
   'menu.register.result': '注册结果',
   'menu.dashboard': '基本管理',
-  'menu.dashboard.analysis': '首页',
+  // 'menu.dashboard.analysis': '首页', //旧首页
+  'menu.dashboard.homePage': '首页',
   // 'menu.dashboard.monitor': '监控页',
   // 'menu.dashboard.workplace': '工作台',
   'menu.dashboard.userinfo': '用户信息',
