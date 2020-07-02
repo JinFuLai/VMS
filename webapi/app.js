@@ -3,7 +3,7 @@ var app = express();
 var config = require('config');   // https://www.npmjs.com/package/config
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-mongoose.connect(config.get('DB_CONFIG_STRING'), { useNewUrlParser: true });
+mongoose.connect(config.get('DB_CONFIG_STRING'), { useNewUrlParser: true , useUnifiedTopology: true   });
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 var swagger = require('./swagger')(app);

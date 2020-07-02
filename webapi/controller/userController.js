@@ -49,6 +49,7 @@ module.exports = function (app) {
           .limit(pageSize)
           .sort({ '_id': -1 })
           .exec((err, users) => {
+            // console.log(users,'数据')
             if (err) {
               res.json(reponseHelper.Error(err));
             };
@@ -155,10 +156,23 @@ module.exports = function (app) {
 *       200:
 *         description: Successfully
 */
+  // app.delete("/user/delete", (req, res) => {
+  //   // console.log(req,'laoniu')
+  //   const {id = ''} = req.query;
+  //   const ids = id.split(',');
+  //   user.remove({ id: {$in:ids}}, function (err) {
+  //     if (!err) {
+  //       res.json(reponseHelper.Success("删除成功"));
+  //     }
+  //   });
+  // });
   app.delete("/user/delete", (req, res) => {
-    const {id = ''} = req.query;
+    // console.log(req.body.id,'laoniu')
+    const id = req.body.id;
+    // console.log(id,"id")
+    // console.log(req.query,"req.query")
     const ids = id.split(',');
-    user.remove({ id: {$in:ids}}, function (err) {
+    user.remove({ _id:{$in:ids}}, function (err) {
       if (!err) {
         res.json(reponseHelper.Success("删除成功"));
       }
@@ -200,6 +214,7 @@ module.exports = function (app) {
   *           $ref: '#/definitions/user'
   */
   app.post('/user/login', function (req, res) {
+    // console.log(req.body,"登录")
     if (!req.body.username || !req.body.password) {
       res.json(reponseHelper.ParameterError());
       return;
@@ -208,12 +223,14 @@ module.exports = function (app) {
     user.find({
       username: req.body.username
     }, function (err, _users) {
+      // console.log(err,_users,"haha")
       if (err) {
         res.json(reponseHelper.Error(err));
       } err;
       if (_users.length == 0) {
         res.json(reponseHelper.createResponse(211, null, 'Login failed. User not found.'));
       } else {
+        // console.log("inin")
         var _user;
         for (const key in _users) {
           if (_users.hasOwnProperty(key)) {
@@ -227,6 +244,7 @@ module.exports = function (app) {
         if (!_user) {
           res.json(reponseHelper.createResponse(400, null, 'Login failed. Wrong password.'));
         } else {
+          // console.log("in")
           // if user is found and password is right
           // create a token with only our given payload
           // we don't want to pass in the entire user since that has the password
@@ -237,11 +255,13 @@ module.exports = function (app) {
           }
           _user.token = token;
           user.findByIdAndUpdate(_user.id, { token: token }, { new: true }, function (err, updateRes) {
+            // console.log(_user,"hah")
             if (err) {
               res.json(reponseHelper.createResponse(400, null, 'Login failed. Wrong password.Please try again later!'));
             } else {
               // return the information including token as JSON
               res.json(reponseHelper.createResponse(200, _user, "Login successful!"));
+              // console.log(_user,"zm")
             }
           });
         }
@@ -273,16 +293,19 @@ module.exports = function (app) {
   */
   app.post('/user/update', function (req, res) {
     let resToken = reponseHelper.check(req.headers)
-    if (resToken.code !== 200) {
+    if (resToken.code !== 456) {
       res.json(resToken);
       return;
     }
-    user.findByIdAndUpdate(resToken.data, req.body, { new: true }, function (err, updateRes) {
+  //  console.log(req.body)
+    // user.findByIdAndUpdate(resToken.data,req.id, req.body, { new: true }, function (err, updateRes) {
+    user.findByIdAndUpdate(req.body.id, req.body, { new: true }, function (err, updateRes) {
+      // console.log(req.body.id,"updata")
       if (err) {
         res.json({ success: false, code: 400, message: 'update failed. Wrong password.Please try again later!' });
       } else {
         // return the information including token as JSON        
-        res.json(reponseHelper.createResponse(200, updateRes, "update successful!"));
+        res.json(reponseHelper.createResponse(200, req.body, "update successful!"));
 
       }
     });
@@ -414,7 +437,7 @@ module.exports = function (app) {
   app.post('/user/updatePhoto', function (req, res) {
 
     let resToken = reponseHelper.check(req.headers)
-    if (resToken.code !== 200) {
+    if (resToken.code !== 456) {
       res.json(resToken);
       return;
     }

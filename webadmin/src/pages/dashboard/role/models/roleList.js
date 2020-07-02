@@ -1,4 +1,4 @@
-import { queryList,queryDelete } from '../service';
+import { queryList,queryDelete,queryCreate } from '../service';
 
 export default {
   namespace: 'roleList',
@@ -23,6 +23,11 @@ export default {
         }
       }); 
       if (callback) callback(response);
+    },
+    *create({ payload,callback }, { call, put }) {
+      const response = yield call(queryCreate, payload);
+      console.log(response,"add456")
+      console.log({ payload,callback },"{ payload,callb123ack }")
     },
     *delete({ payload,callback }, { call, put }) {
       const response = yield call(queryDelete, payload);

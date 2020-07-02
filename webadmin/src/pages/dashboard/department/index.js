@@ -6,6 +6,7 @@ import { Table, Divider, Tag, Button, Input, Avatar, Modal, Spin } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import AddForm from './components/addForm';
 import UpdateForm from './components/updateForm';
+import ViewDetailsForm from './components/viewDetailsForm';
 
 const { Search } = Input;
 
@@ -17,43 +18,43 @@ class DepartmentList extends React.Component {
   _columns = () => [
     {
       title: '所属公司',
-      dataIndex: 'company',
-      key: 'company',
+      dataIndex: 'belong_to_company',
+      key: 'belong_to_company',
     },
     {
       title: '部门名称',
-      dataIndex: 'department',
-      key: 'department',
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: '旗下车辆数',
-      dataIndex: 'describe',
-      key: 'describe',
+      dataIndex: 'car_number',
+      key: 'car_number',
     },
     {
       title: '旗下驾驶员数',
-      dataIndex: 'describe',
-      key: 'describe',
+      dataIndex: 'driver_number',
+      key: 'driver_number',
     },
     {
       title: '旗下设备数',
-      dataIndex: 'describe',
-      key: 'describe',
+      dataIndex: 'equipment_unmber',
+      key: 'equipment_unmber',
     },
     {
       title: '操作',
       key: 'action',
-      render: user => (
+      render: (Text,record) => (
         <span>
-          <Button type='link' onClick={() => this.showViewDetails()} >
+          <Button type='link' onClick={() => this.showViewDetails(record)} >
             查看详情
           </Button>
           <Divider type="vertical" />
-          <Button type='link' onClick={() => this.showUpdate()} >
+          <Button type='link' onClick={() => this.showUpdate(record)} >
             编辑
           </Button>
           <Divider type="vertical" />
-          <Button type='link' onClick={() => this._showDeleteModel(user._id)} >
+          <Button type='link' onClick={() => this._showDeleteModel(record._id)} >
             删除
           </Button>
         </span>
@@ -77,6 +78,7 @@ class DepartmentList extends React.Component {
     confirmLoading: false,
     showUpdateForm: false,
     viewDetailsForm: false,
+    UpdateData:{},
   };
 
   start = () => {
@@ -100,7 +102,7 @@ class DepartmentList extends React.Component {
     const _this = this;
     dispatch({
       type: 'departmentList/search',
-      payload: (keyword && keyword.length > 0) ? { username: keyword } : {},
+      payload: (keyword && keyword.length > 0) ? { name: keyword } : {},
       callback: response => {
         _this.setState({
           selectedRowKeys: [],
@@ -116,16 +118,19 @@ class DepartmentList extends React.Component {
       departmentList: { data },
     } = this.props;
 
-    const { loadingDelete, selectedRowKeys, loadingSearch, showAddForm,showUpdateForm, confirmLoading } = this.state;
+    const { loadingDelete, selectedRowKeys, loadingSearch, showAddForm, showUpdateForm, confirmLoading } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
     const dataSource = data.dataList ? data.dataList.map(user => {
+      user.car_number = user.car.length
+      user.driver_number = user.driver.length
+      user.equipment_unmber = user.equipment.length
       user.key = user._id;
       return user
-    }) : []; 
+    }) : [];
     const columns = this._columns();
     return (
       <div style={{ padding: 24, background: '#fff' }}>
@@ -161,30 +166,40 @@ class DepartmentList extends React.Component {
             <p>确认删除?</p>
           </Modal>
           <Modal
-           bodyStyle={{
-            height:'520px',
-            overflow:'auto'
-           }}
+            bodyStyle={{
+              height: '520px',
+              overflow: 'auto'
+            }}
             title="添加部门"
             width="900px"
             onOk={this.hideAdd}
             confirmLoading={confirmLoading}
             onCancel={this.hideAdd}
             visible={this.state.showAddForm}
+            footer={[]}
           >
-            <AddForm></AddForm>
+            <AddForm search={this.search} hideAdd={this.hideAdd}></AddForm>
           </Modal>
           <Modal
+            bodyStyle={{
+              height: '520px',
+              overflow: 'auto'
+            }}
             title="编辑部门"
             width="900px"
             onOk={this.hideUpdate}
             confirmLoading={confirmLoading}
             onCancel={this.hideUpdate}
             visible={this.state.showUpdateForm}
+            footer={[]}
           >
-            <UpdateForm></UpdateForm>
+            <UpdateForm data={this.state.UpdateData} search={this.search} hideUpdate={this.hideUpdate}></UpdateForm>
           </Modal>
           <Modal
+            bodyStyle={{
+              height: '520px',
+              overflow: 'auto'
+            }}
             title="查看详情"
             width="900px"
             onOk={this.hideViewDetails}
@@ -192,6 +207,7 @@ class DepartmentList extends React.Component {
             onCancel={this.hideViewDetails}
             visible={this.state.viewDetailsForm}
           >
+            <ViewDetailsForm data={this.state.viewDetailsData}></ViewDetailsForm>
           </Modal>
         </Spin>
       </div>
@@ -203,26 +219,27 @@ class DepartmentList extends React.Component {
   hideAdd = () => {
     this.setState({ showAddForm: false })
   }
-  showUpdate = () => {
+  showUpdate = (record) => {
+    this.setState({ UpdateData: record })
     this.setState({ showUpdateForm: true })
   }
   hideUpdate = () => {
     this.setState({ showUpdateForm: false })
   }
-  showViewDetails = () => {
+  showViewDetails = (record) => {
+    this.setState({ viewDetailsData: record })
     this.setState({ viewDetailsForm: true })
   }
   hideViewDetails = () => {
     this.setState({ viewDetailsForm: false })
   }
- 
+
   _hiddenDeleteModel = () => {
     this.setState({ showDeleteModal: false })
   }
 
   _showDeleteModel = ids => {
     this.setState({ showDeleteModal: true, shouldDeleteIds: ids })
-    console.log(ids);
   }
 
   _deleteUser = () => {
@@ -239,6 +256,7 @@ class DepartmentList extends React.Component {
           loadingDelete: false,
           loading: false,
         });
+        this.search();
       }
     });
   }

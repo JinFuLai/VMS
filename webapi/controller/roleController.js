@@ -13,9 +13,10 @@ module.exports = function (app) {
   /**
    * @swagger
    * /api/role/list:
-   *   get:
+   *   post:
    *     tags:
    *       - role
+   *     summary: "角色查询"
    *     description: Returns all role
    *     produces:
    *       - application/json
@@ -25,40 +26,92 @@ module.exports = function (app) {
    *         schema:
    *           $ref: '#/definitions/role'
    */
-  app.get('/role/list', function (req, res) {
-    role.find({}, function (err, roles) {
-      if (err) throw err;
-      // object of all the role
-      res.json(reponseHelper.Success(roles))
-    });
+  // app.get('/role/list', function (req, res) {
+  //   role.find({}, function (err, roles) {
+  //     if (err) throw err;
+  //     // object of all the role
+  //     res.json(reponseHelper.Success(roles))
+  //   });
+  // });
+  app.post('/role/list', function (req, res) {
+    const { current = 1, pageSize = 10 } = req.body
+    role.count(req.body, // 获取数据条数
+      (err, total) => {//查询出结果返回
+        if (err) {
+          res.json(reponseHelper.Error(err));
+        };
+        role.find(req.body)
+          .skip((current - 1) * pageSize)
+          .limit(pageSize)
+          .sort({ '_id': -1 })
+          .exec((err, roles) => {
+            if (err) {
+              res.json(reponseHelper.Error(err));
+            };
+            res.json(reponseHelper.Success({ dataList: roles, pagination: { total, current, pageSize } }))
+          });
+      })
   });
 
-  /**
- * @swagger
- * /api/role/{id}:
- *   get:
- *     tags:
- *       - role
- *     description: Returns a single puppy
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: id
- *         description: role's id
- *         in: path
- *         required: true
- *         type: integer
- *     responses:
- *       200:
- *         description: A single role
- *         schema:
- *           $ref: '#/api/role'
- */
-  app.get('/role/role', function (req, res) {
-    role.findById(req.query.id, function (err, role) {
-      if (err) throw err;
-      // object of all the role
-      res.json(reponseHelper.Success(role))
+    /**
+   * @swagger
+   * /api/role/update:
+   *   post:
+   *     tags:
+   *       - role
+   *     summary: 更新角色信息
+   *     description: Returns a single puppy
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: id
+   *         description: role's id
+   *         in: path
+   *         required: true
+   *         type: integer
+   *     responses:
+   *       200:
+   *         description: A single role
+   *         schema:
+   *           $ref: '#/api/role'
+   */
+  // /**
+  //  * @swagger
+  //  * /api/role/update:
+  //  *   post:
+  //  *     tags:
+  //  *       - User
+  //  *     summary: 更新角色信息
+  //  *     produces:
+  //  *       - application/json
+  //  *     parameters:
+  //  *       - name: body
+  //  *         description: 参数
+  //  *         in: body
+  //  *         required: true
+  //  *         schema:
+  //  *           $ref: '#/definitions/role'
+  //  *     responses:
+  //  *       200:
+  //  *         description: Successfully
+  //  *         schema:
+  //  *           $ref: '#/definitions/role'
+  //  */
+
+  app.post('/role/update', function (req, res) {
+    let resToken = reponseHelper.check(req.headers)
+    if (resToken.code !== 456) {
+      res.json(resToken);
+      return;
+    }
+    role.findByIdAndUpdate(req.body.id, req.body, { new: true }, function (err, updateRes) {
+      if (err) {
+        res.json({ success: false, code: 400, message: 'update failed. Wrong password.Please try again later!' });
+      } else {
+        // return the information including token as JSON        
+        res.json(reponseHelper.createResponse(200, req.body, "update successful!"));
+
+      }
     });
   });
 
@@ -68,6 +121,7 @@ module.exports = function (app) {
    *   post:
    *     tags:
    *       - role
+   *     summary: 创建角色
    *     description: Creates a new role
    *     produces:
    *       - application/json
@@ -94,28 +148,34 @@ module.exports = function (app) {
   });
 
   /**
-* @swagger
-* /api/role/delete:
-*   post:
-*     tags:
-*       - role
-*     description: Delete a role
-*     produces:
-*       - application/json
-*     parameters:
-*       - name: id
-*         description: role object
-*         in: body
-*         required: true
-*         schema:
-*           $ref: '#/api/role'
-*     responses:
-*       200:
-*         description: Successfully created
-*/
+   * @swagger
+   * /api/role/delete:
+   *   post:
+   *     tags:
+   *       - role
+   *     summary: 删除角色
+   *     description: Delete a role
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: id
+   *         description: role object
+   *         in: body
+   *         required: true
+   *         schema:
+   *           $ref: '#/api/role'
+   *     responses:
+   *       200:
+   *         description: Successfully created
+   */
   app.delete("/role/delete", (req, res) => {
-    role.remove({ _id: req.query.id }, function (err) {
-      res.json(reponseHelper.Success("删除成功"));
+    const id = req.body.id;
+    const ids = id.split(',');
+    role.remove({ _id: { $in: ids } }, function (err) {
+      if (!err) {
+        res.json(reponseHelper.Success("删除成功"));
+      }
     });
   });
 }
+

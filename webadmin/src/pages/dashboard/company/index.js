@@ -6,6 +6,7 @@ import { Table, Divider, Tag, Button, Input, Avatar, Modal, Spin } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import AddForm from './components/addForm';
 import UpdateForm from './components/updateForm';
+import ViewDetailsForm from './components/viewDetailsForm';
 
 
 const { Search } = Input;
@@ -23,48 +24,48 @@ class CompanyList extends React.Component {
     },
     {
       title: '公司类别',
-      dataIndex: 'userNumber',
-      key: 'userNumber',
+      dataIndex: 'company_type',
+      key: 'company_type',
     },
     {
       title: '省份',
-      dataIndex: 'company',
-      key: 'company',
+      dataIndex: 'province',
+      key: 'province',
     },
     {
       title: '城市',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'city',
+      key: 'city',
     },
     {
       title: '旗下车辆数',
-      dataIndex: 'describe',
-      key: 'describe',
+      dataIndex: 'car_number',
+      key: 'car_number',
     },
     {
       title: '旗下驾驶员数',
-      dataIndex: 'describe',
-      key: 'describe',
+      dataIndex: 'driver_number',
+      key: 'driver_number',
     },
     {
       title: '旗下设备数',
-      dataIndex: 'describe',
-      key: 'describe',
+      dataIndex: 'equipment_unmber',
+      key: 'equipment_unmber',
     },
     {
       title: '操作',
       key: 'action',
-      render: user => (
+      render: (text, record) => (
         <span>
-          <Button type='link' onClick={() => this.showViewDetails()} >
+          <Button type='link' onClick={() => this.showViewDetails(record)}  >
             查看详情
           </Button>
           <Divider type="vertical" />
-          <Button type='link' onClick={() => this.showUpdate()} >
+          <Button type='link' onClick={() => this.showUpdate(record)} >
             编辑
           </Button>
           <Divider type="vertical" />
-          <Button type='link' onClick={() => this._showDeleteModel(user._id)} >
+          <Button type='link' onClick={() => this._showDeleteModel(record._id)} >
             删除
           </Button>
         </span>
@@ -88,6 +89,8 @@ class CompanyList extends React.Component {
     confirmLoading: false,
     showUpdateForm: false,
     viewDetailsForm: false,
+    UpdateData: {},
+    viewDetailsData: {},
   };
 
   start = () => {
@@ -111,13 +114,14 @@ class CompanyList extends React.Component {
     const _this = this;
     dispatch({
       type: 'companyList/search',
-      payload: (keyword && keyword.length > 0) ? { username: keyword } : {},
+      payload: (keyword && keyword.length > 0) ? { name: keyword } : {},
       callback: response => {
         _this.setState({
           selectedRowKeys: [],
           loadingSearch: false,
           loadingDelete: false,
         });
+
       }
     });
   }
@@ -126,17 +130,21 @@ class CompanyList extends React.Component {
     const {
       companyList: { data },
     } = this.props;
-
-    const { loadingDelete, selectedRowKeys, loadingSearch, showAddForm,showUpdateForm, confirmLoading } = this.state;
+    const { loadingDelete, selectedRowKeys, loadingSearch, showAddForm, showUpdateForm, confirmLoading } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
     const dataSource = data.dataList ? data.dataList.map(user => {
+      user.car_number = user.car.length
+      user.driver_number = user.driver.length
+      user.equipment_unmber = user.equipment.length
       user.key = user._id;
       return user
-    }) : []; 
+    }) : [];
+ 
+
     const columns = this._columns();
     return (
       <div style={{ padding: 24, background: '#fff' }}>
@@ -172,30 +180,40 @@ class CompanyList extends React.Component {
             <p>确认删除?</p>
           </Modal>
           <Modal
-           bodyStyle={{
-            height:'520px',
-            overflow:'auto'
-           }}
+            bodyStyle={{
+              height: '520px',
+              overflow: 'auto'
+            }}
             title="添加公司"
             width="900px"
             onOk={this.hideAdd}
             confirmLoading={confirmLoading}
             onCancel={this.hideAdd}
             visible={this.state.showAddForm}
+            footer={[]}
           >
-            <AddForm></AddForm>
+            <AddForm search={this.search} hideAdd={this.hideAdd}></AddForm>
           </Modal>
           <Modal
+            bodyStyle={{
+              height: '520px',
+              overflow: 'auto'
+            }}
             title="编辑公司"
             width="900px"
             onOk={this.hideUpdate}
             confirmLoading={confirmLoading}
             onCancel={this.hideUpdate}
             visible={this.state.showUpdateForm}
+            footer={[]}
           >
-            <UpdateForm></UpdateForm>
+            <UpdateForm data={this.state.UpdateData} search={this.search} hideUpdate={this.hideUpdate}></UpdateForm>
           </Modal>
           <Modal
+            bodyStyle={{
+              height: '520px',
+              overflow: 'auto'
+            }}
             title="查看详情"
             width="900px"
             onOk={this.hideViewDetails}
@@ -203,6 +221,7 @@ class CompanyList extends React.Component {
             onCancel={this.hideViewDetails}
             visible={this.state.viewDetailsForm}
           >
+            <ViewDetailsForm data={this.state.viewDetailsData}></ViewDetailsForm>
           </Modal>
         </Spin>
       </div>
@@ -214,26 +233,28 @@ class CompanyList extends React.Component {
   hideAdd = () => {
     this.setState({ showAddForm: false })
   }
-  showUpdate = () => {
+  showUpdate = (record) => {
+    this.setState({ UpdateData: record })
     this.setState({ showUpdateForm: true })
   }
   hideUpdate = () => {
     this.setState({ showUpdateForm: false })
   }
-  showViewDetails = () => {
+  showViewDetails = (record) => {
+    this.setState({ viewDetailsData: record })
     this.setState({ viewDetailsForm: true })
   }
   hideViewDetails = () => {
     this.setState({ viewDetailsForm: false })
   }
- 
+
   _hiddenDeleteModel = () => {
     this.setState({ showDeleteModal: false })
   }
 
   _showDeleteModel = ids => {
     this.setState({ showDeleteModal: true, shouldDeleteIds: ids })
-    console.log(ids);
+    // console.log(ids);
   }
 
   _deleteUser = () => {
@@ -250,6 +271,7 @@ class CompanyList extends React.Component {
           loadingDelete: false,
           loading: false,
         });
+        this.search();
       }
     });
   }

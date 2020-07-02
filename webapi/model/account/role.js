@@ -10,7 +10,11 @@ const roleSchema = new Schema({
   describe: String,
   account: { type: Schema.Types.ObjectId, ref: 'account' },
   permission: [{ type: String }],
-  status: { type: String, default: consts.STATUS.ACTIVE }
+  status: { type: String, default: consts.STATUS.ACTIVE }, //界限
+  company: { type: String },
+  jurisdiction: { type: String },
+  accessNumber: { type: Number },
+  userNumber: { type: Number },
 }, { collection: 'role' });
 
 // the schema is useless so far

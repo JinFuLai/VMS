@@ -29,12 +29,14 @@ const Model = {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
+      console.log(response,"dd")
       yield put({
         type: 'changeLoginStatus',
         payload: response,
       }); // Login successfully
 
-      if (response.status === 'ok') {
+      if (response.code == 200) {
+        console.log("登录成功")
         message.success('登录成功！');
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
@@ -54,8 +56,10 @@ const Model = {
             return;
           }
         }
-
         history.replace(redirect || '/');
+      }else{
+        message.warning('账户或密码错误');
+     
       }
     },
 

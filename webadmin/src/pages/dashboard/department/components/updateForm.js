@@ -1,4 +1,8 @@
 import { Form, Input, InputNumber, Button, Row, Col, Select, Checkbox, DatePicker } from 'antd';
+import styles from '../styles.css';
+import CarTabs from './tabs';
+import { queryUpdate } from '../service';
+import React, { useState } from 'react';
 const layout = {
     labelCol: {
         span: 8,
@@ -12,44 +16,77 @@ const validateMessages = {
     required: '${label}不能为空!',
 };
 
-const AddUser = () => {
+const Update = (props) => {
     const onFinish = values => {
         console.log(values);
     };
+    const onSubmit = (values) => {
+        values.id = props.data._id,
+            queryUpdate(values).then(res => {
+                props.search()
+                props.hideUpdate()
+            })
+    };
+    const hideUpdate = () => {
+        props.hideUpdate()
+    }
+    const [form] = Form.useForm();
+    const [formVals, setFormVals] = useState({
+        name: props.data.name,
+        belong_to_company: props.data.belong_to_company,
+        department_principal: props.data.department_principal,
+        comment: props.data.comment,
 
+    });
     return (
         <div>
-            <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+            <Form
+                initialValues={{
+                    name: formVals.name,
+                    belong_to_company: formVals.belong_to_company,
+                    department_principal: formVals.department_principal,
+                    comment: formVals.comment,
+                }} form={form}
+                {...layout} name="nest-messages" onFinish={onSubmit} validateMessages={validateMessages}>
                 <Row gutter={24}>
                     <Col span={8} key={1}>
-                        <Form.Item name="1" label="所属公司" rules={[{ required: true, },]} >
+                        <Form.Item name="belong_to_company" label="所属公司" rules={[{ required: true, },]} >
                             <Input />
                         </Form.Item>
                     </Col>
                     <Col span={8} key={2}>
-                        <Form.Item name="2" label="部门名称" rules={[{ required: true, }]}>
+                        <Form.Item name="name" label="部门名称" rules={[{ required: true, }]}>
                             <Input />
                         </Form.Item>
                     </Col>
-                    <Col span={8} key={5}>
-                        <Form.Item name="5" label="旗下车辆数" rules={[{ required: true, }]}>
+                    <Col span={8} key={3}>
+                        <Form.Item name="department_principal" label="部门负责人" rules={[{ required: true, }]}>
+                            <Select>
+                                <Select.Option value="张三">张三</Select.Option>
+                                <Select.Option value="李四">李四</Select.Option>
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={8} key={4}>
+                        <Form.Item name="comment" label="备注" rules={[{ required: true, }]}>
                             <Input />
                         </Form.Item>
                     </Col>
-                    <Col span={8} key={6}>
-                        <Form.Item name="6" label="旗下驾驶员数" rules={[{ required: true, }]}>
-                            <Input />
-                        </Form.Item>
+                    <Col span={24} key={5}>
+                        <CarTabs  data={props.data} ></CarTabs>
                     </Col>
-                    <Col span={8} key={7}>
-                        <Form.Item name="7" label="旗下设备数" rules={[{ required: true, }]}>
-                            <Input />
-                        </Form.Item>
+                    <Col span={16} key={6}>
                     </Col>
+                    <div className={styles.butLayout}>
+                        <Button onClick={() => hideUpdate()} >取消</Button>
+                        <span className={styles.butConfirm}>
+                            <Button type="primary" htmlType="submit" >确定</Button>
+                        </span>
+                    </div>
                 </Row>
             </Form>
         </div>
     );
 };
 
-export default AddUser;
+export default Update;

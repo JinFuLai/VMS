@@ -5,10 +5,12 @@ const FormItem = Form.Item;
 
 const CreateForm = (props) => {
   const [form] = Form.useForm();
+  // console.log(form,"表单")
   const { modalVisible, onSubmit: handleAdd, onCancel } = props;
 
   const okHandle = async () => {
     const fieldsValue = await form.validateFields();
+    console.log(fieldsValue,"增加")
     form.resetFields();
     handleAdd(fieldsValue);
   };

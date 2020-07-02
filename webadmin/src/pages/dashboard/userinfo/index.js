@@ -9,15 +9,18 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import AddUserForm from './components/addUserForm';
 import UpdateUserForm from './components/updateUserForm';
 import ViewDetailsForm from './components/viewDetailsForm';
+import Demo from './components/demo';
 import Table_ from './components/table';
+import moment from 'moment';
+
 
 const { Search } = Input;
 
 @connect(({ userList }) => ({
   userList,
 }))
-class UserList extends React.Component {
 
+class UserList extends React.Component {
   _columns = () => [
     {
       title: '用户账号',
@@ -42,17 +45,17 @@ class UserList extends React.Component {
     },
     {
       title: '所在权限组',
-      dataIndex: 'permissionGroups',
-      key: 'permissionGroups',
-      render: permissionGroups => (
-        <span>
-          {permissionGroups != null ? permissionGroups.map(tag => (
-            <Tag color="blue" key={tag}>
-              {tag}
-            </Tag>
-          )) : ''}
-        </span>
-      ),
+      dataIndex: 'role',
+      key: 'role',
+      // render: permissionGroups => (
+      //   <span>
+      //     {permissionGroups != null ? permissionGroups.map(tag => (
+      //       <Tag color="blue" key={tag}>
+      //         {tag}
+      //       </Tag>
+      //     )) : ''}
+      //   </span>
+      // ),
     },
     {
       title: '拥有权限数',
@@ -63,25 +66,26 @@ class UserList extends React.Component {
       title: '注册时间',
       dataIndex: 'created_date',
       key: 'created_date',
+      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
     },
     {
       title: '操作',
       key: 'action',
-      render: user => (
+      render: (text, record) => (
         <span>
-          <Button type='link' onClick={() => this.showViewDetails()} >
+          <Button type='link' onClick={() => this.showViewDetails(record)} >
             查看详情
           </Button>
           <Divider type="vertical" />
-          <Button type='link' onClick={() => this.showUpdateUser()} >
+          <Button type='link' onClick={() => this.showUpdateUser(record)} >
             编辑
           </Button>
           <Divider type="vertical" />
-          <Button type='link' onClick={() => this.showBlockUpModal()} >
+          {/* <Button type='link' onClick={() => this.showBlockUpModal()} >
             停用
-          </Button>
+          </Button> */}
           <Divider type="vertical" />
-          <Button type='link' onClick={() => this._showDeleteModel(user._id)} >
+          <Button type='link' onClick={() => this._showDeleteModel(record._id)} >
             删除
           </Button>
         </span>
@@ -91,6 +95,7 @@ class UserList extends React.Component {
 
   componentDidMount() {
     this.search();
+    // this.formatterTime();
   }
 
   state = {
@@ -105,7 +110,14 @@ class UserList extends React.Component {
     confirmLoading: false,
     showUpdateUserForm: false,
     viewDetailsForm: false,
+    viewDetailsData: {},
+    UpdateData: {},
+    addData: {},
   };
+
+  formatterTime = (val) => {
+    return val ? moment(val).format('YYYY-MM-DD') : ''
+  }
 
   start = () => {
     this.setState({ loadingDelete: true });
@@ -130,7 +142,6 @@ class UserList extends React.Component {
       type: 'userList/search',
       payload: (keyword && keyword.length > 0) ? { username: keyword } : {},
       callback: response => {
-        console.log(response);
         _this.setState({
           selectedRowKeys: [],
           loadingSearch: false,
@@ -139,13 +150,13 @@ class UserList extends React.Component {
       }
     });
   }
-
   render() {
+
     const {
       userList: { data },
     } = this.props;
 
-    const { loadingDelete, selectedRowKeys, loadingSearch, showAddUserForm,showUpdateUserForm, confirmLoading } = this.state;
+    const { loadingDelete, selectedRowKeys, loadingSearch, showAddUserForm, showUpdateUserForm, confirmLoading } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -180,9 +191,24 @@ class UserList extends React.Component {
             </div>
             <Table rowSelection={rowSelection} columns={columns} dataSource={dataSource} />
             {/* <Table_ rowSelection={rowSelection} columns={columns} dataSource={dataSource}></Table_> */}
+            {/* <AddUserForm
+             onSubmit={async (value) => {
+              console.log(value,"value")
+              const success = await handleAdd(value);
+    
+              if (success) {
+                this.setState({ showAddUserForm: false });
+    
+                // if (actionRef.current) {
+                //   actionRef.current.reload();
+                // }
+              }
+            }}
+            onCancel={() => this.setState({ showAddUserForm: false })}
+            // modalVisible={createModalVisible}
+            ></AddUserForm> */}
           </PageHeaderWrapper>
           <Modal
-            // title="确定删除？"
             closable={false}
             centered
             visible={this.state.showDeleteModal}
@@ -203,13 +229,18 @@ class UserList extends React.Component {
           <Modal
             title="添加用户"
             width="900px"
-            onOk={this.hideAddUser}
+            onOk={this.addUserBut}
             confirmLoading={confirmLoading}
             onCancel={this.hideAddUser}
             visible={this.state.showAddUserForm}
+            footer={
+              [] // 设置footer为空，去掉 取消 确定默认按钮
+            }
           >
-            <AddUserForm></AddUserForm>
+            <AddUserForm search={this.search} hideAddUser={this.hideAddUser}></AddUserForm>
+
           </Modal>
+
           <Modal
             title="编辑用户"
             width="900px"
@@ -217,8 +248,12 @@ class UserList extends React.Component {
             confirmLoading={confirmLoading}
             onCancel={this.hideUpdateUser}
             visible={this.state.showUpdateUserForm}
+            footer={
+              [] // 设置footer为空，去掉 取消 确定默认按钮
+            }
           >
-            <UpdateUserForm></UpdateUserForm>
+            <UpdateUserForm data={this.state.UpdateData} search={this.search} hideUpdateUser={this.hideUpdateUser}></UpdateUserForm>
+            {/* <Demo data={this.state.UpdateData}></Demo> */}
           </Modal>
           <Modal
             title="查看详情"
@@ -228,30 +263,41 @@ class UserList extends React.Component {
             onCancel={this.hideViewDetails}
             visible={this.state.viewDetailsForm}
           >
-          <ViewDetailsForm></ViewDetailsForm>
+            <ViewDetailsForm data={this.state.viewDetailsData}></ViewDetailsForm>
           </Modal>
         </Spin>
       </div>
     );
   }
+
   showAddUser = () => {
+
     this.setState({ showAddUserForm: true })
   }
   hideAddUser = () => {
     this.setState({ showAddUserForm: false })
   }
-  showUpdateUser = () => {
+  showUpdateUser = (record) => {
+   let datas= this.formatterTime(record.created_date)
+    record.created_date = datas
+    this.setState({ UpdateData: record })
     this.setState({ showUpdateUserForm: true })
   }
   hideUpdateUser = () => {
     this.setState({ showUpdateUserForm: false })
   }
-  showViewDetails = () => {
-    this.setState({ viewDetailsForm: true })
+  showViewDetails = (record) => {
+
+    this.setState({ viewDetailsData: { ...record } }, () => {
+
+      this.setState({ viewDetailsForm: true })
+    })
+
   }
   hideViewDetails = () => {
     this.setState({ viewDetailsForm: false })
   }
+
   showBlockUpModal = () => {
     this.setState({ blockUpModal: true })
   }
@@ -264,7 +310,6 @@ class UserList extends React.Component {
 
   _showDeleteModel = ids => {
     this.setState({ showDeleteModal: true, shouldDeleteIds: ids })
-    console.log(ids);
   }
 
   _deleteUser = () => {
@@ -281,9 +326,95 @@ class UserList extends React.Component {
           loadingDelete: false,
           loading: false,
         });
+        this.search();
       }
     });
   }
 }
 
 export default UserList;
+
+// import { DownOutlined, PlusOutlined } from '@ant-design/icons';
+// import { Button, Divider, Dropdown, Menu, message, Table, Search } from 'antd';
+// import React, { useState, useRef } from 'react';
+// import { PageHeaderWrapper } from '@ant-design/pro-layout';
+// import ProTable from '@ant-design/pro-table';
+// // import CreateForm from './components/CreateForm';
+// // import UpdateForm from './components/UpdateForm';
+// import { queryUserList } from './service';
+
+// const TableList = () => {
+
+
+
+
+//   const columns = [
+//     {
+//       title: '用户账户',
+//       dataIndex: 'username',
+//       // key: 'username',
+//     },
+//     // {
+//     //   title: '用户头像',
+//     //   dataIndex: 'desc',
+//     // },
+//     // {
+//     //   title: '用户昵称',
+//     //   dataIndex: 'callNo',
+//     // },
+//     // {
+//     //   title: '用户性别',
+//     //   dataIndex: 'status',
+//     // },
+//     // {
+//     //   title: '所在权限组数',
+//     //   dataIndex: 'updatedAt',
+//     // },
+//     // {
+//     //   title: '拥有权限数',
+//     //   dataIndex: 'updatedAt',
+//     // },
+//     // {
+//     //   title: '注册时间',
+//     //   dataIndex: 'updatedAt',
+//     // },
+//     // {
+//     //   title: '操作',
+//     //   dataIndex: 'option',
+//     //   valueType: 'option',
+//     //   render: (_, record) => (
+//     //     <>
+//     //     <a>
+//     //       配置
+//     //       </a>
+//     //     <Divider type="vertical" />
+//     //     <a>订阅警报</a>
+//     //     </>
+//     //   ),
+//     // },
+//   ];
+
+// return (
+//     <PageHeaderWrapper>
+//       <ProTable
+//         toolBarRender={(action, { selectedRows }) => [
+//           <Button icon={<PlusOutlined />} type="primary">
+//             新建
+//           </Button>,
+//         ]}
+//         request={ async() =>{
+//            let  res  = await queryUserList() ;       
+//           const { code,data}=res
+//           data.data.forEach(i => {
+//              i.key=i._id
+//           });
+//           return data
+//         }}
+//         columns={columns}
+//         // rowSelection={{}}
+//       />
+//     </PageHeaderWrapper>
+// )
+// }
+
+// export default TableList;

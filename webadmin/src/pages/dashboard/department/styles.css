@@ -14,3 +14,16 @@
     width: 150px;
     height: 20px;
 }
+.butLayout{
+    margin-left: 140px;
+    margin-top: 20px;
+}
+.butConfirm{
+    margin-left: 15px
+}
+.contactsButLayout{
+    margin-left: 320px;
+}
+.contactsButConfirm{
+    margin-left: 15px;
+}

@@ -171,24 +171,44 @@ module.exports = function (app) {
      *      200:
      *          description: Successfully   
      */
+    // app.get('/vehicle/all', function (req, res) {   //原有得请求方法
+    //     vehicle.find({})
+    //         .populate("account", "name")
+    //         .populate("vehicle_type", "name")
+    //         .populate("vehicle_brand", "name")
+    //         .populate("vehicle_color", "name")
+    //         .populate("group", "name")
+    //         .populate('device')
+    //         .exec((err, vehicleAll) => {
+    //             if (err) {
+    //                 res.json(reponseHelper.Error('failed.Please try again later!'));
+    //                 return;
+    //             }
+    //             if (vehicleAll) {                             
+    //                 res.json(reponseHelper.Success({dataList:vehicleAll}));
+    //             }
+    //         });
+    // });
     app.get('/vehicle/all', function (req, res) {
-        vehicle.find({})
-            .populate("account", "name")
-            .populate("vehicle_type", "name")
-            .populate("vehicle_brand", "name")
-            .populate("vehicle_color", "name")
-            .populate("group", "name")
-            .populate('device')
-            .exec((err, vehicleAll) => {
+        const { current = 1, pageSize = 10 } = req.body
+        vehicle.count(req.body, // 获取数据条数
+          (err, total) => {//查询出结果返回
+            if (err) {
+              res.json(reponseHelper.Error(err));
+            };
+            vehicle.find(req.body)
+              .skip((current - 1) * pageSize)
+              .limit(pageSize)
+              .sort({ '_id': -1 })
+              .exec((err, users) => {
+                // console.log(users,'数据')
                 if (err) {
-                    res.json(reponseHelper.Error('failed.Please try again later!'));
-                    return;
-                }
-                if (vehicleAll) {                             
-                    res.json(reponseHelper.Success(vehicleAll));
-                }
-            });
-    });
+                  res.json(reponseHelper.Error(err));
+                };
+                res.json(reponseHelper.Success({ dataList: users, pagination: { total, current, pageSize } }))
+              });
+          })
+      });
 
     /**
      * @swagger

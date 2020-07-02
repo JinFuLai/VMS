@@ -6,6 +6,7 @@ import { Table, Divider, Tag, Button, Input, Avatar, Modal, Spin } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import AddForm from './components/addForm';
 import UpdateForm from './components/updateForm';
+import ViewDetailsForm from './components/viewDetailsForm';
 
 const { Search } = Input;
 
@@ -13,7 +14,6 @@ const { Search } = Input;
     roleList,
 }))
 class RoleList extends React.Component {
-
   _columns = () => [
     {
       title: '角色名称',
@@ -43,17 +43,17 @@ class RoleList extends React.Component {
     {
       title: '操作',
       key: 'action',
-      render: user => (
+      render: (text,record) => (
         <span>
-          <Button type='link' onClick={() => this.showViewDetails()} >
+          <Button type='link' onClick={() => this.showViewDetails(record)} >
             查看详情
           </Button>
           <Divider type="vertical" />
-          <Button type='link' onClick={() => this.showUpdate()} >
+          <Button type='link' onClick={() => this.showUpdate(record)} >
             编辑
           </Button>
           <Divider type="vertical" />
-          <Button type='link' onClick={() => this._showDeleteModel(user._id)} >
+          <Button type='link' onClick={() => this._showDeleteModel(record._id)} >
             删除
           </Button>
         </span>
@@ -77,6 +77,8 @@ class RoleList extends React.Component {
     confirmLoading: false,
     showUpdateForm: false,
     viewDetailsForm: false,
+    viewDetailsData: {},
+    UpdateData: {},
   };
 
   start = () => {
@@ -96,11 +98,12 @@ class RoleList extends React.Component {
   };
 
   search = keyword => {
+    console.log(keyword,"查询")
     const { dispatch } = this.props;
     const _this = this;
     dispatch({
       type: 'roleList/search',
-      payload: (keyword && keyword.length > 0) ? { username: keyword } : {},
+      payload: (keyword && keyword.length > 0) ? { name: keyword } : {},
       callback: response => {
         _this.setState({
           selectedRowKeys: [],
@@ -110,7 +113,6 @@ class RoleList extends React.Component {
       }
     });
   }
-
   render() {
     const {
       roleList: { data },
@@ -167,8 +169,9 @@ class RoleList extends React.Component {
             confirmLoading={confirmLoading}
             onCancel={this.hideAdd}
             visible={this.state.showAddForm}
+            footer={[]}
           >
-            <AddForm></AddForm>
+            <AddForm search={this.search} hideAdd={this.hideAdd}></AddForm>
           </Modal>
           <Modal
             title="编辑角色"
@@ -177,8 +180,9 @@ class RoleList extends React.Component {
             confirmLoading={confirmLoading}
             onCancel={this.hideUpdate}
             visible={this.state.showUpdateForm}
+            footer={[]}
           >
-            <UpdateForm></UpdateForm>
+            <UpdateForm data={this.state.UpdateData} search={this.search} hideUpdate={this.hideUpdate}></UpdateForm>
           </Modal>
           <Modal
             title="查看详情"
@@ -188,6 +192,7 @@ class RoleList extends React.Component {
             onCancel={this.hideViewDetails}
             visible={this.state.viewDetailsForm}
           >
+          <ViewDetailsForm data={this.state.viewDetailsData}></ViewDetailsForm>
           </Modal>
         </Spin>
       </div>
@@ -199,13 +204,15 @@ class RoleList extends React.Component {
   hideAdd = () => {
     this.setState({ showAddForm: false })
   }
-  showUpdate = () => {
+  showUpdate = (record) => {
+    this.setState({ UpdateData: record })
     this.setState({ showUpdateForm: true })
   }
   hideUpdate = () => {
     this.setState({ showUpdateForm: false })
   }
-  showViewDetails = () => {
+  showViewDetails = (record) => {
+    this.setState({ viewDetailsData: record })
     this.setState({ viewDetailsForm: true })
   }
   hideViewDetails = () => {
@@ -218,7 +225,7 @@ class RoleList extends React.Component {
 
   _showDeleteModel = ids => {
     this.setState({ showDeleteModal: true, shouldDeleteIds: ids })
-    console.log(ids);
+    // console.log(ids);
   }
 
   _deleteUser = () => {
@@ -235,6 +242,7 @@ class RoleList extends React.Component {
           loadingDelete: false,
           loading: false,
         });
+        this.search();
       }
     });
   }

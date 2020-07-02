@@ -1,4 +1,4 @@
-import { queryUserList,queryUserDelete } from '../service';
+import { queryUserList,queryUserDelete,queryUserCreate} from '../service';
 
 export default {
   namespace: 'userList',
@@ -13,6 +13,8 @@ export default {
   effects: {
     *search({ payload,callback }, { call, put }) {
       const response = yield call(queryUserList, payload);
+      // console.log(response,"fanhui")
+      // console.log({ payload,callback },"{ payload,callback }")
       yield put({
         type: 'refresh',
         payload: {
@@ -24,8 +26,16 @@ export default {
       }); 
       if (callback) callback(response);
     },
+
+    *create({ payload,callback }, { call, put }) {
+      const response = yield call(queryUserCreate, payload);
+      // console.log(response,"add1")
+      // console.log({ payload,callback },"{ payload,callback }")
+    },
     *delete({ payload,callback }, { call, put }) {
       const response = yield call(queryUserDelete, payload);
+      // console.log(response,"delete")
+      // console.log({ payload,callback },"{ delete}")
       // const ids = payload.id;
       // yield put({
       //   type: 'delete',

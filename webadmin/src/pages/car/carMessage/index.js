@@ -27,18 +27,18 @@ class CarMessageList extends React.Component {
     },
     {
       title: '车辆品牌',
-      dataIndex: 'clpp',
-      key: 'clpp',
+      dataIndex: 'vehicle_brand',
+      key: 'vehicle_brand',
     },
     {
       title: '所属公司',
-      dataIndex: 'ssgs',
-      key: 'ssgs',
+      dataIndex: 'belong_to_company',
+      key: 'belong_to_company',
     },
     {
       title: '车辆类型',
-      dataIndex: 'cllx',
-      key: 'cllx',
+      dataIndex: 'vehicle_type',
+      key: 'vehicle_type',
     },
     {
       title: '最后里程数',
