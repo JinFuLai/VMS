@@ -9,4 +9,5 @@ Vehicle manage system is a application which could track all your vehicles. Moni
 .....
 
 ## Support GPS Device
-* 
+
+[<img src="http://www.google.com.au/images/nav_logo7.png">](http://google.com.au/)
